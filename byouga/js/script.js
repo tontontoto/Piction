@@ -46,3 +46,16 @@ const onPaint = function() {
     context.lineTo(mouse.x, mouse.y);
     context.stroke();
 }
+
+
+
+
+// 画像保存
+document.getElementById("download").onclick = (event) => {
+	let canvas = document.getElementById("mycanvas");
+
+	let link = document.createElement("a");
+	link.href = canvas.toDataURL("image/jpeg");
+	link.download = "test.jpg";
+	link.click();
+}
