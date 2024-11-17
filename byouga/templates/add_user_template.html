@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>データ管理テスト</title>
+</head>
+<body>
+       <h1>Application</h1>
+        <form action="/add_user" method="POST">
+            <input type="text" name="userName" placeholder="user name">
+            <input type="text" name="displayName" placeholder="display name">
+            <input type="mail" name="mailAddress" placeholder="mail address">
+            <input type="password" name="password" placeholder="password">
+
+            <input type="submit" value="Add"/>
+        </form>
+
+        <br>
+		{% for user in data %}
+			<p>{{user.userName}} : {{user.displayName}}</p>
+		{% endfor %}
+</body>
+</html>
