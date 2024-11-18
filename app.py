@@ -5,7 +5,6 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
 import os
-import hashlib
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sample.db'
@@ -38,7 +37,7 @@ def index():
         return render_template('index.html', user = user)
 
 
-# signup page ----
+# ---- サインアップページ処理 ----
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -57,40 +56,39 @@ def signup():
     else:
         return render_template('signup.html')
     
-# login-----
+# ---- ログインページ処理 ----
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         userName = request.form.get('userName')
         password = request.form.get('password')
+        error = "ユーザーネームまたはパスワードが違います"
         # Userテーブルからusernameに一致するユーザを取得
         user = User.query.filter(User.userName==userName).first()
-        if user and bcrypt.check_password_hash(user.password, password):  # userがNoneでないかも確認
-            print("成功")
-            login_user(user)
-            return redirect('/')
+        if user:
+            if user and bcrypt.check_password_hash(user.password, password):  # userがNoneでないかも確認
+                print("成功")
+                login_user(user)
+                return redirect('/')
+            else:
+                # パスワードが違う時の処理
+                return render_template('login.html', error=error)
+        else:
+            # ユーザーネームが違う時の処理
+            return render_template('login.html', error=error)
     else:
+        # method='GET'のとき
         return render_template('login.html')
 
-
+# ---- ログアウト機能 ----
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect('/login')
 
-def add_data():
-	# model_sample.pyの仮データを挿入
-	with app.app_context():
-		db.create_all()
-		testUser = User(userName='testUser', displayName='testUser', mailAddress="test@gmail.com", password="abcde")
-		testUser2 = User(userName='testUser2', displayName='testUser2', mailAddress="test2@gmail.com", password="efghi")
-		db.session.add_all([testUser, testUser2])
-		db.session.commit()
-
 if __name__ == '__main__':
     with app.app_context():
         db.drop_all()
         db.create_all()
-        add_data()
-    app.run(debug=True)
+        app.run(debug=True)

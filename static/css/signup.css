@@ -1,0 +1,40 @@
+#mainContent {
+    /* text-align: center; */
+}
+.signupForm {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    width: 45%;
+}
+.inputArea {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 5%;
+}
+.inputArea p {
+    margin: 0;
+    text-align: left;
+}
+.inputArea input {
+    width: 100%;
+    line-height: 100%;
+    font-size: 16px;
+    height: 50px;
+}
+.signupSubmitButton {
+    background: #000;
+    color: #fff;
+    margin: 0 auto;
+    transition: 0.4s;
+    width: 80%;
+    height: 4rem;
+}
+.signupSubmitButton:hover {
+    background: #fff;
+    color: #000;
+}
+.privacyPolicy {
+    display: flex;
+    flex-direction: row;
+}
