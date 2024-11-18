@@ -3,12 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
     <title>Piction_TOP</title>
 </head>
 <body>
-    <h1>ようこそPictionへ</h1>
-    <a href="/signup" role="button">新規登録</a>
-    <a href="/logout" role="button">ログアウト</a>
+    <h1>Welcome to Piction!!!</h1>
+    <p>
+        Pictionへようこそ。<br>
+        このアプリは自分の絵がそのままオークションに出品できるアプリです。<br>
+        楽しんで遊んでもらえたらうれしいです。^^
+    </p>
+    <div class="pageLinkArea">
+        <div class="userPageLink">
+            <a href="/signup" role="button">新規登録する</a>
+        </div>
+        <div class="userPageLink">
+            <a href="/logout" role="button">ログアウトする</a>
+        </div>
+    </div>
+
+
 
     <!-- db内容表示(デバック用) -->
     <p>以下デバック用DB中身エリア</p>

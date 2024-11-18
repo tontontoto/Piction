@@ -28,9 +28,8 @@ def load_user(userId):
 #     result = hashlib.sha512(text).hexdigest()
 #     return result
 
-# ---- 新規登録ページ ----
+# ---- Welcomeページ ----
 @app.route('/', methods=['GET', 'POST'])
-@login_required
 def index():
     if request.method == 'GET':
         user = User.query.all()
@@ -69,7 +68,7 @@ def login():
             if user and bcrypt.check_password_hash(user.password, password):  # userがNoneでないかも確認
                 print("成功")
                 login_user(user)
-                return redirect('/')
+                return redirect('/top')
             else:
                 # パスワードが違う時の処理
                 return render_template('login.html', error=error)
@@ -86,6 +85,12 @@ def login():
 def logout():
     logout_user()
     return redirect('/login')
+
+@app.route('/top')
+@login_required
+def top():
+    return render_template('top.html')
+
 
 if __name__ == '__main__':
     with app.app_context():
