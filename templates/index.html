@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piction</title>
+</head>
+<body>
+    <h1>ようこそPictionへ</h1>
+    <a href="/signup" role="button">新規登録</a>
+    <a href="/logout" role="button">ログアウト</a>
+
+    <!-- db内容表示(デバック用) -->
+    <p>以下デバック用DB中身エリア</p>
+    {% for user in user %}
+        <p>userName :{{user.userName}}｜displayName :{{user.displayName}}｜mailAddress :{{user.mailAddress}}｜password :{{user.password}}</p>
+    {% endfor %}
+</body>
+</html>
