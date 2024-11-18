@@ -1,0 +1,116 @@
+@charset "UTF-8";
+
+body {
+    font-family: "游ゴシック Medium", "Yu Gothic Medium", "游ゴシック体", YuGothic,
+    sans-serif;
+    font-size: 16px;
+    color: #333;
+    background-color: #fff;
+    
+}
+
+main {
+    display: flex;  
+    justify-content: space-around;
+    margin: auto;
+    padding: 5% 0;
+    width: 70%;
+    color: #fff;
+}
+@media screen and (max-width: 768px) {
+    main {
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    #myCanvas {
+        margin-bottom: 15%;
+    }
+
+    .side{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+    }
+
+}
+
+#myCanvas {
+    border: #737172 solid 1px;
+    box-shadow: 0 5px 7px 0 #c0c0c0;
+    border-radius: 15px;
+}
+
+.side{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.side > * {
+    color: #070707;
+}
+.sideTop > *{
+    margin-bottom: 10%;
+}
+
+.timer{
+    border: #737172 solid 1px;
+    font-size: 100%; 
+    padding: 15px;
+    box-shadow: 0 5px 7px 0 #c0c0c0;
+    border-radius: 15px;
+}
+
+.timer p{
+    text-align: center;
+}
+
+.money{
+    border: #737172 solid 1px;
+    font-size: 100%; 
+    padding: 15px;
+    box-shadow: 0 5px 7px 0 #c0c0c0;
+    border-radius: 15px;
+}
+
+.money p{
+    text-align: center;
+}
+
+#download {
+    width: 100%;
+    margin-bottom: 10%;
+    padding: 10px 20px; 
+    font-size: 16px;
+    cursor: pointer; 
+    border-radius: 5px;
+    background-color: #ffffff; 
+    color: #ef087c; 
+    border: 1px solid #ef087c;
+}
+
+.btn .button {
+    width: 100%;
+    border: 1px solid #000000;
+    font-size: 16px;
+    font-weight: bold;
+    color: #070707;
+    background-color: #ffffff;
+    padding: 10px 30px;
+    border-radius: 0px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn .button:hover {
+    background-color: #070707;
+    color: #ffffff;
+    transition: all 0.4s;
+}
+#download:hover {
+    background-color: #ef087c;
+    color: #ffffff;
+    transition: all 0.4s;
+}

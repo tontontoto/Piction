@@ -1,22 +1,38 @@
-const canvas = document.getElementById("mycanvas");
+const canvas = document.getElementById("myCanvas");
 const context = canvas.getContext("2d");
 
-context.rect(0,0, canvas.width, canvas.height);
-context.fillStyle = "black";
+const size = Math.min(window.innerWidth * 0.8, window.innerHeight * 0.8);
+canvas.style.width = `${size}px`; // 見た目のサイズ
+canvas.style.height = `${size}px`; // 見た目のサイズ
+canvas.width = size; // 描画解像度（内部ピクセル数）
+canvas.height = size;
+
+window.addEventListener("resize", () => {
+  const size = Math.min(window.innerWidth * 0.8, window.innerHeight * 0.8);
+  canvas.style.width = `${size}px`;
+  canvas.style.height = `${size}px`;
+  canvas.width = size;
+  canvas.height = size;
+
+  // 必要なら再描画
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  context.fillStyle = "white";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+});
+
+context.rect(0, 0, canvas.width, canvas.height);
+context.fillStyle = "white";
 context.fill();
 context.beginPath();
-context.moveTo(100, 100);
-context.lineTo(100, 200);
 context.lineWidth = 5;
-context.strokeStyle = '#fff';
+context.strokeStyle = 'black';
 
 let mouse = {x:0, y:0};
 
 canvas.addEventListener("mousemove", function(e) {
-    mouse.x = e.pageX - this.offsetLeft;
-    mouse.y = e.pageY - this.offsetTop;
-
-    // console.log(mouse);
+  const rect = canvas.getBoundingClientRect();
+  mouse.x = e.clientX - rect.left;
+  mouse.y = e.clientY - rect.top;
 }, false);
 
 canvas.addEventListener("mousedown", function(e) {
@@ -27,8 +43,8 @@ canvas.addEventListener("mousedown", function(e) {
 }, false);
 
 canvas.addEventListener("mouseup", function() {
-    canvas.removeEventListener("mousemove", onPaint, false);
-})
+  canvas.removeEventListener("mousemove", onPaint, false);
+}, false);
 
 const onPaint = function() {
     context.lineTo(mouse.x, mouse.y);
@@ -37,7 +53,7 @@ const onPaint = function() {
 
 // 画像保存
 document.getElementById("download").onclick = (event) => {
-	let canvas = document.getElementById("mycanvas");
+	let canvas = document.getElementById("myCanvas");
 
 	let link = document.createElement("a");
 	link.href = canvas.toDataURL("image/jpeg");
