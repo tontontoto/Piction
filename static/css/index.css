@@ -2,3 +2,8 @@
     margin: 0;
     padding: 0;
 }
+.mainContents {
+    width: 70%;
+    margin: 0 auto;
+    text-align: center;
+}
