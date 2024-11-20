@@ -1,0 +1,28 @@
+#mainContents {
+    width: 70%;
+    margin: 5vw auto;
+    align-items: center;
+}
+.userInfo {
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+}
+.iconArea {
+    padding: 0 5%;
+}
+.iconArea img{
+    border-radius: 50%;
+}
+
+.users {
+    padding: 0 5%;
+}
+.displayName {
+    font-size: x-large;
+    font-weight: bold;
+}
+.userName,
+.mailAddress {
+    color: #989898;
+}

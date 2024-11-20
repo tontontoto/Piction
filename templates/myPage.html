@@ -1,12 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/myPage.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
     <title>My Page</title>
 </head>
+
 <body>
-    <h1>My page</h1>
-    
+    <div id="mainContents">
+        <div class="pageTitle">
+            <h1>マイページ</h1>
+        </div>
+        <div class="userInfo">
+            <div class="iconArea">
+                <img src="{{ url_for('static', filename='img_sample/icon_sample.jpg') }} " width="200px" class="icon">
+            </div>
+            <div class="users">
+                <p class="displayName">{{ user.displayName }}</p>
+                <p class="userName">@{{ user.userName }}</p>
+                <p class="mailAddress">{{ user.mailAddress }}</p>
+            </div>
+        </div>
+    </div>
+
+
+
 </body>
+
 </html>

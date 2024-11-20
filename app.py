@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, Response, make_response
+from flask import Flask, session, render_template, request, redirect, url_for, flash, Response, make_response
 from flask_sqlalchemy import SQLAlchemy
 from model_sample import db, User, Sale, Category, Bid, Like, Inquiry, WinningBid, Payment, PaymentWay, InquiryKind
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
@@ -10,7 +10,7 @@ import os
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sample.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.urandom(24)
+app.config['SECRET_KEY'] = os.urandom(24) # 複数ユーザーが各々のページにアクセスできる
 
 db.init_app(app)
 bcrypt = Bcrypt()
@@ -24,13 +24,19 @@ login_manager.init_app(app)
 def load_user(userId):
     return User.query.get(userId)
 
-# def calculate_password_hash(password):
-#     text = password.encode('utf-8')
-#     result = hashlib.sha512(text).hexdigest()
-#     return result
+# ログインしているユーザに対してのアクセス制限をかけるデコレータ
+def logout_required(f):
+    def decorated_function(*args, **kwargs):
+        # セッションにユーザーIDがある場合、リダイレクト
+        if 'userId' in session:
+            # ログイン後にアクセス可能ページにリダイレクト
+            return redirect(url_for('top'))  
+        return f(*args, **kwargs)
+    return decorated_function
 
 # ---- Welcomeページ ----
 @app.route('/', methods=['GET', 'POST'])
+@logout_required
 def index():
     if request.method == 'GET':
         user = User.query.all()
@@ -45,6 +51,7 @@ def signup():
         displayName = request.form.get('displayName')
         mailAddress = request.form.get('mailAddress')
         password = request.form.get('password')
+        # privacyPolicy = request.form.get('privacyPolicy')
 
         # passwordのハッシュ化
         hashdPassword = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -52,10 +59,15 @@ def signup():
 
         db.session.add(new_user)
         db.session.commit()
+
+        # ユーザーIDをセッションに保存　-> 後からIDから参照できるようになる
+        session['userId'] = new_user.userId
+        print(f'{userName}さんの登録が完了しました！')
         return redirect('/login')
     else:
         return render_template('signup.html')
-    
+
+
 # ---- ログインページ処理 ----
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -64,12 +76,15 @@ def login():
         password = request.form.get('password')
         error = "ユーザーネームまたはパスワードが違います"
         # Userテーブルからusernameに一致するユーザを取得
-        user = User.query.filter(User.userName==userName).first()
+        user = User.query.filter_by(userName=userName).first()
         if user:
             if user and bcrypt.check_password_hash(user.password, password):  # userがNoneでないかも確認
                 print("成功")
+                # sessionに保存
+                session['userId'] = user.userId
                 login_user(user)
-                return redirect('/top')
+                resp = redirect('/top')
+                return resp
             else:
                 # パスワードが違う時の処理
                 return render_template('login.html', error=error)
@@ -85,12 +100,22 @@ def login():
 @login_required
 def logout():
     logout_user()
+    session.pop('userId') # ログアウト時にsessionからユーザーIDを削除
+    print("ログアウト完了")
     return redirect('/login')
 
 @app.route('/top')
 @login_required
 def top():
     return render_template('top.html')
+
+# ---- Mypage ----
+@app.route('/myPage')
+@login_required
+def myPage():
+    userId = session.get('userId')
+    user = User.query.get(userId)
+    return render_template('myPage.html', user=user)
 
 
 if __name__ == '__main__':

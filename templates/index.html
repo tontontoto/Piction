@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-    <title>Piction_TOP</title>
+    <title>Welcome to Piction</title>
 </head>
 <body>
     <div class="mainContents">
@@ -13,8 +13,7 @@
     <div class="welcomeText">
         <p>
             Pictionへようこそ。<br>
-            このアプリは自分の絵がそのままオークションに出品できるアプリです。<br>
-            楽しんで遊んでもらえたらうれしいです。^^
+            このアプリは自分の絵がそのままオークションに出品できるアプリです。
         </p>
     </div>
 
@@ -23,17 +22,24 @@
             <a href="/signup" role="button">新規登録する</a>
         </div>
         <div class="userPageLink">
-            <a href="/logout" role="button">ログアウトする</a>
+            <a href="/login" role="button">ログインする</a>
         </div>
+        <br>
+
     </div>
 </div>
 
 
 
     <!-- db内容表示(デバック用) -->
-    <p>以下デバック用DB中身エリア</p>
+    <h5>デバック用</h5>
+    <h5>このページ（index.html）はログアウト時にしか見ることができない</h5>
+    <p>【以下デバック用DB中身エリア】</p>
     {% for user in user %}
         <p>userName :{{user.userName}}｜displayName :{{user.displayName}}｜mailAddress :{{user.mailAddress}}｜password :{{user.password}}</p>
     {% endfor %}
+    <div class="userPageLink">
+        <a href="/logout" role="button">ログアウトする</a>
+    </div>
 </body>
 </html>

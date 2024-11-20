@@ -6,33 +6,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>新規登録ページ</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/signup_login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
+    <script src="{{ url_for('static', filename='js/signup.js')}}"></script>
 </head>
 
 <body>
     <div id="mainContent">
         <h1>新規登録</h1>
-        <form method="POST" class="signupForm">
+        <form method="POST" class="signupForm" onsubmit="return validateForm(event)">
             <div class="inputArea">
-                <p>ユーザーネーム</p>
-                <input type="text" name="userName" placeholder="user name">
+                <p>ユーザーネーム<span class="errorMassage">【必須】</span></p>
+                <input type="text"  id="userName" name="userName" placeholder="user name">
             </div>
             <div class="inputArea">
-                <p>表示名</p>
-                <input type="text" name="displayName" placeholder="display name">
+                <p>
+                    表示名<span class="errorMassage">【必須】</span> 
+                </p>
+                <input type="text" id="displayName" name="displayName" placeholder="display name">
             </div>
             <div class="inputArea">
-                <p>メールアドレス</p>
-                <input type="mail" name="mailAddress" placeholder="mail address">
+                <p>
+                    メールアドレス<span class="errorMassage">【必須】</span>
+                </p>
+                <input type="mail" id="mailAddress" name="mailAddress" placeholder="mail address">
             </div>
             <div class="inputArea">
-                <p>パスワード</p>
-                <input type="password" name="password" placeholder="password">
+                <p>
+                    パスワード<span class="errorMassage">【必須】</span>
+                </p>
+                <input type="password" id="password" name="password" placeholder="password">
             </div>
+
             <div class="privacyPolicy">
-                <input type="checkbox" name="privacyPolicy">
+                <input type="checkbox" id="privacyPolicy" name="privacyPolicy" >
                 <p><a href="privacyPolicy.html">利用規約、プライバシーポリシー</a>に同意する。</p>
+                <div id="errorMassageCheckbox" class="errorMassage">
+                    <p>利用規約に同意する必要があります。</p>
+                </div>
             </div>
-            <input type="submit" value="登録する" class="signupSubmitButton"/>
+            <input type="submit" value="登録する" class="signupSubmitButton" />
 
 
         </form>
