@@ -1,0 +1,17 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#ranking {
+    width: 70%;
+    margin: 0 auto;
+    align-items: center;
+}
+
+.rankingTitle {
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+    align-items: center;
+}

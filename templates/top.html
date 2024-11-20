@@ -3,11 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/top.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
     <title>Piction Top</title>
 </head>
 <body>
     <h1>Piction トップページ</h1>
-    <p>rannkingu</p>
+    <div id="ranking">
+        <div class="rankingTitle">
+            <h2>人気の作品｜ランキング</h2>
+            <a href="top.html">もっと見る</a>
+        </div>
+        <div class="sale">
+            <img src="">
+            <p>title</p>
+            <p>表示名</p>
+            <span class="moreArrow">→</span>
+        </div>
+    </div>
     
     <a href="/myPage">マイページ</a><br><br>
 
