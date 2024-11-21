@@ -51,30 +51,59 @@ const onPaint = function() {
     context.stroke();
 }
 
-// 画像保存
-document.getElementById("download").onclick = (event) => {
-	let canvas = document.getElementById("myCanvas");
+// タイマー
+function startTimer(duration, display) {
+  var timer = duration, minutes, seconds;
+  setInterval(function () {
+      minutes = parseInt(timer / 60, 10);
+      seconds = parseInt(timer % 60, 10);
 
-	let link = document.createElement("a");
-	link.href = canvas.toDataURL("image/jpeg");
-	link.download = "test.jpg";
-	link.click();
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+
+      display.textContent = minutes + ":" + seconds;
+
+      if (--timer < 0) {
+          timer = duration;
+      }
+  }, 1000);
 }
 
+// 値段の変化
+let moneyElement = document.querySelector('.money p');
+let money = 502;
 
-download.addEventListener('click', () => {
-    const dataURL = canvas.toDataURL('image/png'); // 画像をBase64に変換
-    fetch('/save-image', {
-      method: 'POST',
-      body: JSON.stringify({ image: dataURL }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-                    }).then(response => {
-      if (response.ok) {
-        alert('Image saved successfully!');
-      } else {
-        alert('Failed to save image.');
-      }
-    });
-  });
+function updateMoney() {
+    if (moneyElement && money > 0) {
+        money -= 2;
+        moneyElement.textContent = money + '円';
+    }
+}
+
+setInterval(updateMoney, 1000);
+
+window.onload = function () {
+  var threeMinutes = 60 * 3,
+      display = document.querySelector('.timer p');
+  startTimer(threeMinutes, display);
+};
+
+// 描画内容の仮保存
+function saveCanvas() {
+  var canvas = document.getElementById('myCanvas');
+  var dataURL = canvas.toDataURL();
+  localStorage.setItem('canvasImage', dataURL);
+
+  // タイマーと値段を保存
+  var timerValue = document.querySelector('.timer p').textContent;
+  localStorage.setItem('timerValue', timerValue);
+  localStorage.setItem('moneyValue', money);
+}
+
+//ボタンをクリックしたときに保存する
+window.addEventListener('DOMContentLoaded', (event) => {
+  const saveButton = document.getElementById('saveButton');
+  if (saveButton) {
+    saveButton.addEventListener('click', saveCanvas);
+  }
+});

@@ -25,7 +25,7 @@ class User(db.Model):
     password = db.Column(db.String(15))
     registrationDate = db.Column(db.Date, default=date.today())
 
-    sales= db.relationship("Sale", back_populates="user")
+    sales= db.relationship("Sale", back_populates="user", foreign_keys="Sale.userId")
     bids = db.relationship("Bid", back_populates="user") 
     likes = db.relationship("Like", back_populates="user")
     inquiries = db.relationship("Inquiry", back_populates="user")
@@ -45,11 +45,12 @@ class Sale(db.Model):
     __tablename__ = "sale"
     saleId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userId = db.Column(db.Integer, ForeignKey('user.userId'))
-
+    displayName = db.Column(db.String(10), ForeignKey('user.displayName'))
     title = db.Column(db.String(40))
     displayName = db.Column(db.String(10))
     filePath = db.Column(db.String(30))
     startingPrice = db.Column(db.Integer)
+    creationTime = db.Column(db.String(5))
     startingTime = db.Column(db.DATETIME, default=datetime.now, nullable=False)
     finishTime = db.Column(db.DATETIME, default=datetime.now, nullable=False)
     saleStatus = db.Column(db.Boolean)

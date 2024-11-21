@@ -79,18 +79,6 @@ main {
     text-align: center;
 }
 
-#download {
-    width: 100%;
-    margin-bottom: 10%;
-    padding: 10px 20px; 
-    font-size: 16px;
-    cursor: pointer; 
-    border-radius: 5px;
-    background-color: #ffffff; 
-    color: #ef087c; 
-    border: 1px solid #ef087c;
-}
-
 .btn .button {
     width: 100%;
     border: 1px solid #000000;
@@ -104,13 +92,4 @@ main {
     transition: all 0.2s;
 }
 
-.btn .button:hover {
-    background-color: #070707;
-    color: #ffffff;
-    transition: all 0.4s;
-}
-#download:hover {
-    background-color: #ef087c;
-    color: #ffffff;
-    transition: all 0.4s;
-}
+

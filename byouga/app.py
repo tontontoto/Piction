@@ -26,35 +26,30 @@ def save_image_to_file(image_bytes, upload_folder):
         f.write(image_bytes)
     return file_path
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+@app.route('/draw')
+def draw():
+    return render_template('draw.html')
 
 @app.route('/result')
 def result():
     return render_template('result.html')
 
-@app.route('/add_user_template')
-def add_user_template():
-    data = User.query.all()
-    return render_template('add_user_template.html', data=data)
-
-@app.route('/add_user', methods=['POST'])
 def add_user():
-    userName = request.form.get('userName')
-    displayName = request.form.get('displayName')
-    mailAddress = request.form.get('mailAddress')
-    password = request.form.get('password')
-
-    new_user = User(userName=userName, displayName=displayName, mailAddress=mailAddress, password=password)
-    db.session.add(new_user)
+    dummy_users = [
+        User(userName='user1', displayName='User One', mailAddress='user1@example.com', password='password1'),
+        User(userName='user2', displayName='User Two', mailAddress='user2@example.com', password='password2'),
+        User(userName='user3', displayName='User Three', mailAddress='user3@example.com', password='password3')
+    ]
+    db.session.bulk_save_objects(dummy_users)
     db.session.commit()
-    return redirect(url_for('index'))
 
-@app.route('/save-image', methods=['POST'])
-def save_image():
+@app.route('/add_sale', methods=['POST'])
+def add_sale():
     data = request.get_json()
     image_data = data.get('image')
+    time = data.get('time')
+    price = data.get('price')
+    title = data.get('title')
 
     if not image_data:
         return jsonify({'error': 'No image data provided'}), 400
@@ -65,13 +60,15 @@ def save_image():
 
     file_path = save_image_to_file(image_bytes, app.config['UPLOAD_FOLDER'])
 
-    new_image = Sale(filePath=file_path)
-    db.session.add(new_image)
+    new_sale = Sale(title=title, filePath=file_path, startingPrice=price, creationTime=time)
+    db.session.add(new_sale)
     db.session.commit()
 
-    return jsonify({'message': 'Image saved successfully', 'file_path': file_path}), 200
+    return jsonify({'message': 'Sale added successfully'}), 201
 
-if __name__ == '__main__':
+if __name__ == '__main__': 
     with app.app_context():
         db.create_all()
+        # db.drop_all() # テーブルの全削除
+        # add_user() # userデータの仮挿入
     app.run(debug=True)
