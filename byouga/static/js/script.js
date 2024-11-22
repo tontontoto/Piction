@@ -1,5 +1,5 @@
 const canvas = document.getElementById("myCanvas");
-const context = canvas.getContext("2d");
+const stage = new createjs.Stage(canvas);
 
 const size = Math.min(window.innerWidth * 0.8, window.innerHeight * 0.8);
 canvas.style.width = `${size}px`; // 見た目のサイズ
@@ -15,41 +15,63 @@ window.addEventListener("resize", () => {
   canvas.height = size;
 
   // 必要なら再描画
-  context.clearRect(0, 0, canvas.width, canvas.height);
-  context.fillStyle = "white";
-  context.fillRect(0, 0, canvas.width, canvas.height);
+  stage.clear();
+  drawBackground();
 });
 
-context.rect(0, 0, canvas.width, canvas.height);
-context.fillStyle = "white";
-context.fill();
-context.beginPath();
-context.lineWidth = 5;
-context.strokeStyle = 'black';
-
-let mouse = {x:0, y:0};
-
-canvas.addEventListener("mousemove", function(e) {
-  const rect = canvas.getBoundingClientRect();
-  mouse.x = e.clientX - rect.left;
-  mouse.y = e.clientY - rect.top;
-}, false);
-
-canvas.addEventListener("mousedown", function(e) {
-    context.beginPath();
-    context.moveTo(mouse.x, mouse.y);
-
-    canvas.addEventListener("mousemove", onPaint, false);
-}, false);
-
-canvas.addEventListener("mouseup", function() {
-  canvas.removeEventListener("mousemove", onPaint, false);
-}, false);
-
-const onPaint = function() {
-    context.lineTo(mouse.x, mouse.y);
-    context.stroke();
+function drawBackground() {
+  const background = new createjs.Shape();
+  background.graphics.beginFill("white").drawRect(0, 0, canvas.width, canvas.height);
+  stage.addChild(background);
+  stage.update();
 }
+
+drawBackground();
+
+const line = new createjs.Shape();
+stage.addChild(line);
+
+let isDrawing = false;
+let isEraserActive = false;
+
+// 消しゴムボタンのクリックイベント
+const eraserButton = document.getElementById("eraser");
+eraserButton.addEventListener("click", () => {
+  isEraserActive = !isEraserActive; // トグル切り替え
+  eraserButton.textContent = isEraserActive ? "ペン" : "消しゴム"; // ボタンの表示切り替え
+});
+
+canvas.addEventListener("mousedown", (e) => {
+  isDrawing = true;
+
+  const rect = canvas.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+
+  if (isEraserActive) {
+    // 消しゴムの設定
+    line.graphics.setStrokeStyle(20).beginStroke("white").moveTo(mouseX, mouseY);
+  } else {
+    // 通常のペン設定
+    const paintColor = document.querySelector("#inputColor").value;
+    line.graphics.setStrokeStyle(5).beginStroke(paintColor).moveTo(mouseX, mouseY);
+  }
+});
+
+canvas.addEventListener("mousemove", (e) => {
+  if (!isDrawing) return;
+  const rect = canvas.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+  line.graphics.lineTo(mouseX, mouseY);
+  stage.update();
+});
+
+canvas.addEventListener("mouseup", () => {
+  isDrawing = false;
+  line.graphics.endStroke();
+  stage.update();
+});
 
 // タイマー
 function startTimer(duration, display) {
