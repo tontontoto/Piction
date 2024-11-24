@@ -65,7 +65,7 @@ class Sale(db.Model):
     likes = db.relationship("Like", back_populates="sale")
     payment = db.relationship("Payment", back_populates="sale", uselist=False)
 
-
+# 入札テーブル
 class Bid(db.Model):    
     __tablename__ = "bid"
     bidId = db.Column(db.Integer, primary_key=True, autoincrement=True)

@@ -16,6 +16,11 @@
     margin: 0;
     text-align: left;
 }
+#inputCharacterError {
+    color: red;
+    display: none;
+}
+
 .inputArea input {
     width: 100%;
     line-height: 100%;
@@ -24,6 +29,11 @@
 }
 
 .errorMassage {
+    color: red;
+    display: none;
+}
+/* メールアドレス部 */
+#validEmailAddresError {
     color: red;
     display: none;
 }
@@ -43,4 +53,14 @@
 .privacyPolicy {
     display: flex;
     flex-direction: row;
+}
+
+.passwordContaier {
+    position: relative;
+}
+#buttonEye {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate(-50%, -50%);
 }

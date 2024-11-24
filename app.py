@@ -63,7 +63,10 @@ def signup():
         # ユーザーIDをセッションに保存　-> 後からIDから参照できるようになる
         session['userId'] = new_user.userId
         print(f'{userName}さんの登録が完了しました！')
-        return redirect('/login')
+        # sessionに保存 / 新規登録時ログインページ介さずTOPに遷移
+        session['userId'] = new_user.userId
+        login_user(new_user)
+        return redirect('/top')
     else:
         return render_template('signup.html')
 
