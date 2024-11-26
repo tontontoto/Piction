@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/myPage.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/userSales.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
     <title>My Page</title>
 </head>
@@ -24,6 +25,9 @@
                 <p class="mailAddress">{{ user.mailAddress }}</p>
             </div>
         </div>
+        {% with sales = sales %}
+        {% include 'userSales.html' %}
+        {% endwith %}
     </div>
 
 

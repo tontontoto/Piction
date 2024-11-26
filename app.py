@@ -5,6 +5,7 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
 from datetime import date, datetime
+from sqlalchemy.orm import joinedload
 import os
 
 app = Flask(__name__)
@@ -34,10 +35,22 @@ def logout_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+# 仮データ
+# def add_user():
+#     dummy_users = [
+#         User(userName='user1', displayName='User One', mailAddress='user1@example.com', password='password1'),
+#         User(userName='user2', displayName='User Two', mailAddress='user2@example.com', password='password2'),
+#         User(userName='user3', displayName='User Three', mailAddress='user3@example.com', password='password3')
+#     ]
+#     db.session.bulk_save_objects(dummy_users)
+#     db.session.commit()
+
+
+
 # ---- Welcomeページ ----
 @app.route('/', methods=['GET', 'POST'])
 @logout_required
-def index():
+def index():      
     if request.method == 'GET':
         user = User.query.all()
         return render_template('index.html', user = user)
@@ -55,7 +68,7 @@ def signup():
 
         # passwordのハッシュ化
         hashdPassword = bcrypt.generate_password_hash(password).decode('utf-8')
-        new_user = User(userName=userName, displayName=displayName, mailAddress=mailAddress, password=hashdPassword) 
+        new_user = User(userName=userName, displayName=displayName, mailAddress=mailAddress, password=hashdPassword)
 
         db.session.add(new_user)
         db.session.commit()
@@ -66,6 +79,7 @@ def signup():
         # sessionに保存 / 新規登録時ログインページ介さずTOPに遷移
         session['userId'] = new_user.userId
         login_user(new_user)
+        print(session['userId'])
         return redirect('/top')
     else:
         return render_template('signup.html')
@@ -107,9 +121,11 @@ def logout():
     print("ログアウト完了")
     return redirect('/login')
 
+# ---- toppage ----
 @app.route('/top')
 @login_required
 def top():
+
     return render_template('top.html')
 
 # ---- Mypage ----
@@ -118,11 +134,35 @@ def top():
 def myPage():
     userId = session.get('userId')
     user = User.query.get(userId)
-    return render_template('myPage.html', user=user)
 
+    # session(ログイン状態のuserId)のsaleの行を取り出し、
+    # 外部キーのuserIdよりUserテーブルの中のデータを参照できる。
+    sales = db.session.query(Sale).join(User).filter_by(userId=userId).all()
+    for sale in sales:
+        display_name = sale.user.displayName
+        title = sale.title
+        print(title)
+        print(f"ユーザーの表示名: {display_name}")
+            
+    return render_template('myPage.html', user=user, sales=sales)
 
+def add_sale():
+    # userId = session.get('userId')
+    # if userId:
+    if True:
+        sale1 = Sale(userId=1, title="新宿の絵", filePass="./static/upload_images\image_7.png", startingPrice="300")
+        sale2 = Sale(userId=1, title="原宿の絵", filePass="./static/upload_images\image_5.png", startingPrice="1000")
+        sale3 = Sale(userId=2, title="渋谷の絵", filePass="./static/upload_images\image_5.png", startingPrice="2000")
+
+    db.session.add(sale1)
+    db.session.add(sale2)
+    db.session.add(sale3)
+    db.session.commit()
+    print(f"新しいSaleが登録されました。userId: {1}")
 if __name__ == '__main__':
     with app.app_context():
         db.drop_all()
         db.create_all()
+        # add_user()
+        add_sale()
         app.run(debug=True)
