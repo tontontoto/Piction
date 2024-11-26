@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>新規登録ページ</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/signup_login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
     <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/signup.js')}}" defer></script>
@@ -14,33 +14,32 @@
 <body>
     <div id="mainContent">  
         <h1>新規登録</h1>
-        <form method="POST" class="signupForm" onsubmit="return validateForm(event)">
+        <form method="POST" id="signupForm" onsubmit="return validateForm(event)">
             <!-- userName -->
             <div class="inputArea">
-                <p>ユーザーネーム(半角英数記号( _ )のみ)<span class="errorMassage">【必須】</span></p>
-                <p id="inputCharacterError">半角英数字とアンダーバー以外の文字は入力できません。</p>
-                <input type="text" id="userName" name="userName" placeholder="userName" maxlength="15" >
+                <p>ユーザーネーム(半角英数記号( _ )のみ)<span class="errorMessageRequired"></span></p>
+                <p ></p>
+                <input type="text" id="userName" name="userName" placeholder="2文字以上15字以内" maxlength="15" >
             </div>
             <!-- displayName -->
             <div class="inputArea">
-                <p>
-                    表示名<span class="errorMassage">【必須】</span> 
-                </p>
-                <input type="text" id="displayName" name="displayName" placeholder="display name">
+                <p>表示名</p>
+                <p><span id="displayNameCount">0</span> / 30</p>
+                <p class="errorMessageRequired"></p>
+                <!-- <p id="inputCharacterCountError">30文字以下で入力してください</p> -->
+                <input type="text" id="displayName" name="displayName" placeholder="30文字以内">
             </div>
             <!-- mailAddress -->
             <div class="inputArea">
-                <p>
-                    メールアドレス<span class="errorMassage">【必須】</span>
-                </p>
-                <p id="validEmailAddresError">正しいメールアドレスを入力してください。</p>
-                <input type="text" id="mailAddress" name="mailAddress" placeholder="mail address" required>
+                <p>メールアドレス</p>
+                <p class="errorMessageRequired"></p>
+                <!-- <p id="validEmailAddressError">正しいメールアドレスを入力してください。</p> -->
+                <input type="text" id="mailAddress" name="mailAddress" placeholder="Piction@sample.jp">
             </div>
             <!-- password -->
             <div class="inputArea">
-                <p>
-                    パスワード<span class="errorMassage">【必須】</span>
-                </p>
+                <p>パスワード</p>
+                <p class="errorMessageRequired"></p>
                 <div class="passwordContaier">
                     <input type="password" id="password" name="password" placeholder="password">
                     <span id="buttonEye" class="fa fa-eye" onclick="pushHideButton()"></span>
@@ -51,9 +50,7 @@
             <div class="privacyPolicy">
                 <input type="checkbox" id="privacyPolicy" name="privacyPolicy" >
                 <p><a href="privacyPolicy.html">利用規約、プライバシーポリシー</a>に同意する。</p>
-                <div id="errorMassageCheckbox" class="errorMassage">
-                    <p>利用規約に同意する必要があります。</p>
-                </div>
+                <p class="errorMessageRequired"></p>
             </div>
             <input type="submit" value="登録する" class="signupSubmitButton" />
 
