@@ -13,10 +13,6 @@ window.addEventListener("resize", () => {
   canvas.style.height = `${size}px`;
   canvas.width = size;
   canvas.height = size;
-
-  // 必要なら再描画
-  stage.clear();
-  drawBackground();
 });
 
 function drawBackground() {
@@ -34,11 +30,22 @@ stage.addChild(line);
 let isDrawing = false;
 let isEraserActive = false;
 
+const penButton = document.getElementById("pen");
+penButton.addEventListener("click", () => {
+  isEraserActive = false; // ペンに切り替え
+});
+
 // 消しゴムボタンのクリックイベント
 const eraserButton = document.getElementById("eraser");
 eraserButton.addEventListener("click", () => {
-  isEraserActive = !isEraserActive; // トグル切り替え
-  eraserButton.textContent = isEraserActive ? "ペン" : "消しゴム"; // ボタンの表示切り替え
+  isEraserActive = true; // 消しゴム切り替え
+});
+
+// クリアボタンのクリックイベント
+const clearButton = document.getElementById("reset");
+clearButton.addEventListener("click", () => {
+  line.graphics.clear();
+  stage.update();
 });
 
 canvas.addEventListener("mousedown", (e) => {
@@ -73,6 +80,8 @@ canvas.addEventListener("mouseup", () => {
   stage.update();
 });
 
+
+
 // タイマー
 function startTimer(duration, display) {
   var timer = duration, minutes, seconds;
@@ -85,8 +94,9 @@ function startTimer(duration, display) {
 
       display.textContent = minutes + ":" + seconds;
 
-      if (--timer < 0) {
-          timer = duration;
+      if (--timer < 0) { // タイマーが0になったら内容の保存＆リダイレクト
+        saveCanvas();
+        window.location.href = '/result';
       }
   }, 1000);
 }

@@ -9,11 +9,17 @@
 </head>
 <body>
     <main>
-        <canvas id="myCanvas"></canvas>
-        <div>
-            <input id="inputColor" type="color" value="#000" placeholder="カラーを選択">
-            <button id="eraser">消しゴムモード</button>
-            <button id="buttonReset">リセット</button>
+        <div class="drawArea">
+            <div class="selectTool">
+                <span>
+                    <label>カラー変更</label>
+                    <input id="inputColor" type="color" value="#000" placeholder="カラーを選択">
+                </span>
+                <button class="btn_push" id="pen">ペン</button>
+                <button class="btn_push" id="eraser">消しゴム</button>
+                <button class="btn_push" id="reset">リセット</button>
+            </div>
+            <canvas id="myCanvas"></canvas>  
         </div>
         
         <div class="side">

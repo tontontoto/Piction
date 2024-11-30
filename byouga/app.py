@@ -34,14 +34,14 @@ def draw():
 def result():
     return render_template('result.html')
 
-def add_user():
-    dummy_users = [
-        User(userName='user1', displayName='User One', mailAddress='user1@example.com', password='password1'),
-        User(userName='user2', displayName='User Two', mailAddress='user2@example.com', password='password2'),
-        User(userName='user3', displayName='User Three', mailAddress='user3@example.com', password='password3')
-    ]
-    db.session.bulk_save_objects(dummy_users)
-    db.session.commit()
+# def add_user():
+#     dummy_users = [
+#         User(userName='user1', displayName='User One', mailAddress='user1@example.com', password='password1'),
+#         User(userName='user2', displayName='User Two', mailAddress='user2@example.com', password='password2'),
+#         User(userName='user3', displayName='User Three', mailAddress='user3@example.com', password='password3')
+#     ]
+#     db.session.bulk_save_objects(dummy_users)
+#     db.session.commit()
 
 @app.route('/add_sale', methods=['POST'])
 def add_sale():
