@@ -12,8 +12,12 @@
 .rankingTitle {
     display: flex;
     flex-direction: row;
-    margin: 0 auto;
+    justify-content: center;
+    margin: 4vh auto;
     align-items: center;
+}
+.rankingTitle h2 {
+    margin-right: 30px;
 }
 
 /* sale box */

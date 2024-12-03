@@ -125,8 +125,8 @@ def logout():
 @app.route('/top')
 @login_required
 def top():
-
-    return render_template('top.html')
+    sales=db.session.query(Sale).all()        
+    return render_template('top.html', sales=sales)
 
 # ---- Mypage ----
 @app.route('/myPage')
@@ -143,26 +143,41 @@ def myPage():
         title = sale.title
         print(title)
         print(f"ユーザーの表示名: {display_name}")
+    listing_number = db.session.query(Sale).filter(Sale.userId == userId).count()
             
-    return render_template('myPage.html', user=user, sales=sales)
+    return render_template('myPage.html', user=user, sales=sales, listingNumber=listing_number)
 
 def add_sale():
+    pass
     # userId = session.get('userId')
     # if userId:
     if True:
-        sale1 = Sale(userId=1, title="新宿の絵", filePass="./static/upload_images\image_7.png", startingPrice="300")
-        sale2 = Sale(userId=1, title="原宿の絵", filePass="./static/upload_images\image_5.png", startingPrice="1000")
-        sale3 = Sale(userId=2, title="渋谷の絵", filePass="./static/upload_images\image_5.png", startingPrice="2000")
+        sale1 = Sale(userId=1, title="テストの絵", filePass="upload_images/image_5.png", startingPrice="300")
+        sale2 = Sale(userId=2, title="原宿の絵", filePass="upload_images/image_29.png", startingPrice="1000")
+        sale3 = Sale(userId=1, title="落書き", filePass="upload_images/image_6.png", startingPrice="2000")
+        sale4 = Sale(userId=1, title="くまさん", filePass="upload_images/image_22.png", startingPrice="2000")
+        sale5 = Sale(userId=2, title="へたくそ日本地図", filePass="upload_images/image_7.png", startingPrice="2000")
+        sale6 = Sale(userId=1, title="ももんが", filePass="upload_images/image_8.png", startingPrice="2000")
+        sale7 = Sale(userId=1, title="HACHIWARE", filePass="upload_images/image_9.png", startingPrice="2000")
+        # sale8 = Sale(userId=1, title="ももんが", filePass="upload_images/image_8.png", startingPrice="2000")
+        # sale9 = Sale(userId=1, title="ももんが", filePass="upload_images/image_8.png", startingPrice="2000")
+        # sale10 = Sale(userId=1, title="ももんが", filePass="upload_images/image_8.png", startingPrice="2000")
+        # sale11 = Sale(userId=1, title="ももんが", filePass="upload_images/image_8.png", startingPrice="2000")
 
     db.session.add(sale1)
     db.session.add(sale2)
     db.session.add(sale3)
+    db.session.add(sale4)
+    db.session.add(sale5)
+    db.session.add(sale6)
+    db.session.add(sale7)
     db.session.commit()
     print(f"新しいSaleが登録されました。userId: {1}")
+
 if __name__ == '__main__':
     with app.app_context():
         db.drop_all()
         db.create_all()
-        # add_user()
+        # # add_user()
         add_sale()
         app.run(debug=True)

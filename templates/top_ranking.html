@@ -1,34 +1,26 @@
-{% extends 'top.html' %}
-{% block ranking  %}
-    <div id="ranking">
-        <div class="rankingTitle">
-            <h2>人気の作品｜ランキング</h2>
-            <a href="top.html">もっと見る</a>
+<div id="ranking">
+    <div class="rankingTitle">
+        <h2>人気の作品｜ランキング</h2>
+        <a href="top.html">もっと見る</a>
+    </div>
+    <div class="sale">
+        <div class="saleBox" data-rank="No.1">
+            <img src="{{ url_for('static', filename='upload_images/image_8.png') }}" class="saleBoxImg">
+            <p class="saleTitle">ももんが</p>
+            <p>佐藤</p>
+            <img src="{{ url_for('static', filename='parts/heart.svg') }}" class="saleHeart">
         </div>
-        <div class="sale">
-            <div class="saleBox" data-rank="No.1">
-                <img src="{{ url_for('static', filename='img_sample/image_28.png') }}" class="saleBoxImg">
-                <p class="saleTitle">新宿ドライブ</p>
-                <p>佐藤</p>
-                <img src="{{ url_for('static', filename='img_sample/heart.svg') }}" class="saleHeart">
-            </div>
-            <div class="saleBox" data-rank="No.2">
-                <img src="{{ url_for('static', filename='img_sample/pencil-shirokuro.png') }}" class="saleBoxImg">
-                <p class="saleTitle">えんぴつ</p>
-                <p>田中</p>
-                <img src="{{ url_for('static', filename='img_sample/heart.svg') }}" class="saleHeart">
-            </div>
-            <div class="saleBox" data-rank="No.3">
-                <img src="{{ url_for('static', filename='img_sample/16507_color.png') }}" class="saleBoxImg">
-                <p class="saleTitle">お料理</p>
-                <p>鈴木</p>
-                <img src="{{ url_for('static', filename='img_sample/heart.svg') }}" class="saleHeart">
-            </div>
-            <div class="moreButton">
-                <button class="button">
-                    <a href="/myPage">もっとみる</a>
-                </button>
-            </div>
+        <div class="saleBox" data-rank="No.2">
+            <img src="{{ url_for('static', filename='upload_images/image_7.png') }}" class="saleBoxImg">
+            <p class="saleTitle">日本地図</p>
+            <p>田中</p>
+            <img src="{{ url_for('static', filename='parts/heart.svg') }}" class="saleHeart">
+        </div>
+        <div class="saleBox" data-rank="No.3">
+            <img src="{{ url_for('static', filename='upload_images/image_6.png') }}" class="saleBoxImg">
+            <p class="saleTitle">落書き</p>
+            <p>鈴木</p>
+            <img src="{{ url_for('static', filename='parts/heart.svg') }}" class="saleHeart">
         </div>
     </div>
-{% endblock %}
+</div>

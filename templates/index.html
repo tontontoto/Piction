@@ -1,38 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-    <title>Welcome to Piction</title>
+    <link rel="icon" href="../static/icon/favicon.png">
+    <title>Piction</title>
 </head>
+
 <body>
     <div class="mainContents">
-    <h1>Welcome to Piction!!!</h1>
-    <p>Pictionへようこそ</p>
-    <div class="welcomeText">
-        <p>
-            Pictionへようこそ。<br>
-            このアプリは自分の絵がそのままオークションに出品できるアプリです。
-        </p>
-    </div>
+        <img src="{{ url_for('static', filename='../static/icon/logo.png') }}" alt="Piction" id="PictionLogo">
 
-    <div class="pageLinkArea">
-        <div class="userPageLink">
-            <a href="/signup" role="button">新規登録する</a>
+        <h1>Welcome to Piction!!!</h1>
+        <div class="welcomeText">
+            <p>このアプリは自分の絵がそのままオークションに出品できるアプリです。</p>
         </div>
-        <div class="userPageLink">
-            <a href="/login" role="button">ログインする</a>
-        </div>
-        <br>
 
+        <div class="signupLoginArea">
+            <div class="userPageLink">
+                <a href="/signup" role="button" class="signupLoginButton" id="signupLink">Sign up</a>
+            </div>
+            <div class="userPageLink">
+                <a href="/login" role="button" class="signupLoginButton" id="loginLink">Login</a>
+            </div>
+        </div>
     </div>
-</div>
+    
+    <footer>
+        {% include 'x_share.html'%}
+    </footer>
 
 
 
     <!-- db内容表示(デバック用) -->
-    <h5>デバック用</h5>
+    <!-- <h5>デバック用</h5>
     <h5>このページ（index.html）はログアウト時にしか見ることができない</h5>
     <p>【以下デバック用DB中身エリア】</p>
     {% for user in user %}
@@ -40,6 +43,7 @@
     {% endfor %}
     <div class="userPageLink">
         <a href="/logout" role="button">ログアウトする</a>
-    </div>
+    </div> -->
 </body>
+
 </html>

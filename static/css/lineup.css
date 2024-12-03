@@ -1,0 +1,12 @@
+#lineup {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.lineupArea {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    flex-wrap: wrap;
+    gap: 20px;
+}

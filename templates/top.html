@@ -5,7 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header_footer.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/top.css') }}">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/topRanking.css') }}"> -->
+    
+    <!-- lineup css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/lineup.css') }}">
+    <!-- sale css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sale.css') }}">
+    
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
     <title>Piction Top</title>
 </head>
@@ -15,15 +22,13 @@
     {% include 'header.html' %}
     <!------------------->
 
-    <h1>Piction トップページ</h1>
-    {% block ranking %}
-    {% endblock %}
+    <!-- {% include 'top_ranking.html' %} -->
 
-    <div id="recommendProduct">
-        <div class="recommendProductTitle">
-            <h2>おすすめ商品　一覧</h2>
-        </div>
-    </div>
+    <!-- 商品一覧 -->
+    {% with sales = sales %}
+        {% include 'lineup.html' %}
+    {% endwith %}
+    
 
 
     <a href="/myPage">マイページ</a><br><br>

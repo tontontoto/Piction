@@ -1,0 +1,12 @@
+<!-- 商品のHTML -->
+<div class="saleBox">
+    <img src="{{ url_for('static', filename=sale.filePass) }}" alt="">
+    <div>
+        <h3>{{ sale.user.displayName }}</h3>
+        <p>{{ sale.title }}</p>
+        <p>¥None</p>
+
+        <!-- ハートSVG -->
+        <img src="{{ url_for('static', filename='parts/heart.svg') }}" alt="" width="100px" class="heartlogo">
+    </div>
+</div>
