@@ -1,0 +1,52 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+.mainContents {
+    width: 70%;
+    margin: 0 auto;
+    text-align: center;
+}
+#PictionLogo {
+    text-align: center;
+    margin-top: 10vh;
+}
+
+/* signupLoginArea */
+.signupLoginArea {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-top: 5vh;
+}
+
+.userPageLink {
+
+}
+
+.signupLoginButton {
+    display: block;
+    width: 160px;
+    height: 36px;
+    padding: 5px 5px 5px 5px; /* 内側の時計回りの余白 padding: 5px; と同じになります。 */
+    text-align: center;
+    color: #666;
+    line-height: 36px;
+    text-decoration: none;
+    background-color: #efefef;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+
+/* xShareButton */
+.xShareButton {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+}
+.xShareButton img{
+    width: 30px;
+    position: absolute;
+    display: flex;
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header_footer.css') }}">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/topRanking.css') }}"> -->
+    
+    <!-- lineup css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/lineup.css') }}">
+    <!-- sale css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sale.css') }}">
+    
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
+    
+    <script src="{{ url_for('static', filename='js/top.js') }}"></script>
+    <title>Piction Top</title>
+</head>
+
+<body>
+    <!-- ヘッダーエリア -->
+    {% include 'header.html' %}
+    <!------------------->
+
+    <!-- {% include 'top_ranking.html' %} -->
+
+    <!-- 商品一覧 -->
+    {% with sales = sales %}
+        {% include 'lineup.html' %}
+    {% endwith %}
+    
+
+
+    <a href="/myPage">マイページ</a><br><br>
+    <a href="/logout">ログアウトする</a><br><br>
+    <a href="/signup" role="button">新規登録する</a>
+
+    <!-- フッターエリア -->
+    {% include 'footer.html' %}
+    <!------------------->
+
+</body>
+
+</html>

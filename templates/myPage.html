@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/myPage.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/userSales.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
+    <title>My Page</title>
+</head>
+
+<body>
+    <header id="header">
+        <img src="{{ url_for('static', filename='icon/logo.png')}}" alt="Piction" id="logo">
+    </header>
+    <main id="main">
+        <div class="profile">
+            <div class="userIcon">
+                <img src="{{ url_for('static', filename='img_sample/icon_sample.jpg') }}" class="icon">
+            </div>
+            <div class="userInfo">
+                <p class="displayName">{{ user.displayName }}</p>
+                <p class="userName">@{{ user.userName }}</p>
+                <p class="mailAddress">
+                    <!-- <span><img src="{{ url_for('static', filename='parts/mail.svg') }}"></span> -->
+                    {{ user.mailAddress }}
+                </p>
+
+                <div class="userWantSale">
+                    <div class="listingNumber">
+                        <h3>出品</h3>
+                        <p>{{ listingNumber }}</p>
+                    </div>
+                    <div class="thumbsUpSaleNumber">
+                        <h3>いいねした商品</h3>
+                        <p>{{ listingNumber }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profileChange">
+                <button class="profileChangeButton">プロフィール変更</button>
+            </div>
+        </div>
+        <div class="flex1">
+            <div class="salesMoney">
+                <p>売上金</p>
+                <p>￥1,345</p>
+            </div>
+            <div class="flex2">
+                <div class="thumbsUpSaleList">
+                    <img src="{{ url_for('static', filename='../static/parts/heart.svg') }}" alt="heart">
+                    <p>いいね一覧</p>
+                    <img src="{{ url_for('static', filename='../static/parts/chevron-right.svg')}}" class="chevron-right">
+                </div>
+                <div class="thumbsUpSaleList">
+                    <img src="{{ url_for('static', filename='../static/parts/chart-line.svg') }}" alt="chart-line">
+                    <p>販売状況</p>
+                    <img src="{{ url_for('static', filename='../static/parts/chevron-right.svg')}}" class="chevron-right">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <hr class="separatorLine">
+    
+    <!-- 自分の出品物表示エリア -->
+    <div>
+        {% with sales = sales %}
+        {% include 'userSales.html' %}
+        {% endwith %}
+    </div>
+</body>
+
+</html>

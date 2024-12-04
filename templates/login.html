@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログインページ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/signup_login.css') }}">
+</head>
+<body>
+    <div id="mainContent">
+        <h1>ログイン</h1>
+        <p>{{ error }}</p>
+        <form method="POST" class="signupForm">
+            <div class="inputArea">
+                <p>ユーザーネーム</p>
+                <input type="text" name="userName" placeholder="user name">
+            </div>
+            <div class="inputArea">
+                <p>パスワード</p>
+                <input type="password" name="password" placeholder="password">
+            </div>
+            <input type="submit" value="ログインする" class="signupSubmitButton"/>
+        </form>
+        <a href="/signup" role="button">新規登録する</a>
+    </div>
+</body>
+</html>

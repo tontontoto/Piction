@@ -1,0 +1,14 @@
+<div class="userSales">
+    <p>あなたの出品物</p>
+    <div class="mySales">
+        {% for sale in sales %}
+        <div class="mySale">
+            <img src="{{ url_for('static', filename=sale.filePass) }}">
+            <div class="mySaleInfo">
+                <h3>{{ sale.title }}</h3>
+                <p>作：{{ sale.user.displayName }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
