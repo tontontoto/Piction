@@ -128,6 +128,9 @@ def top():
     sales=db.session.query(Sale).all()        
     return render_template('top.html', sales=sales)
 
+# ---- いいね情報受け取りroute ----
+
+
 # ---- Mypage ----
 @app.route('/myPage')
 @login_required

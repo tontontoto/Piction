@@ -7,6 +7,9 @@
         <p>¥None</p>
 
         <!-- ハートSVG -->
-        <img src="{{ url_for('static', filename='parts/heart.svg') }}" alt="" width="100px" class="heartlogo">
+        <button onclick="likeSale({{ sale.saleId }})"> 
+            <img src="{{ url_for('static', filename='parts/heart.svg') }}" alt="" width="100px" class="heartlogo">
+        </button>
     </div>
+
 </div>
