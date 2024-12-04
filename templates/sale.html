@@ -2,12 +2,12 @@
 <div class="saleBox">
     <img src="{{ url_for('static', filename=sale.filePass) }}" alt="">
     <div>
-        <h3>{{ sale.user.displayName }}</h3>
-        <p>{{ sale.title }}</p>
+        <h3>{{ sale.title }}</h3>
+        <p>{{ sale.user.displayName }}</p>
         <p>¥None</p>
 
         <!-- ハートSVG -->
-        <button onclick="likeSale({{ sale.saleId }})"> 
+        <button onclick="likeSale( {{ sale.saleId }} )"> 
             <img src="{{ url_for('static', filename='parts/heart.svg') }}" alt="" width="100px" class="heartlogo">
         </button>
     </div>

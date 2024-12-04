@@ -162,8 +162,8 @@ def add_sale():
         sale5 = Sale(userId=2, title="へたくそ日本地図", filePass="upload_images/image_7.png", startingPrice="2000")
         sale6 = Sale(userId=1, title="ももんが", filePass="upload_images/image_8.png", startingPrice="2000")
         sale7 = Sale(userId=1, title="HACHIWARE", filePass="upload_images/image_9.png", startingPrice="2000")
-        # sale8 = Sale(userId=1, title="ももんが", filePass="upload_images/image_8.png", startingPrice="2000")
-        # sale9 = Sale(userId=1, title="ももんが", filePass="upload_images/image_8.png", startingPrice="2000")
+        sale8 = Sale(userId=1, title="カレーライス", filePass="upload_images/image_10.png", startingPrice="2000")
+        sale9 = Sale(userId=1, title="ZX-25R", filePass="upload_images/image_11.png", startingPrice="2000")
         # sale10 = Sale(userId=1, title="ももんが", filePass="upload_images/image_8.png", startingPrice="2000")
         # sale11 = Sale(userId=1, title="ももんが", filePass="upload_images/image_8.png", startingPrice="2000")
 
@@ -174,6 +174,8 @@ def add_sale():
     db.session.add(sale5)
     db.session.add(sale6)
     db.session.add(sale7)
+    db.session.add(sale8)
+    db.session.add(sale9)
     db.session.commit()
     print(f"新しいSaleが登録されました。userId: {1}")
 
