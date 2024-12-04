@@ -24,8 +24,23 @@ function drawBackground() {
 
 drawBackground();
 
+const lineWidthInput = document.getElementById("lineWidth");
+const lineOpacityInput = document.getElementById("lineOpacity");
+
 const line = new createjs.Shape();
 stage.addChild(line);
+stage.update();
+
+// 初期の太さ
+let lineWidth = parseInt(lineWidthInput.value);
+let lineOpacity = parseFloat(lineOpacityInput.value);
+// 線の太さ更新
+lineWidthInput.addEventListener("input", () => {
+  lineWidth = parseInt(lineWidthInput.value);
+});
+lineOpacityInput.addEventListener("input", () => {
+  lineOpacity = parseFloat(lineOpacityInput.value);
+});
 
 let isDrawing = false;
 let isEraserActive = false;
@@ -33,35 +48,59 @@ let isEraserActive = false;
 const penButton = document.getElementById("pen");
 penButton.addEventListener("click", () => {
   isEraserActive = false; // ペンに切り替え
+  if (!isEraserActive) {
+    penButton.style.backgroundColor = "#ededed";
+    penButton.style.transform = "translateX(5px)";
+    penButton.style.zIndex = "0";
+
+    eraserButton.style.backgroundColor = "";
+    eraserButton.style.transform = "";
+  }
 });
 
 // 消しゴムボタンのクリックイベント
 const eraserButton = document.getElementById("eraser");
 eraserButton.addEventListener("click", () => {
   isEraserActive = true; // 消しゴム切り替え
+  if (isEraserActive) {
+    eraserButton.style.backgroundColor = "#ededed";
+    eraserButton.style.transform = "translateX(5px)";
+    eraserButton.style.zIndex = "0";
+
+    penButton.style.backgroundColor = "";
+    penButton.style.transform = "";
+  }
 });
 
 // クリアボタンのクリックイベント
 const clearButton = document.getElementById("reset");
 clearButton.addEventListener("click", () => {
-  line.graphics.clear();
-  stage.update();
+  var result = confirm("リセットしてもよろしいですか？"); // 確認ダイアログ
+  if(result == true){
+    line.graphics.clear();
+    stage.update();
+  }
 });
 
 canvas.addEventListener("mousedown", (e) => {
   isDrawing = true;
-
   const rect = canvas.getBoundingClientRect();
   const mouseX = e.clientX - rect.left;
   const mouseY = e.clientY - rect.top;
 
   if (isEraserActive) {
     // 消しゴムの設定
-    line.graphics.setStrokeStyle(20).beginStroke("white").moveTo(mouseX, mouseY);
+    line.graphics.setStrokeStyle(lineWidth).beginStroke("white").moveTo(mouseX, mouseY);
   } else {
     // 通常のペン設定
-    const paintColor = document.querySelector("#inputColor").value;
-    line.graphics.setStrokeStyle(5).beginStroke(paintColor).moveTo(mouseX, mouseY);
+    const paintColorHex = document.querySelector("#inputColor").value;
+
+    // 色を16進数から10進数のRGBに変換
+    const paintColorRGB = parseInt(paintColorHex.slice(1), 16); // #を除去して数値に変換
+    line.graphics
+    .setStrokeStyle(lineWidth)
+    .beginStroke(createjs.Graphics.getRGB(paintColorRGB, lineOpacity))
+    .moveTo(mouseX, mouseY);
   }
 });
 

@@ -53,7 +53,7 @@ class Sale(db.Model):
     creationTime = db.Column(db.String(5))
     startingTime = db.Column(db.DATETIME, default=datetime.now, nullable=False)
     finishTime = db.Column(db.DATETIME, default=datetime.now, nullable=False)
-    saleStatus = db.Column(db.Boolean)
+    saleStatus = db.Column(db.Boolean, default=True)
 
     user = db.relationship("User", back_populates="sales")
     categories = db.relationship("Category", secondary=saleCategoryAssociation, back_populates="sales")
