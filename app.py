@@ -38,9 +38,6 @@ def logout_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-
-
-
 # ---- ユーザーデータの仮挿入 ----
 # def add_user():
 #     dummy_users = [
@@ -50,8 +47,6 @@ def logout_required(f):
 #     ]
 #     db.session.bulk_save_objects(dummy_users)
 #     db.session.commit()
-
-
 
 # ---- Welcomeページ ----
 @app.route('/', methods=['GET', 'POST'])
@@ -157,6 +152,7 @@ def myPage():
     return render_template('myPage.html', user=user, sales=sales, listingNumber=listing_number)
 
 
+
 # image_dataを受け取り、base64デコードして画像データを返す
 def decode_image(image_data):
     try:
@@ -192,11 +188,16 @@ def add_sale():
     file_path = save_image_to_file(image_bytes, app.config['UPLOAD_FOLDER'])
     file_path = file_path.replace(app.config['UPLOAD_FOLDER'], 'upload_images')
 
-    new_sale = Sale(title=title, filePath=file_path, startingPrice=price, creationTime=time)
+    userId = session.get('userId')
+    user = User.query.get(userId)
+    displayName = user.displayName
+
+    new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=file_path, startingPrice=price, creationTime=time)
     db.session.add(new_sale)
     db.session.commit()
 
     return jsonify({'message': 'Sale added successfully'}), 201
+
 
 # ---- 描画ページ ----
 @app.route('/draw')
