@@ -1,4 +1,4 @@
-from flask import Flask, session, render_template, request, redirect, url_for, flash, Response, make_response
+from flask import Flask, session, render_template, request, redirect, url_for, flash, Response, make_response, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from model_sample import db, User, Sale, Category, Bid, Like, Inquiry, WinningBid, Payment, PaymentWay, InquiryKind
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
@@ -7,11 +7,14 @@ from flask_bcrypt import Bcrypt
 from datetime import date, datetime
 from sqlalchemy.orm import joinedload
 import os
+import base64
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sample.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.urandom(24) # 複数ユーザーが各々のページにアクセスできる
+app.config['UPLOAD_FOLDER'] = './static/upload_images'
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 db.init_app(app)
 bcrypt = Bcrypt()
@@ -35,7 +38,25 @@ def logout_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# 仮データ
+# image_dataを受け取り、base64デコードして画像データを返す
+def decode_image(image_data):
+    try:
+        image_data = image_data.split(",")[1]
+        return base64.b64decode(image_data)
+    except (IndexError, base64.binascii.Error):
+        return None
+
+# 画像データをファイルに保存し、ファイルパスを返す
+file_path = "upload_images"
+def save_image_to_file(image_bytes, upload_folder, upload_path):
+    file_name = f"image_{len(os.listdir(upload_folder)) + 1}.png"
+    file_path = os.path.join(upload_path, file_name)
+    with open(file_path, 'wb') as f:
+        f.write(image_bytes)
+    return file_path
+
+
+# ---- ユーザーデータの仮挿入 ----
 # def add_user():
 #     dummy_users = [
 #         User(userName='user1', displayName='User One', mailAddress='user1@example.com', password='password1'),
@@ -150,39 +171,44 @@ def myPage():
             
     return render_template('myPage.html', user=user, sales=sales, listingNumber=listing_number)
 
+# ---- 出品ページ処理 ----
+@app.route('/add_sale', methods=['POST'])
 def add_sale():
-    pass
-    # userId = session.get('userId')
-    # if userId:
-    if True:
-        sale1 = Sale(userId=1, title="テストの絵", filePass="upload_images/image_5.png", startingPrice="300")
-        sale2 = Sale(userId=2, title="原宿の絵", filePass="upload_images/image_29.png", startingPrice="1000")
-        sale3 = Sale(userId=1, title="落書き", filePass="upload_images/image_6.png", startingPrice="2000")
-        sale4 = Sale(userId=1, title="くまさん", filePass="upload_images/image_22.png", startingPrice="2000")
-        sale5 = Sale(userId=2, title="へたくそ日本地図", filePass="upload_images/image_7.png", startingPrice="2000")
-        sale6 = Sale(userId=1, title="ももんが", filePass="upload_images/image_8.png", startingPrice="2000")
-        sale7 = Sale(userId=1, title="HACHIWARE", filePass="upload_images/image_9.png", startingPrice="2000")
-        sale8 = Sale(userId=1, title="カレーライス", filePass="upload_images/image_10.png", startingPrice="2000")
-        sale9 = Sale(userId=1, title="ZX-25R", filePass="upload_images/image_11.png", startingPrice="2000")
-        # sale10 = Sale(userId=1, title="ももんが", filePass="upload_images/image_8.png", startingPrice="2000")
-        # sale11 = Sale(userId=1, title="ももんが", filePass="upload_images/image_8.png", startingPrice="2000")
+    data = request.get_json()
+    image_data = data.get('image')
+    time = data.get('time')
+    price = data.get('price')
+    title = data.get('title')
 
-    db.session.add(sale1)
-    db.session.add(sale2)
-    db.session.add(sale3)
-    db.session.add(sale4)
-    db.session.add(sale5)
-    db.session.add(sale6)
-    db.session.add(sale7)
-    db.session.add(sale8)
-    db.session.add(sale9)
+    if not image_data:
+        return jsonify({'error': 'No image data provided'}), 400
+
+    image_bytes = decode_image(image_data)
+    if not image_bytes:
+        return jsonify({'error': 'Invalid image data'}), 400
+
+    file_path = save_image_to_file(image_bytes, app.config['UPLOAD_FOLDER'])
+
+    new_sale = Sale(title=title, filePath=file_path, startingPrice=price, creationTime=time)
+    db.session.add(new_sale)
     db.session.commit()
-    print(f"新しいSaleが登録されました。userId: {1}")
 
-if __name__ == '__main__':
+    return jsonify({'message': 'Sale added successfully'}), 201
+
+# ---- 描画ページ ----
+@app.route('/draw')
+def draw():
+    return render_template('draw.html')
+
+# ---- 出品ページ処理 ----
+@app.route('/result')
+def result():
+    return render_template('result.html')
+
+if __name__ == '__main__': 
     with app.app_context():
-        db.drop_all()
+        db.drop_all() # テーブルの全削除
         db.create_all()
-        # # add_user()
-        add_sale()
-        app.run(debug=True)
+        
+        # add_user() # userデータの仮挿入
+    app.run(debug=True)

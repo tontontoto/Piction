@@ -1,0 +1,132 @@
+@charset "UTF-8";
+
+body {
+    font-family: "游ゴシック Medium", "Yu Gothic Medium", "游ゴシック体", YuGothic, sans-serif;
+    font-size: 16px;
+    color: #333;
+    background-color: #fff;
+    position: relative;
+}
+
+.backbotan {
+    position: absolute;
+    height: 30%;
+    top: 4%;
+    left: 4%;
+}
+
+.backbotan .btn {
+    font-size: 16px;
+    font-weight: bold;
+    color: #070707;
+    padding: 10px 30px;
+    border-radius: 0;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.backbotan .btn:hover {
+    color: #474747;
+    transition: all 0.4s;
+}
+
+main {
+    display: flex;
+    justify-content: space-around;
+    margin: auto;
+    padding: 5% 0;
+    width: 70%;
+    color: #fff;
+}
+@media screen and (max-width: 768px) {
+    main {
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .completedImg {
+        margin-bottom: 15%;
+    }
+
+    .side {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+    }
+    
+}
+
+.completedImg {
+    width: 60%;
+    aspect-ratio: 1/1;
+    border: 1px solid #737172;
+    box-shadow: 0 5px 7px 0 #c0c0c0;
+    border-radius: 15px;
+}
+
+.side{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.side > * p{
+    color: #070707;
+    margin: 0;
+}
+
+.timerResult p, .moneyResult p {
+    font-size: 32px;
+}
+
+.titleComponent{
+    margin-top: 5%;
+}
+.inputText, .label {
+    color: #333;
+}
+
+.label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: .9em;
+}
+
+.inputText {
+    width: 100%;
+    padding: 8px 10px;
+    border: none;
+    border-radius: 3px;
+    background: #f7f7f7;
+    font-size: 1em;
+    line-height: 1.5;
+}
+
+.inputText::placeholder {
+    color: #999;
+}
+
+.btn{
+    margin-top: 5%;
+
+}
+
+.btn .button {
+    width: 100%;
+    border: 1px solid #000000;
+    font-size: 16px;
+    font-weight: bold;
+    color: #070707;
+    background-color: #ff5a65;
+    padding: 10px 30px;
+    border-radius: 0px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn .button:hover {
+    background-color: #ff0011;
+    color: #ffffff;
+    transition: all 0.4s;
+}
