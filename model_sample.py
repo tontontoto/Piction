@@ -50,14 +50,15 @@ class Sale(db.Model):
     __tablename__ = "sale"
     saleId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userId = db.Column(db.Integer, ForeignKey('user.userId'))
-
+    displayName = db.Column(db.String(10), ForeignKey('user.displayName'))
     title = db.Column(db.String(40))
     displayName = db.Column(db.String(10))
-    filePass = db.Column(db.String(30))
+    filePath = db.Column(db.String(30))
     startingPrice = db.Column(db.Integer)
+    creationTime = db.Column(db.String(5))
     startingTime = db.Column(db.DATETIME, default=datetime.now, nullable=False)
     finishTime = db.Column(db.DATETIME, default=datetime.now, nullable=False)
-    saleStatus = db.Column(db.Boolean)
+    saleStatus = db.Column(db.Boolean, default=True)
 
     user = db.relationship("User", back_populates="sales")
     categories = db.relationship("Category", secondary=saleCategoryAssociation, back_populates="sales")
