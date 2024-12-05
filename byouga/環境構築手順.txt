@@ -1,6 +1,0 @@
-①仮想環境作成
-	py -m venv venv
-	./venv/Script/activate
-
-②インストール
-	pip install flask flask_sqlalchemy
