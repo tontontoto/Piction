@@ -38,22 +38,7 @@ def logout_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# image_dataを受け取り、base64デコードして画像データを返す
-def decode_image(image_data):
-    try:
-        image_data = image_data.split(",")[1]
-        return base64.b64decode(image_data)
-    except (IndexError, base64.binascii.Error):
-        return None
 
-# 画像データをファイルに保存し、ファイルパスを返す
-file_path = "upload_images"
-def save_image_to_file(image_bytes, upload_folder, upload_path):
-    file_name = f"image_{len(os.listdir(upload_folder)) + 1}.png"
-    file_path = os.path.join(upload_path, file_name)
-    with open(file_path, 'wb') as f:
-        f.write(image_bytes)
-    return file_path
 
 
 # ---- ユーザーデータの仮挿入 ----
@@ -171,6 +156,23 @@ def myPage():
             
     return render_template('myPage.html', user=user, sales=sales, listingNumber=listing_number)
 
+
+# image_dataを受け取り、base64デコードして画像データを返す
+def decode_image(image_data):
+    try:
+        image_data = image_data.split(",")[1]
+        return base64.b64decode(image_data)
+    except (IndexError, base64.binascii.Error):
+        return None
+
+# 画像データをファイルに保存し、ファイルパスを返す
+def save_image_to_file(image_bytes, upload_folder):
+    file_name = f"image_{len(os.listdir(upload_folder)) + 1}.png"
+    file_path = os.path.join(upload_folder, file_name).replace('\\', '/')
+    with open(file_path, 'wb') as f:
+        f.write(image_bytes)
+    return file_path
+
 # ---- 出品ページ処理 ----
 @app.route('/add_sale', methods=['POST'])
 def add_sale():
@@ -188,6 +190,7 @@ def add_sale():
         return jsonify({'error': 'Invalid image data'}), 400
 
     file_path = save_image_to_file(image_bytes, app.config['UPLOAD_FOLDER'])
+    file_path = file_path.replace(app.config['UPLOAD_FOLDER'], 'upload_images')
 
     new_sale = Sale(title=title, filePath=file_path, startingPrice=price, creationTime=time)
     db.session.add(new_sale)
