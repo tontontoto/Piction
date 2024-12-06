@@ -1,17 +1,3 @@
-// ハートクリック処理　(白 <==> ピンク)
-// document.getElementById('heart-icon').addEventListener('click', function () {
-//     // パスの色を変更
-//     const path = document.getElementById('heart-path');
-//     if (path.getAttribute('fill') === '#f03eb5') {
-//         path.setAttribute('fill', '#fff');
-//         path.setAttribute('stroke', '#000');
-//     } else {
-//         path.setAttribute('fill', '#f03eb5');
-//         path.setAttribute('stroke', '#f03eb5');
-//     }
-// });
-
-
 console.log("hello!");
 
 function likeSale(saleId, userId) {
