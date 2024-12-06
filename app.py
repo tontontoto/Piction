@@ -126,11 +126,43 @@ def logout():
 @app.route('/top')
 @login_required
 def top():
+    userId = session.get('userId') # 利用しているuserIdの取得
+    print("userIdです！", userId)
+    sales = Sale.query.all()  # すべての商品を取得
+    liked_sales = (
+        db.session.query(Like.saleId)
+        .filter_by(userId=userId)
+        .all()
+    )  # ユーザーが過去に「いいね」をした商品IDのリストを取得
+    liked_sale_ids = [sale[0] for sale in liked_sales]  # 取得したsaleIdをリスト化
     sales=db.session.query(Sale).all()        
-    return render_template('top.html', sales=sales)
+    return render_template('top.html', sales=sales, userId=userId, liked_sale_ids=liked_sale_ids)
 
 # ---- いいね情報受け取りroute ----
-
+@app.route('/like', methods=['POST'])
+def like_sale():
+    user_id = request.form['userId']
+    sale_id = request.form['saleId']
+    
+    # すでにこのユーザーがこの商品に「いいね」をしていないか確認
+    existing_like = Like.query.filter_by(saleId=sale_id, userId=user_id).first()
+    
+    if existing_like:
+        # すでに「いいね」している場合は削除
+        db.session.delete(existing_like)
+        db.session.commit()
+        action = 'removed'
+    else:
+        # 新たに「いいね」を追加
+        new_like = Like(userId=user_id, saleId=sale_id)
+        db.session.add(new_like)
+        db.session.commit()
+        action = 'added'
+    
+    # 「いいね」された商品に対する「いいね」の数を取得
+    like_count = Like.query.filter_by(saleId=sale_id).count()
+    print(f"Like count for sale {sale_id}: {like_count}")
+    return jsonify({'action': action, 'likeCount': like_count})
 
 # ---- Mypage ----
 @app.route('/myPage')
@@ -188,9 +220,9 @@ def add_sale():
     file_path = save_image_to_file(image_bytes, app.config['UPLOAD_FOLDER'])
     file_path = file_path.replace(app.config['UPLOAD_FOLDER'], 'upload_images')
 
-    userId = session.get('userId')
-    user = User.query.get(userId)
-    displayName = user.displayName
+    userId = session.get('userId') # 今使っているユーザーのuserIdの取得
+    user = User.query.get(userId) # userIdからuser情報受け取り
+    displayName = user.displayName # displayNameの取得
 
     new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=file_path, startingPrice=price, creationTime=time)
     db.session.add(new_sale)
