@@ -32,8 +32,8 @@ function likeSale(saleId, userId) {
             const heartIconPath = document.getElementById(`heart-path-${saleId}`);
             if (heartIconPath) {
                 if (data.action === 'added') {
-                    heartIconPath.setAttribute('fill', 'pink');
-                    heartIconPath.setAttribute('stroke', 'pink');
+                    heartIconPath.setAttribute('fill', '#f03eb5');
+                    heartIconPath.setAttribute('stroke', '#f03eb5');
                 } else {
                     heartIconPath.setAttribute('fill', '#fff');
                     heartIconPath.setAttribute('stroke', '#000');

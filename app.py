@@ -164,6 +164,15 @@ def like_sale():
     print(f"Like count for sale {sale_id}: {like_count}")
     return jsonify({'action': action, 'likeCount': like_count})
 
+# ---- いいね一覧ページ ----
+@app.route('/myLikeList')
+@login_required
+def myLikeList():
+    userId = session.get('userId')
+    myLikeList = db.session.query(Sale).join(Like).filter(Like.userId == userId).all()
+    print(myLikeList)
+    return render_template('myLikeList.html', myLikeList=myLikeList)
+
 # ---- Mypage ----
 @app.route('/myPage')
 @login_required

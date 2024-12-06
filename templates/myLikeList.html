@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- lineup css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/lineup.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sale.css') }}">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>いいね一覧</h1>
+    {% if myLikeList %}
+    <p>いいね件数</p>
+    <div class="lineupArea">
+        {% for sale in myLikeList %}
+            {% include 'sale.html' %}
+        {% endfor %}
+    </div>
+    {% else %}
+        <p>いいねはありません</p>
+        <p>他の人の商品をいいねしてみよう！</p>
+    {% endif %}
+</body>
+
+</html>
