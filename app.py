@@ -55,7 +55,11 @@ def index():
     if request.method == 'GET':
         user = User.query.all()
         return render_template('index.html', user = user)
-
+    
+# ---- saleDetail ----
+@app.route('/saleDetail')
+def saleDetail():
+    return render_template('saleDetail.html')
 
 # ---- サインアップページ処理 ----
 @app.route('/signup', methods=['GET', 'POST'])
