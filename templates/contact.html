@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>contact</title>
+    <link rel="stylesheet" href="../static/css/contact.css">
+</head>
+<body>
+    <div class="contactPage">
+        <h1>お問い合わせ</h1>
+        <div class="contactBox">
+            <h2>お名前</h2>
+            <input type="text" id="name" required>
+            <h2>お名前（フリガナ）</h2>
+            <input type="text" id="furigana" required>
+            <h2>メールアドレス</h2>
+            <input type="email" id="email" required>
+            <h2>電話番号</h2>
+            <input type="tel" id="phone" required>
+            <h2>件名</h2>
+            <p>
+                <select name="example">
+                    <option value="">選択してください</option>
+                    <option value="1">お問い合わせ</option>
+                    <option value="2">ご意見・ご感想</option>
+                    <option value="3">その他</option>
+                </select>
+            </p>
+            <h2>お問い合わせ内容</h2>
+            <textarea id="message" required></textarea>
+            <h2>添付ファイルのアップロード</h2>
+            <input type="file" id="attachment">
+        </div>
+            <div class="privacyPolicy" >
+                <input type="checkbox" id="privacy" name="privacy"/>
+                <label for="privacy">個人情報の取り扱いについて、<a href=".html">プライバシーポリシー</a>に同意する。</label>
+            </div>
+            <div id="errorMessages"></div>
+            <button type="submit">送信</button>
+        
+    </div>
+</body>
+</html>
