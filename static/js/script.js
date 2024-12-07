@@ -85,7 +85,7 @@ clearButton.addEventListener("click", () => {
 canvas.addEventListener("mousedown", (e) => {
   isDrawing = true;
   const rect = canvas.getBoundingClientRect();
-  const mouseX = e.clientX - rect.left;
+  const mouseX = e.clientX - rect.left; 
   const mouseY = e.clientY - rect.top;
 
   if (isEraserActive) {
@@ -100,7 +100,8 @@ canvas.addEventListener("mousedown", (e) => {
     line.graphics
     .setStrokeStyle(lineWidth)
     .beginStroke(createjs.Graphics.getRGB(paintColorRGB, lineOpacity))
-    .moveTo(mouseX, mouseY);
+    .moveTo(mouseX, mouseY)
+    .lineTo(mouseX, mouseY);
   }
 });
 

@@ -24,6 +24,33 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  // 要素を取得
+  const close = document.querySelector(".modalClose");
+  const container = document.querySelector(".modalContainer");
+  const open = document.getElementById("openModal");
+
+  // openボタンをクリックしたらモーダルウィンドウを表示する
+  open.addEventListener("click", () => {
+    container.classList.add("active"); // クラスを追加
+  });
+
+  // closeボタンをクリックしたらモーダルウィンドウを閉じる
+  close.addEventListener("click", () => {
+    container.classList.remove("active"); // クラスを削除
+  });
+
+  // モーダルウィンドウの外側をクリックしたら閉じる
+  container.addEventListener("click", (e) => {
+    if (
+      !e.target.closest(".modalBody") &&
+      container.classList.contains("active")
+    ) {
+      container.classList.remove("active");
+    }
+  });
+});
+
 //本保存
 const download = document.getElementById("download");
 download.addEventListener("click", () => {
@@ -53,31 +80,4 @@ download.addEventListener("click", () => {
     .then((title) => {
       console.log(title);
     });
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  // 要素を取得
-  const close = document.querySelector(".modalClose");
-  const container = document.querySelector(".modalContainer");
-  const open = document.getElementById("openModal");
-
-  // openボタンをクリックしたらモーダルウィンドウを表示する
-  open.addEventListener("click", () => {
-    container.classList.add("active"); // クラスを追加
-  });
-
-  // closeボタンをクリックしたらモーダルウィンドウを閉じる
-  close.addEventListener("click", () => {
-    container.classList.remove("active"); // クラスを削除
-  });
-
-  // モーダルウィンドウの外側をクリックしたら閉じる
-  container.addEventListener("click", (e) => {
-    if (
-      !e.target.closest(".modalBody") &&
-      container.classList.contains("active")
-    ) {
-      container.classList.remove("active");
-    }
-  });
 });

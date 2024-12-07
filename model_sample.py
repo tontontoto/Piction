@@ -51,7 +51,7 @@ class Sale(db.Model):
     saleId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userId = db.Column(db.Integer, ForeignKey('user.userId'))
     displayName = db.Column(db.String(10), ForeignKey('user.displayName'))
-    title = db.Column(db.String(40))
+    title = db.Column(db.String(40), default="無題")
     displayName = db.Column(db.String(10))
     filePath = db.Column(db.String(30))
     startingPrice = db.Column(db.Integer)
