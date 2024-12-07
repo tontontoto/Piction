@@ -87,10 +87,11 @@ canvas.addEventListener("mousedown", (e) => {
   const rect = canvas.getBoundingClientRect();
   const mouseX = e.clientX - rect.left; 
   const mouseY = e.clientY - rect.top;
+  
 
   if (isEraserActive) {
     // 消しゴムの設定
-    line.graphics.setStrokeStyle(lineWidth).beginStroke("white").moveTo(mouseX, mouseY);
+    line.graphics.setStrokeStyle(lineWidth, 1, "round").beginStroke("white").moveTo(mouseX, mouseY);
   } else {
     // 通常のペン設定
     const paintColorHex = document.querySelector("#inputColor").value;
@@ -98,10 +99,9 @@ canvas.addEventListener("mousedown", (e) => {
     // 色を16進数から10進数のRGBに変換
     const paintColorRGB = parseInt(paintColorHex.slice(1), 16); // #を除去して数値に変換
     line.graphics
-    .setStrokeStyle(lineWidth)
+    .setStrokeStyle(lineWidth, 1, "round")
     .beginStroke(createjs.Graphics.getRGB(paintColorRGB, lineOpacity))
-    .moveTo(mouseX, mouseY)
-    .lineTo(mouseX, mouseY);
+    .moveTo(mouseX, mouseY);
   }
 });
 
