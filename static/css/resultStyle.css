@@ -1,188 +1,214 @@
 @charset "UTF-8";
 
 body {
-    font-family: "游ゴシック Medium", "Yu Gothic Medium", "游ゴシック体", YuGothic, sans-serif;
-    font-size: 16px;
-    color: #333;
-    background-color: #fff;
-    position: relative;
+  font-family: "游ゴシック Medium", "Yu Gothic Medium", "游ゴシック体", YuGothic,
+    sans-serif;
+  font-size: 16px;
+  color: #333;
+  background-color: #fff;
+  position: relative;
 }
 
 .backbotan {
-    position: absolute;
-    height: 30%;
-    top: 4%;
-    left: 4%;
+  position: absolute;
+  height: 30%;
+  top: 4%;
+  left: 4%;
 }
 
 .backbotan .btn {
-    font-size: 16px;
-    font-weight: bold;
-    color: #070707;
-    padding: 10px 30px;
-    border-radius: 0;
-    text-decoration: none;
-    transition: all 0.2s;
+  font-size: 16px;
+  font-weight: bold;
+  color: #070707;
+  padding: 10px 30px;
+  border-radius: 0;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
 }
 
 .backbotan .btn:hover {
-    color: #474747;
-    transition: all 0.4s;
+  color: #474747;
+  transition: all 0.4s;
 }
 
 main {
-    display: flex;
-    justify-content: space-around;
-    margin: auto;
-    padding: 5% 0;
-    width: 70%;
-    color: #fff;
+  display: flex;
+  justify-content: space-around;
+  margin: auto;
+  padding: 5% 0;
+  width: 70%;
+  color: #fff;
 }
 @media screen and (max-width: 768px) {
-    main {
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-    }
+  main {
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-    .completedImg {
-        margin-bottom: 15%;
-    }
+  .completedImg {
+    margin-bottom: 15%;
+  }
 
-    .side {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        width: 100%;
-    }
-    
+  .side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+  }
 }
 
 .completedImg {
-    width: 60%;
-    aspect-ratio: 1/1;
-    border: 1px solid #737172;
-    box-shadow: 0 5px 7px 0 #c0c0c0;
-    border-radius: 15px;
+  width: 60%;
+  aspect-ratio: 1/1;
+  border: 1px solid #737172;
+  box-shadow: 0 5px 7px 0 #c0c0c0;
+  border-radius: 15px;
 }
 
-.side{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+.side {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
-.side > * p{
-    color: #070707;
-    margin: 0;
-}
-
-.timerResult p, .moneyResult p {
-    font-size: 32px;
+.side > * p {
+  color: #070707;
+  margin: 0;
 }
 
-.titleComponent{
-    margin-top: 5%;
+.timerResult p,
+.moneyResult p {
+  font-size: 32px;
 }
-.inputText, .label {
-    color: #333;
+
+.titleComponent {
+  margin-top: 5%;
+}
+.inputText,
+.label {
+  color: #333;
 }
 
 .label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: .9em;
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.9em;
 }
 
 .inputText {
-    width: 100%;
-    padding: 8px 10px;
-    border: none;
-    border-radius: 3px;
-    background: #f7f7f7;
-    font-size: 1em;
-    line-height: 1.5;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 3px;
+  background: #f7f7f7;
+  font-size: 1em;
+  line-height: 1.5;
 }
 
 .inputText::placeholder {
-    color: #999;
+  color: #999;
 }
 
-.btn{
-    margin-top: 5%;
-
+.btn {
+  margin-top: 5%;
 }
 
 .btn .button {
-    width: 100%;
-    border: 1px solid #000000;
-    font-size: 16px;
-    font-weight: bold;
-    color: #070707;
-    background-color: #ff5a65;
-    padding: 10px 30px;
-    border-radius: 0px;
-    text-decoration: none;
-    transition: all 0.2s;
+  width: 100%;
+  border: 1px solid #000000;
+  font-size: 16px;
+  font-weight: bold;
+  color: #070707;
+  background-color: #ff5a65;
+  padding: 10px 30px;
+  border-radius: 0px;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
 }
 
 .btn .button:hover {
-    background-color: #ff0011;
-    color: #ffffff;
-    transition: all 0.4s;
+  background-color: #ff0011;
+  color: #ffffff;
+  transition: all 0.4s;
 }
 
-.modal-container {
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    text-align: center;
-    background: rgba(0, 0, 0, 0.5);
-    overflow: auto;
-    opacity: 0;
-    visibility: hidden;
-    transition: .3s ease-out;
-    z-index: 9;
-  }
-  
-  .modal-container::before {
-    content: "";
-    display: inline-block;
-    vertical-align: middle;
-    height: 100%;
-  }
-  
-  .modal-container.active {
-    opacity: 1;
-    visibility: visible;
-  }
-  
-  .modal-body {
-    position: relative;
-    display: inline-block;
-    vertical-align: middle;
-    max-width: 500px;
-    width: 90%;
-  }
-  
-  .modal-close {
-    position: absolute;
-    top: -30px;
-    right: 0;
-    font-size: 14px;
-    color: #fff;
-    background: rgba(0,0,0,60%);
-    padding: 4px 15px;
-    cursor: pointer;
-    border-radius: 5px 5px 0 0;
-  }
-  
-  .modal-content {
-    background: #fff;
-    border: 2px solid #000;
-    text-align: left;
-    padding: 30px;
-    font-weight: bold;
-  }
-  
+.modalContainer {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.5);
+  overflow: auto;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s ease-out;
+  z-index: 9;
+}
+.modalContainer::before {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+}
+
+.modalContainer.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modalBody {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 500px;
+  width: 90%;
+}
+.inn {
+  text-align: center;
+}
+.btnArea {
+  display: flex;
+  justify-content: space-around;
+}
+.btnArea button {
+  font-size: 14px;
+  width: 10em;
+  color: #fff;
+  border: 1px solid #000000;
+  padding: 4px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.4s;
+}
+.btnArea button:hover {
+  transition: all 0.4s;
+}
+.confirm {
+  background-color: #ff5a65;
+}
+.confirm a{
+    text-decoration: none;
+    color: #070707;
+}
+
+.confirm:hover {
+  background-color: #ff0011;
+}
+.modalClose {
+  background: #333;
+}
+.modalClose:hover {
+  background-color: #000;
+}
+
+.modalContent {
+  background: #fff;
+  border: 1px solid #000000;
+  text-align: left;
+  padding: 30px;
+  font-weight: bold;
+}

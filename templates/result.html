@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <title>art</title>
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="../static/css/resultStyle.css">
     <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
 </head>
+
 <body>
     <form action="/draw" class="backbotan">
         <button type="submit" class="btn">&lt;最初から作り直す</button>
@@ -14,7 +16,7 @@
     <main>
         <!-- index.htmlで作成した画像を表示 -->
         <canvas id="myCanvas"></canvas>
-        
+
         <article class="side">
 
             <div class="timerResult">
@@ -29,27 +31,29 @@
                 <input type="text" id="title" class="inputText" placeholder="タイトル">
             </div>
             <div class="btn">
-                <button type="submit" class="button" id="download">出品</button>
+                <button type="submit" class="button" id="openModal">出品</button>
             </div>
-            
+
         </article>
     </main>
 
-    <div class="modal-container"><!-- モーダルウィンドウ本体の囲み -->
-        <div class="modal-body">
-          <button type="button" class="modal-close">close</button><!-- 閉じるボタン -->
-          <div class="modal-content"><!-- コンテンツエリア -->
-            <div class="inn">
-              <span class="en">FREE</span>
-              <p class="txt">無料提案・相談もお気軽に！</p>
+    <div class="modalContainer"><!-- モーダルウィンドウ -->
+        <div class="modalBody">
+            <div class="modalContent"><!-- コンテンツエリア -->
+                <div class="inn">
+                    <span class="en">確認</span>
+                    <p class="txt">本当に出品しますか？</p>
+                </div>
+                <div class="btnArea">
+                    <button type="button" class="confirm" id="download"><a href="/">出品</a></button>
+                    <button type="button" class="modalClose">キャンセル</button>
+                </div>
+
             </div>
-            <div class="btn-area">
-              <a href="/"></a>
-            </div>
-          </div>
         </div>
-      </div>
+    </div>
     <script src="../static/js/script.js"></script>
     <script src="../static/js/resultScript.js"></script>
 </body>
+
 </html>
