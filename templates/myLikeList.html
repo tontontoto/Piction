@@ -1,0 +1,35 @@
+<!-- myLikeList いいね一覧ページ -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/myLikeList.css') }}">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="title">
+        <a href="/top"><img src="{{ url_for('static', filename='parts/chevron-left.svg') }}" alt="cheron-left"></a>
+        <h1>いいね一覧</h1>
+    </div>
+    <p>いいね件数</p>
+    {% if myLikeList %}
+
+    <div class="myLikeListArea">
+        {% for sale in myLikeList %}
+        <div class="saleBox">
+            <img src="{{ url_for('static', filename=sale.filePath) }}" alt="saleImage" id="uploadImg" width="200px">
+            <h3>{{ sale.title }}</h3>
+            <p>￥{{ sale.startingPrice }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>いいねはありません</p>
+    <p>他の人の商品をいいねしてみよう！</p>
+    {% endif %}
+</body>
+
+</html>

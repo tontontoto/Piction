@@ -1,6 +1,6 @@
 <div id="lineup">
     <h2>商品一覧</h2>
-    {% with sales = sales %}
+    {% with sales = sales, user=user%}
     <div class="lineupArea">
         {% for sale in sales %}
             {% include 'sale.html' %}

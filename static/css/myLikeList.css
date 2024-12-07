@@ -1,0 +1,23 @@
+.title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.title img {
+    height: 40px;
+    width: auto;
+}
+img {
+    width: 200px;
+}
+
+
+.myLikeListArea {
+    width: 80%;
+    margin: 0 auto;
+
+}
+.saleBox {
+    display: flex;
+    flex-direction: row;
+} 

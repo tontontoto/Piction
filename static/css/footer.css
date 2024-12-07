@@ -1,0 +1,125 @@
+/* フッター */
+.footer {
+    /* position: absolute; */
+    bottom: 0;
+    width: 100%;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 10px 0px #777777;
+    padding: 40px 0 20px;
+    color: #000;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+.footer-logo {
+    color: #000;
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+}
+img {
+    width: 200px;
+}
+
+.footer-links {
+    display: flex;
+    gap: 30px;
+}
+
+.footer-column ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.footer-column ul li a {
+    color: #000;
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 2;
+    transition: color 0.3s;
+}
+
+.footer-column ul li a:hover {
+    color: #333;
+}
+
+.payment-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.payment-icons img {
+    width: 40px;
+    height: auto;
+}
+
+.footer-button {
+    display: flex;
+    align-items: center;
+}
+.footer-button button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.footer-button button a {
+    color: #fff; /* テキストの色を白に設定 */
+    text-decoration: none; /* 下線を消す */
+}
+
+.footer-button button:hover {
+    background-color: #333;
+}
+
+.footer-bottom {
+    text-align: center;
+    border-top:2px solid #3d3d3d;
+    padding-top: 10px;
+    margin-top: 20px;
+}
+
+.footer-bottom small {
+    font-size: 14px;
+    color: #000;
+}
+
+
+/* モバイル対応 */
+@media (max-width: 768px) {
+    .header-top {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .header-logo,
+    .search-box,
+    .header-icon {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .navigation-main ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .navigation-main ul li a {
+        padding: 5px 10px;
+    }
+}

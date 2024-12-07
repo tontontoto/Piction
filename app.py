@@ -38,9 +38,6 @@ def logout_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-
-
-
 # ---- ユーザーデータの仮挿入 ----
 # def add_user():
 #     dummy_users = [
@@ -50,8 +47,6 @@ def logout_required(f):
 #     ]
 #     db.session.bulk_save_objects(dummy_users)
 #     db.session.commit()
-
-
 
 # ---- Welcomeページ ----
 @app.route('/', methods=['GET', 'POST'])
@@ -131,11 +126,52 @@ def logout():
 @app.route('/top')
 @login_required
 def top():
+    userId = session.get('userId') # 利用しているuserIdの取得
+    print("userIdです！", userId)
+    sales = Sale.query.all()  # すべての商品を取得
+    liked_sales = (
+        db.session.query(Like.saleId)
+        .filter_by(userId=userId)
+        .all()
+    )  # ユーザーが過去に「いいね」をした商品IDのリストを取得
+    liked_sale_ids = [sale[0] for sale in liked_sales]  # 取得したsaleIdをリスト化
     sales=db.session.query(Sale).all()        
-    return render_template('top.html', sales=sales)
+    return render_template('top.html', sales=sales, userId=userId, liked_sale_ids=liked_sale_ids)
 
 # ---- いいね情報受け取りroute ----
+@app.route('/like', methods=['POST'])
+def like_sale():
+    user_id = request.form['userId']
+    sale_id = request.form['saleId']
+    
+    # すでにこのユーザーがこの商品に「いいね」をしていないか確認
+    existing_like = Like.query.filter_by(saleId=sale_id, userId=user_id).first()
+    
+    if existing_like:
+        # すでに「いいね」している場合は削除
+        db.session.delete(existing_like)
+        db.session.commit()
+        action = 'removed'
+    else:
+        # 新たに「いいね」を追加
+        new_like = Like(userId=user_id, saleId=sale_id)
+        db.session.add(new_like)
+        db.session.commit()
+        action = 'added'
+    
+    # 「いいね」された商品に対する「いいね」の数を取得
+    like_count = Like.query.filter_by(saleId=sale_id).count()
+    print(f"Like count for sale {sale_id}: {like_count}")
+    return jsonify({'action': action, 'likeCount': like_count})
 
+# ---- いいね一覧ページ ----
+@app.route('/myLikeList')
+@login_required
+def myLikeList():
+    userId = session.get('userId')
+    myLikeList = db.session.query(Sale).join(Like).filter(Like.userId == userId).all()
+    print(myLikeList)
+    return render_template('myLikeList.html', myLikeList=myLikeList)
 
 # ---- Mypage ----
 @app.route('/myPage')
@@ -155,6 +191,7 @@ def myPage():
     listing_number = db.session.query(Sale).filter(Sale.userId == userId).count()
             
     return render_template('myPage.html', user=user, sales=sales, listingNumber=listing_number)
+
 
 
 # image_dataを受け取り、base64デコードして画像データを返す
@@ -192,11 +229,16 @@ def add_sale():
     file_path = save_image_to_file(image_bytes, app.config['UPLOAD_FOLDER'])
     file_path = file_path.replace(app.config['UPLOAD_FOLDER'], 'upload_images')
 
-    new_sale = Sale(title=title, filePath=file_path, startingPrice=price, creationTime=time)
+    userId = session.get('userId') # 今使っているユーザーのuserIdの取得
+    user = User.query.get(userId) # userIdからuser情報受け取り
+    displayName = user.displayName # displayNameの取得
+
+    new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=file_path, startingPrice=price, creationTime=time)
     db.session.add(new_sale)
     db.session.commit()
 
     return jsonify({'message': 'Sale added successfully'}), 201
+
 
 # ---- 描画ページ ----
 @app.route('/draw')
@@ -215,3 +257,5 @@ if __name__ == '__main__':
         
         # add_user() # userデータの仮挿入
     app.run(debug=True)
+
+# sana

@@ -66,6 +66,10 @@ class Sale(db.Model):
     likes = db.relationship("Like", back_populates="sale")
     payment = db.relationship("Payment", back_populates="sale", uselist=False)
 
+    @property
+    def like_count(self):
+        return Like.query.filter_by(saleId=self.saleId).count()
+
 # 入札テーブル
 class Bid(db.Model):    
     __tablename__ = "bid"
