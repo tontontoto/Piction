@@ -12,11 +12,11 @@ window.onload = function() {
 };
 
 document.addEventListener('DOMContentLoaded', function() {
-    const time = localStorage.getItem('timerValue');
+    const time = localStorage.getItem('elapsedTime');
     const price = localStorage.getItem('moneyValue');
     
     if (time) {
-        document.querySelector('.timerResult p').textContent = `制作時間: ${time}`;
+        document.querySelector('.timerResult p2').textContent = time;
     }
     
     if (price) {
@@ -24,17 +24,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+const open = document.getElementById('download');
+    open.addEventListener('click', () => {
+      container.addClass('active');
+      return false;
+    });
+
 //本保存
 const download = document.getElementById('download');
 download.addEventListener('click', () => {
 
-  const time = localStorage.getItem('timerValue');
+  const time = localStorage.getItem('elapsedTime');
   const price = localStorage.getItem('moneyValue');
   const title = document.getElementById('title').value;
   const dataURL = canvas.toDataURL('image/png'); // 画像をBase64に変換
   
   localStorage.removeItem('canvasImage');
   localStorage.removeItem('timerValue');
+  localStorage.removeItem('elapsedTime');
   localStorage.removeItem('moneyValue');
   
   fetch('/add_sale', {
@@ -51,4 +58,28 @@ download.addEventListener('click', () => {
     }).then(title => {
       console.log(title);
     })
+  });
+
+  $(function(){
+    // 変数に要素を入れる
+    var close = $('.modal-close'),
+    container = $('.modal-container');
+   
+    //読み込んで5秒後にモーダルウィンドウを表示
+    // setTimeout(() => {
+    //   container.addClass('active');
+    //   return false;
+    // },5000);
+    
+    //closeボタンをクリックしたらモーダルウィンドウを閉じる
+    close.on('click',function(){
+      container.removeClass('active');
+    });
+   
+    //モーダルウィンドウの外側をクリックしたらモーダルウィンドウを閉じる
+    $(document).on('click',function(e) {
+      if(!$(e.target).closest('.modal-body').length) {
+        container.removeClass('active');
+      }
+    });
   });

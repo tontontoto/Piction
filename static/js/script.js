@@ -125,6 +125,10 @@ canvas.addEventListener("mouseup", () => {
 function startTimer(duration, display) {
   var timer = duration, minutes, seconds;
   setInterval(function () {
+
+      // 経過時間の計算
+      var elapsed = duration - timer;
+
       minutes = parseInt(timer / 60, 10);
       seconds = parseInt(timer % 60, 10);
 
@@ -133,11 +137,15 @@ function startTimer(duration, display) {
 
       display.textContent = minutes + ":" + seconds;
 
+      // 経過時間をローカルストレージに保存
+      localStorage.setItem('elapsedTime', elapsed);
+
       if (--timer < 0) { // タイマーが0になったら内容の保存＆リダイレクト
         saveCanvas();
         window.location.href = '/result';
       }
   }, 1000);
+    
 }
 
 // 値段の変化
