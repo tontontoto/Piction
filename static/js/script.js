@@ -101,7 +101,8 @@ canvas.addEventListener("mousedown", (e) => {
     line.graphics
     .setStrokeStyle(lineWidth, 1, "round")
     .beginStroke(createjs.Graphics.getRGB(paintColorRGB, lineOpacity))
-    .moveTo(mouseX, mouseY);
+    .moveTo(mouseX, mouseY)
+    .lineTo(mouseX, mouseY);
   }
 });
 

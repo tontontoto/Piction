@@ -78,17 +78,21 @@ main {
 .btn_push {
     display: inline-block;
     position: relative;
+    width: 9em;
     padding: 1em;
     background-color: #ffffff;
     color: #070707;
     text-align: center;
     text-decoration: none;
 }
-.btn_push:active {
+.btn_push:active{
     transform: translateX(5px);
     z-index: 0;
 }
-
+.selectTool button img{
+    scale: 0.5;
+    z-index: inherit;
+}
 .sliderContainer{
     grid-area: 5 / 1 / 6 / 5;
     color : #070707;
