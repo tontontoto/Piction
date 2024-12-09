@@ -6,26 +6,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/myLikeList.css') }}">
+    <script src="{{ url_for('static', filename='js/myLikeList.js') }}" defer></script>
     <title>Document</title>
 </head>
 
 <body>
-    <div class="title">
-        <a href="/top"><img src="{{ url_for('static', filename='parts/chevron-left.svg') }}" alt="cheron-left"></a>
-        <h1>いいね一覧</h1>
-    </div>
-    <p>いいね件数</p>
-    {% if myLikeList %}
-
-    <div class="myLikeListArea">
-        {% for sale in myLikeList %}
-        <div class="saleBox">
-            <img src="{{ url_for('static', filename=sale.filePath) }}" alt="saleImage" id="uploadImg" width="200px">
-            <h3>{{ sale.title }}</h3>
-            <p>￥{{ sale.startingPrice }}</p>
+    <!-- header部 -->
+    <header>
+        <div class="header-wrapper">
+            <div class="header-top">
+                <div class="header-logo">
+                    <h1>
+                        <a href="/top">
+                            <img src="{{ url_for('static', filename='icon/logo.png') }}" alt="">
+                        </a>
+                    </h1>
+                </div>
+                <div class="search-box">
+                    <form action="#">
+                        <input type="text" placeholder="Search">
+                        <button type="submit"><img src="{{ url_for('static', filename='parts/magnifyingglass.svg') }}"
+                                alt="いいね"></button>
+                    </form>
+                </div>
+                <div class="header-icon">
+                    <div class="headerNav">
+                        <!-- userIcon,displayName -->
+                        <div class="accountButton" class="navButton">
+                            <a href="/myPage" class="accountButtonLink">
+                                <img src="{{ url_for('static', filename='img/icon_sample.jpg') }}" alt="マイページ"
+                                    class="accountButtonIcon">
+                                <p>{{ user.displayName }}</p>
+                            </a>
+                        </div>
+                        <!-- myLikeList -->
+                        <div class="myLikeListButton">
+                            <a href="/myLikeList"><img src="{{ url_for('static', filename='parts/heart.svg') }}"
+                                    alt="いいね"></a>
+                        </div>
+                        <!-- draw -->
+                        <div class="drawButton" class="navButton">
+                            <a href="/draw">出品する</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        {% endfor %}
+    </header>
+
+    <div class="tableNav">
+        <div class="title">
+            <a href="/top"><img src="{{ url_for('static', filename='parts/chevron-left.svg') }}" alt="cheron-left"
+                    class="chevronLeftImg"></a>
+            <p>いいね一覧</p>
+        </div>
+        <!-- productSortSelectArea -->
+        <div class="productSortSelectArea">
+            <label class="productSortSelect">
+                <select id="productSortSelect" name="productSortSelect" onclick="submitSortOrder()">
+                    <option value="likedOrder">新しくいいねした順</option>
+                    <option value="orderCheapPrice">価格の安い順</option>
+                    <option value="orderHighPrice">価格の高い順</option>
+                </select>
+            </label>
+        </div>
     </div>
+
+    <div class="table-wrapper">
+        {% if myLikeList %}
+        <table class="likeListTable">
+            <thead>
+                <tr class="likeList_header">
+                    <th class="likeList_headerCulumn">画像</th>
+                    <th class="likeList_headerCulumn">作品名</th>
+                    <th class="likeList_headerCulumn">現在価格</th>
+                    <th class="likeList_headerCulumn">入札数</th>
+                    <th class="likeList_headerCulumn">残り時間</th>
+                </tr>
+            </thead>
+            <tbody id="myLikeListContainer">
+                {% for sale in myLikeList %}
+                <tr class="likeList_item">
+                    <td class="likeList_itemCulumn">
+                        <img src="{{ url_for('static', filename=sale.filePath) }}" alt="saleImage" id="uploadImg">
+                    </td>
+                    <td class="likeList_itemCulumn">{{ sale.title }}</td>
+                    <td class="likeList_itemCulumn">￥{{ sale.startingPrice }}</td>
+                    <td class="likeList_itemCulumn">xxx</td>
+                    <td class="likeList_itemCulumn">xx:xx</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+
     {% else %}
     <p>いいねはありません</p>
     <p>他の人の商品をいいねしてみよう！</p>

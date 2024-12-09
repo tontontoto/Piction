@@ -135,7 +135,67 @@ def top():
     return render_template('top.html', sales=sales)
 
 # ---- いいね情報受け取りroute ----
+@app.route('/like', methods=['POST'])
+def like_sale():
+    user_id = request.form['userId']
+    sale_id = request.form['saleId']
+    
+    # すでにこのユーザーがこの商品に「いいね」をしていないか確認
+    existing_like = Like.query.filter_by(saleId=sale_id, userId=user_id).first()
+    
+    if existing_like:
+        # すでに「いいね」している場合は削除
+        db.session.delete(existing_like)
+        db.session.commit()
+        action = 'removed'
+    else:
+        # 新たに「いいね」を追加
+        new_like = Like(userId=user_id, saleId=sale_id)
+        db.session.add(new_like)
+        db.session.commit()
+        action = 'added'
+    
+    # 「いいね」された商品に対する「いいね」の数を取得
+    like_count = Like.query.filter_by(saleId=sale_id).count()
+    print(f"Like count for sale {sale_id}: {like_count}")
+    return jsonify({'action': action, 'likeCount': like_count})
 
+# ---- いいね一覧ページ ----
+@app.route('/myLikeList')
+@login_required
+def myLikeList():
+    userId = session.get('userId')
+    user = User.query.get(userId) # userIdからそのユーザー情報を取得
+    myLikeList = db.session.query(Sale).join(Like).filter(Like.userId == userId).order_by(Like.likeId.desc()).all()
+    print(myLikeList)
+    return render_template('myLikeList.html', user=user, myLikeList=myLikeList)
+
+# ---- 並び順を渡すurl ----
+@app.route('/sort_products')
+def sort_products():
+    userId = session.get('userId')
+    sort_order = request.args.get('order', 'likeOrder')  # デフォルト値としてprice_ascを設定
+    print("並び替え：",sort_order)
+
+    # 並び替えの条件を動的に変更
+    if sort_order == 'likedOrder':
+        # いいねした順
+        myLikeList = db.session.query(Sale).join(Like).filter(Like.userId == userId).order_by(Like.likeId.desc()).all()
+    elif sort_order == 'orderCheapPrice':
+        # 価格の安い順
+        myLikeList = db.session.query(Sale).join(Like).filter(Like.userId == userId).order_by(Sale.startingPrice.asc()).all()
+    elif sort_order == 'orderHighPrice':
+        # 価格の高い順
+        myLikeList = db.session.query(Sale).join(Like).filter(Like.userId == userId).order_by(Sale.startingPrice.desc()).all()
+
+    # 商品情報を辞書形式に整形
+        # saleファイルパスを正しいURL形式に変換
+    for sale in myLikeList:
+        sale.filePath = url_for('static', filename=sale.filePath)
+
+    product_list = [{'id': sale.saleId, 'title': sale.title, 'startingPrice': sale.startingPrice, 'filePath': sale.filePath} for sale in myLikeList]
+    # 結果をJSON形式で返す
+    return jsonify(product_list)
 
 # ---- Mypage ----
 @app.route('/myPage')
