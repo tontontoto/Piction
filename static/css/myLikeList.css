@@ -1,23 +1,274 @@
+/* ---- header ----- */
+/* 全体の設定 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #000;
+}
+
+/* ヘッダー */
+header {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 10px 0;
+    border-bottom: #000 1px solid;
+}
+
+.header-wrapper {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.header-top {
+    max-width: 95%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 10px; /* 下のナビゲーションとの間隔 */
+}
+
+.header-logo {
+    width: 200px;
+    text-align: left;
+}
+
+.header-logo h1 a img {
+    height: 50px;
+    width: auto;
+}
+
+/* 検索ボックス */
+.search-box {
+    text-align: left;
+    flex: 2;
+    display: flex;
+    /* justify-content: center; */
+    max-width: 90%;
+}
+
+.search-box form {
+    text-align: left;
+    position: relative;
+    display: flex;
+    width: 100%;
+    max-width: 400px;
+}
+
+.search-box input[type="text"] {
+    padding: 8px 40px 8px 15px;
+    font-size: 16px;
+    border: 1px solid #000;
+    border-radius: 25px;
+    outline: none;
+    background-color: #fff;
+    width: 100%;
+}
+
+.search-box button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+}
+
+.search-box button img {
+    width: 18px;
+    height: 18px;
+}
+
+/* アイコンナビゲーション */
+.header-icon {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.headerNav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+.navButton {
+    align-items: center;
+}
+.accountButton a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-decoration: none;
+    color: #000;
+    white-space: nowrap;
+
+}
+.myLikeListButton {
+    background: #dfdfdf;
+    border-radius: 5px;
+}
+.myLikeListButton a {
+    display: flex;
+    align-items: center;
+}
+.myLikeListButton img {
+    vertical-align: middle; /* 画像の縦位置を中央に調整 */
+    width: 40px;
+    height: 40px;
+}
+.drawButton {
+    height: 100%;
+}
+.drawButton a {
+    display: flex;             /* フレックスボックスを使って要素を並べる */
+    align-items: center;       /* 中央揃え（縦方向） */
+    text-decoration: none;     /* リンクの下線を削除 */
+    padding: 5px 10px;         /* ボタンの内側の余白 */
+    background-color: #000000; /* ボタンの背景色 */
+    color: white;              /* ボタンの文字色 */
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+.accountButtonIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10em;
+}
+
+
+
+/* ---- contents ---- */
+.tableNav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 80%;
+    padding: 10px;
+    margin: 0 auto;
+}
 .title {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
+.title p {
+    font-size: 25px;
+    font-weight: bold;
+    line-height: rem;
+}
 .title img {
     height: 40px;
     width: auto;
 }
-img {
+.chevronLeftImg {
     width: 200px;
 }
 
-
-.myLikeListArea {
-    width: 80%;
-    margin: 0 auto;
-
-}
-.saleBox {
+/* productSortSelectArea */
+.productSortSelectArea {
     display: flex;
     flex-direction: row;
-} 
+}
+.productSortSelectArea img {
+    width: 70%;
+}
+.productSortSelect {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+}
+
+.productSortSelect::after {
+    position: absolute;
+    right: 15px;
+    width: 10px;
+    height: 7px;
+    background-color: #535353;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    content: '';
+    pointer-events: none;
+}
+
+.productSortSelect select {
+    appearance: none;
+    min-width: 230px;
+    height: 2.8em;
+    padding: .4em calc(.8em + 30px) .4em .8em;
+    border: none;
+    border-bottom: 2px solid #000000;
+    background-color: #fff;
+    color: #333333;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.productSortSelect select:focus {
+    outline: none;
+}
+
+/* myLikeList */
+.table-wrapper {
+    box-shadow: 0px 0px 15px -5px #777777;
+    border-radius: 10px;
+    padding: 11px;
+    margin: 0 auto;
+    width: 80%;
+}
+.likeListTable {
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+}
+.likeListTable th, 
+.likeListTable td {
+    border-right: 1px solid #838383;
+}
+.likeList_headerCulumn,
+.likeList_itemCulumn {
+    padding: 15px;
+    white-space: nowrap;
+}
+.likeList_headerCulumn {
+    font-size: 20px;
+}
+.likeList_itemCulumn {
+    font-size: 17px;
+}
+.likeListTable th:first-child, 
+.likeListTable td:first-child {
+    width: 135px;
+}
+.likeListTable th:last-child, 
+.likeListTable td:last-child {
+    border-right: none;
+}
+.likeListTable tr, 
+.likeListTable th {
+    border-bottom: 1px solid #b7b7b7;
+    transition: background-color 0.5s;
+}
+.likeListTable tr:last-child {
+    border-bottom: none;
+}
+.likeListTable tbody tr:hover {
+    background-color: #f0f0f0; /* ホバー時の背景色 */
+}
+
+
+
+#uploadImg {
+    width: 115px;
+    border: 1px solid #acacac;
+}
