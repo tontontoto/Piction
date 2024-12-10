@@ -266,6 +266,18 @@ def add_sale():
 
     return jsonify({'message': 'Sale added successfully'}), 201
 
+# ---- 入札ページ ----
+@app.route('/bid', methods=['POST'])
+def bid():
+    userId = session.get('userId')
+    saleId = request.form.get('saleId')
+    bidPrice = request.form.get('bidPrice')
+    sale = Sale.query.get(saleId)
+    bid = Bid(userId=userId, saleId=saleId, bidPrice=bidPrice)
+    db.session.add(bid)
+    db.session.commit()
+    return redirect('/top')
+
 # ---- 描画ページ ----
 @app.route('/draw')
 def draw():
