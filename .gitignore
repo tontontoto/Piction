@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 /__pycache__
 /venv
 /static/upload_images
-=======
-/__pycache__
-/venv
-/static/upload_images
->>>>>>> origin
+/instance
