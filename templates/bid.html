@@ -10,15 +10,22 @@
 </head>
 
 <body>
-    {{ hea}}
+    <!-- ヘッダーエリア -->
+    {% include 'header.html' %}
+    <!------------------->
+
     <h1>Available Items</h1>
     <ul>
-        {% for item in items %}
+        {% for sale in sales %}
         <li>
             <a href="{{ url_for('item_detail', item_id=item.id) }}">{{ item.title }}</a>
         </li>
         {% endfor %}
     </ul>
+
+    <!-- フッターエリア -->
+    {% include 'footer.html' %}
+    <!------------------->
 </body>
 
 </html>
