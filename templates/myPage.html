@@ -7,12 +7,15 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/myPage.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/userSales.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <title>My Page</title>
 </head>
 
 <body>
-    <header id="header">
-        <img src="{{ url_for('static', filename='icon/logo.png')}}" alt="Piction" id="logo">
+    <!-- ヘッダーエリア -->
+    {% include 'header.html' %}
+    <!------------------->
     </header>
     <main id="main">
         <div class="profile">
@@ -72,6 +75,10 @@
         {% include 'userSales.html' %}
         {% endwith %}
     </div>
+
+    <!-- フッターエリア -->
+    {% include 'footer.html' %}
+    <!------------------->
 </body>
 
 </html>
