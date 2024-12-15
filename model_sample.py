@@ -74,10 +74,10 @@ class Sale(db.Model):
 class Bid(db.Model):    
     __tablename__ = "bid"
     bidId = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    saleId = db.Column(db.String(6), ForeignKey('sale.saleId'))
+    saleId = db.Column(db.Integer, ForeignKey('sale.saleId'))
     userId = db.Column(db.Integer, ForeignKey('user.userId'))
 
-    bidPrice = db.Column(db.float , nullable=False)
+    bidPrice = db.Column(db.Integer)
     bidTime = db.Column(db.DATETIME, default=datetime.now, nullable=False)
 
     user = db.relationship("User", back_populates="bids")
