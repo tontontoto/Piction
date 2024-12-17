@@ -54,15 +54,7 @@ def index():
 def saleDetail(sale_id):
     # 商品情報をデータベースから取得
     sale = Sale.query.get(sale_id)
-    bids = Bid.query.all()
-    # formatted_bids = [
-    # {
-    #     "userId": f"{bid.userId:>4}",       # userIdを4文字に右揃え (スペース埋め)
-    #     "bidPrice": f"{bid.bidPrice:>4}",   # bidPriceを4桁に右揃え (スペース埋め)
-    #     "bidTime": bid.bidTime.strftime("%Y-%m-%d %H:%M:%S")  # bidTimeをフォーマット
-    # }
-    # for bid in bids
-    # ]
+    bids = Bid.query.filter_by(saleId=sale_id).all()
 
     if sale is None:
         # 商品が見つからない場合の処理
