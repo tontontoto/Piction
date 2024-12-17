@@ -54,7 +54,16 @@ def index():
 def saleDetail(sale_id):
     # 商品情報をデータベースから取得
     sale = Sale.query.get(sale_id)
-    
+    bids = Bid.query.all()
+    # formatted_bids = [
+    # {
+    #     "userId": f"{bid.userId:>4}",       # userIdを4文字に右揃え (スペース埋め)
+    #     "bidPrice": f"{bid.bidPrice:>4}",   # bidPriceを4桁に右揃え (スペース埋め)
+    #     "bidTime": bid.bidTime.strftime("%Y-%m-%d %H:%M:%S")  # bidTimeをフォーマット
+    # }
+    # for bid in bids
+    # ]
+
     if sale is None:
         # 商品が見つからない場合の処理
         return "商品が見つかりません", 404
@@ -63,7 +72,7 @@ def saleDetail(sale_id):
     if sale is None:
         flash('Sale not found', 'error')
         return redirect(url_for('top'))
-    return render_template('saleDetail.html', sale=sale)
+    return render_template('saleDetail.html', sale=sale, bids=bids)
 
     
 # MARK: bid
@@ -94,7 +103,7 @@ def signup():
         password = request.form.get('password')
         # privacyPolicy = request.form.get('privacyPolicy')
 
-        # passwordのハッシュ化s
+        # passwordのハッシュ化
         hashdPassword = bcrypt.generate_password_hash(password).decode('utf-8')
         new_user = User(userName=userName, displayName=displayName, mailAddress=mailAddress, password=hashdPassword)
 

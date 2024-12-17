@@ -55,14 +55,9 @@
         <div class="contents">
             <div class="scroll-contents">
                 <span>
-                    <p>ユーザー名   \xxx   yyyy/m/d   h:mm</p>
-                    <p>ユーザー名   \xxx   yyyy/m/d   h:mm</p>
-                    <p>ユーザー名   \xxx   yyyy/m/d   h:mm</p>
-                    <p>ユーザー名   \xxx   yyyy/m/d   h:mm</p>
-                    <p>ユーザー名   \xxx   yyyy/m/d   h:mm</p>
-                    <p>ユーザー名   \xxx   yyyy/m/d   h:mm</p>
-                    <p>ユーザー名   \xxx   yyyy/m/d   h:mm</p>
-                    <p>ユーザー名   \xxx   yyyy/m/d   h:mm</p>
+                    {% for bid in bids %}
+                        <p>{{ bid.userId }} {{ bid.bidPrice }} {{ bid.bidTime }}</p>
+                    {% endfor %}
                 </span>
             </div>
         </div>
