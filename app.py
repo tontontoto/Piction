@@ -55,8 +55,8 @@ def saleDetail(sale_id):
     # 商品情報をデータベースから取得
     sale = Sale.query.get(sale_id)
     bids = Bid.query.filter_by(saleId=sale_id).all()
-    user = User.query.get(sale.userId)
-    display_name = user.displayName if user else "Unknown"
+    currentPrice = db.session.query(Bid.bidPrice).filter_by(saleId=sale_id).order_by(Bid.bidPrice.desc()).first()
+    currentPrice = currentPrice[0] if currentPrice else sale.startingPrice
 
     if sale is None:
         # 商品が見つからない場合の処理
@@ -66,7 +66,7 @@ def saleDetail(sale_id):
     if sale is None:
         flash('Sale not found', 'error')
         return redirect(url_for('top'))
-    return render_template('saleDetail.html', sale=sale, bids=bids, display_name=display_name)
+    return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice)
 
     
 # MARK: 入札
@@ -291,7 +291,8 @@ def add_sale():
     displayName = user.displayName # displayNameの取得
 
     new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=file_path, startingPrice=price, creationTime=time)
-    db.session.add(new_sale)
+    new_bid = Bid(userId=userId, saleId=new_sale.saleId, bidPrice=price)
+    db.session.add(new_sale, new_bid)
     db.session.commit()
 
     return jsonify({'message': 'Sale added successfully'}), 201

@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const addHundredButton = document.getElementById("addHundred");
   const specifyInput = document.getElementById("specify");
   const addAmountButton = document.getElementById("addAmount");
+  const minBidPrice = document.getElementById("minBidPrice");
 
   let currentAmount = parseInt(
     document.getElementById("addAmount").textContent.replace(/[^0-9]/g, ""),
@@ -22,12 +23,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 入札ボタンのイベントリスナー
   bidButton.addEventListener("click", function () {
-    const specifiedAmount = parseInt(specifyInput.value, 10);
-    const finalAmount
-      = specifiedAmount ? parseInt(specifiedAmount, 10) : currentAmount;
+    const specifiedAmount = parseInt(specifyInput.value, 10) || 0;
+    const addAmount = parseInt(addAmountButton.textContent, 10);
+    const minBid = parseInt(minBidPrice.textContent, 10);
 
-    if (isNaN(finalAmount) || finalAmount <= 0) {
-      alert("有効な金額を入力してください");
+    let finalAmount = Math.max(specifiedAmount, addAmount);
+
+    if (isNaN(finalAmount) || finalAmount < minBid) {
+      alert("有効な金額を入力してください"+"specifiedAmount:"+specifiedAmount+"addAmount:"+addAmount+"minBid:"+minBid);
       return;
     }
 
@@ -43,13 +46,12 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((data) => {
         if (data.success) {
           alert("入札が成功しました");
+          location.reload();
         } else {
           alert(data.message || "入札に失敗しました");
-          // console.log(finalAmount);
       }})
       .catch((error) => {
         console.error("Error:", error);
-        // console.log(finalAmount);
         alert("入札に失敗しました");
       });
   });

@@ -24,15 +24,15 @@
             <hr>
             <p>制作時間:{{ sale.creationTime }}秒</p>
             <p>現在の入札価格</p>
-            <p id="currentPrice">{{ sale.startingPrice }}円</p>
+            <p id="currentPrice">{{ currentPrice }}円</p>
             <p>最低入札価格</p>
-            <p>\x,xxx</p>
+            <p id="minBidPrice">{{ currentPrice + 1 }}円</p>
         </div>
     </div>
     <br><br>
     <div class="button-contents">
         <div class="botan">
-            <button id="addAmount" name="amount">{{ sale.startingPrice }}</button>
+            <div class="addAmountBtn" name="amount">入札額：<span id="addAmount">{{ currentPrice }}</span>円</div>
         </div>
         <br>
         <div class="botan2">
@@ -55,11 +55,16 @@
         <div class="contents">
             <div class="scroll-contents">
                 <table>
+                    <tr>
+                        <th>入札者ID</th>
+                        <th>入札額</th>
+                        <th>日時</th>
+                    </tr>
                     {% for bid in bids %}
                         <tr>
-                            <td>{{ display_name }}</td>
+                            <td>{{ bid.userId }}</td>
                             <td>{{ bid.bidPrice }}円</td>
-                            <td>{{ bid.bidTime }}</td>
+                            <td>{{ bid.bidTime.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                         </tr>
                     {% endfor %}
                 </table>
