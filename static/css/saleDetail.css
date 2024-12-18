@@ -89,7 +89,13 @@
     transition: all 0.4s;
 }
 
-.wrapper h1{
+
+.bidHistory{
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+.bidHistory h1{
     text-align: center;
     font-size: 24px;
 }
@@ -104,6 +110,16 @@
     border: #737172 solid 1px;
     font-size: 14px; 
     width: 500px;
-    height:100px;
+    height:200px;
     overflow-y: scroll;
+}
+.scroll-contents table{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    border-collapse: collapse;
+}
+.scroll-contents table td{
+    padding: 5px;
+    text-align: right;
 }

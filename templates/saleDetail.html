@@ -50,15 +50,19 @@
         </div>
     </div>
     <br>
-    <div class="wrapper">
+    <div class="bidHistory">
         <h1>入札履歴</h1>
         <div class="contents">
             <div class="scroll-contents">
-                <span>
+                <table>
                     {% for bid in bids %}
-                        <p>{{ bid.userId }} {{ bid.bidPrice }} {{ bid.bidTime }}</p>
+                        <tr>
+                            <td>{{ display_name }}</td>
+                            <td>{{ bid.bidPrice }}円</td>
+                            <td>{{ bid.bidTime }}</td>
+                        </tr>
                     {% endfor %}
-                </span>
+                </table>
             </div>
         </div>
     </div>

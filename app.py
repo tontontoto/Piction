@@ -55,6 +55,8 @@ def saleDetail(sale_id):
     # 商品情報をデータベースから取得
     sale = Sale.query.get(sale_id)
     bids = Bid.query.filter_by(saleId=sale_id).all()
+    user = User.query.get(sale.userId)
+    display_name = user.displayName if user else "Unknown"
 
     if sale is None:
         # 商品が見つからない場合の処理
@@ -64,10 +66,10 @@ def saleDetail(sale_id):
     if sale is None:
         flash('Sale not found', 'error')
         return redirect(url_for('top'))
-    return render_template('saleDetail.html', sale=sale, bids=bids)
+    return render_template('saleDetail.html', sale=sale, bids=bids, display_name=display_name)
 
     
-# MARK: bid
+# MARK: 入札
 @app.route('/bid', methods=['POST'])
 @login_required
 def bid():
