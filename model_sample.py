@@ -53,6 +53,7 @@ class Sale(db.Model):
     displayName = db.Column(db.String(10), ForeignKey('user.displayName'))
     title = db.Column(db.String(40), default="無題")
     displayName = db.Column(db.String(10))
+    categoryId = db.Column(db.Integer, ForeignKey('category.categoryId'))
     filePath = db.Column(db.String(30))
     startingPrice = db.Column(db.Integer)
     creationTime = db.Column(db.String(5))
