@@ -78,10 +78,15 @@ def bid():
     sale_id = data.get('saleId')
     amount = data.get('amount')
     
+    # saleテーブルのcurrentPriceを更新
+    sale = Sale.query.filter_by(saleId=sale_id).first()
+    sale.currentPrice = amount
+    
     print(f"user_id:{userId}, sale_id: {sale_id}, amount: {amount}")
 
     # Bidテーブルに新しい入札を追加
     new_bid = Bid(userId=userId, saleId=sale_id, bidPrice=amount)
+    
     db.session.add(new_bid)
     db.session.commit()
 
@@ -159,6 +164,7 @@ def top():
     userId = session.get('userId') # 利用しているuserIdの取得
     print("userIdです！", userId)
     sales = Sale.query.all()  # すべての商品を取得
+    
     liked_sales = (
         db.session.query(Like.saleId)
         .filter_by(userId=userId)
@@ -175,7 +181,7 @@ def like_sale():
     sale_id = request.form['saleId']
     
     # すでにこのユーザーがこの商品に「いいね」をしていないか確認
-    existing_like = Like.query.filter_by(sale_id=sale_id, userId=user_id).first()
+    existing_like = Like.query.filter_by(saleId=sale_id, userId=user_id).first()
     
     if existing_like:
         # すでに「いいね」している場合は削除
@@ -190,7 +196,7 @@ def like_sale():
         action = 'added'
     
     # 「いいね」された商品に対する「いいね」の数を取得
-    like_count = Like.query.filter_by(sale_id=sale_id).count()
+    like_count = Like.query.filter_by(saleId=sale_id).count()
     print(f"Like count for sale {sale_id}: {like_count}")
     return jsonify({'action': action, 'likeCount': like_count})
 
@@ -227,7 +233,7 @@ def sort_products():
     for sale in myLikeList:
         sale.filePath = url_for('static', filename=sale.filePath)
 
-    product_list = [{'id': sale.sale_id, 'title': sale.title, 'startingPrice': sale.startingPrice, 'filePath': sale.filePath} for sale in myLikeList]
+    product_list = [{'id': sale.saleId, 'title': sale.title, 'startingPrice': sale.startingPrice, 'filePath': sale.filePath} for sale in myLikeList]
     # 結果をJSON形式で返す
     return jsonify(product_list)
 
@@ -290,7 +296,7 @@ def add_sale():
     user = User.query.get(userId) # userIdからuser情報受け取り
     displayName = user.displayName # displayNameの取得
 
-    new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=file_path, startingPrice=price, creationTime=time)
+    new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=file_path, startingPrice=price,currentPrice=price, creationTime=time)
     new_bid = Bid(userId=userId, saleId=new_sale.saleId, bidPrice=price)
     db.session.add(new_sale, new_bid)
     db.session.commit()
