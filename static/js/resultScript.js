@@ -67,7 +67,12 @@ download.addEventListener("click", () => {
   fetch("/add_sale", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ title, image: dataURL, time: time, price: price }),
+    body: JSON.stringify({ 
+      title, 
+      image: dataURL, 
+      time: time, 
+      price: price 
+    }),
   })
     .then((response) => {
       // 画像保存の結果を表示 デバック用

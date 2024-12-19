@@ -1,14 +1,16 @@
-from flask import Flask, session, render_template, request, redirect, url_for, flash, Response, make_response, jsonify
+# MARK:インポート
+from flask import Flask, render_template, request, redirect, url_for, flash, Response, make_response, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
 from model_sample import db, User, Sale, Category, Bid, Like, Inquiry, WinningBid, Payment, PaymentWay, InquiryKind
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
 from datetime import date, datetime
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, Session
 import os
 import base64
 
+# MARK:インスタンス化
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sample.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -23,6 +25,7 @@ login_manager = LoginManager()
 #アプリをログイン機能を紐付ける
 login_manager.init_app(app)
 
+# MARK:ログイン情報保持
 #現在のログインユーザーの情報を保持し、必要なときに参照できるようになる。
 @login_manager.user_loader
 def load_user(userId):
@@ -38,26 +41,53 @@ def logout_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# ---- ユーザーデータの仮挿入 ----
-# def add_user():
-#     dummy_users = [
-#         User(userName='user1', displayName='User One', mailAddress='user1@example.com', password='password1'),
-#         User(userName='user2', displayName='User Two', mailAddress='user2@example.com', password='password2'),
-#         User(userName='user3', displayName='User Three', mailAddress='user3@example.com', password='password3')
-#     ]
-#     db.session.bulk_save_objects(dummy_users)
-#     db.session.commit()
-
-# ---- Welcomeページ ----
+#　MARK: Welcomeページ 
 @app.route('/', methods=['GET', 'POST'])
 @logout_required
 def index():      
     if request.method == 'GET':
         user = User.query.all()
         return render_template('index.html', user = user)
+    
+# MARK: saleDetail
+@app.route('/saleDetail/<int:sale_id>', methods=['GET', 'POST'])
+def saleDetail(sale_id):
+    # 商品情報をデータベースから取得
+    sale = Sale.query.get(sale_id)
+    bids = Bid.query.filter_by(saleId=sale_id).all()
+    currentPrice = db.session.query(Bid.bidPrice).filter_by(saleId=sale_id).order_by(Bid.bidPrice.desc()).first()
+    currentPrice = currentPrice[0] if currentPrice else sale.startingPrice
 
+    if sale is None:
+        # 商品が見つからない場合の処理
+        return "商品が見つかりません", 404
+    
+    # 商品情報をテンプレートに渡す
+    if sale is None:
+        flash('Sale not found', 'error')
+        return redirect(url_for('top'))
+    return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice)
 
-# ---- サインアップページ処理 ----
+    
+# MARK: 入札
+@app.route('/bid', methods=['POST'])
+@login_required
+def bid():
+    data = request.get_json()
+    userId = session.get('userId')
+    sale_id = data.get('saleId')
+    amount = data.get('amount')
+    
+    print(f"user_id:{userId}, sale_id: {sale_id}, amount: {amount}")
+
+    # Bidテーブルに新しい入札を追加
+    new_bid = Bid(userId=userId, saleId=sale_id, bidPrice=amount)
+    db.session.add(new_bid)
+    db.session.commit()
+
+    return jsonify({'success': True, 'message': '入札が成功しました'})
+
+# MARK: サインアップページ
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -86,7 +116,7 @@ def signup():
         return render_template('signup.html')
 
 
-# ---- ログインページ処理 ----
+# MARK: ログインページ
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -113,7 +143,7 @@ def login():
         # method='GET'のとき
         return render_template('login.html')
 
-# ---- ログアウト機能 ----
+# MARK: ログアウト
 @app.route('/logout')
 @login_required
 def logout():
@@ -122,7 +152,7 @@ def logout():
     print("ログアウト完了")
     return redirect('/login')
 
-# ---- toppage ----
+# MARK: トップページ
 @app.route('/top')
 @login_required
 def top():
@@ -134,18 +164,18 @@ def top():
         .filter_by(userId=userId)
         .all()
     )  # ユーザーが過去に「いいね」をした商品IDのリストを取得
-    liked_sale_ids = [sale[0] for sale in liked_sales]  # 取得したsaleIdをリスト化
+    liked_sale_ids = [sale[0] for sale in liked_sales]  # 取得したsale_idをリスト化
     sales=db.session.query(Sale).all()        
     return render_template('top.html', sales=sales, userId=userId, liked_sale_ids=liked_sale_ids)
 
-# ---- いいね情報受け取りroute ----
+# MARK: いいね情報受け取りroute
 @app.route('/like', methods=['POST'])
 def like_sale():
     user_id = request.form['userId']
     sale_id = request.form['saleId']
     
     # すでにこのユーザーがこの商品に「いいね」をしていないか確認
-    existing_like = Like.query.filter_by(saleId=sale_id, userId=user_id).first()
+    existing_like = Like.query.filter_by(sale_id=sale_id, userId=user_id).first()
     
     if existing_like:
         # すでに「いいね」している場合は削除
@@ -160,11 +190,11 @@ def like_sale():
         action = 'added'
     
     # 「いいね」された商品に対する「いいね」の数を取得
-    like_count = Like.query.filter_by(saleId=sale_id).count()
+    like_count = Like.query.filter_by(sale_id=sale_id).count()
     print(f"Like count for sale {sale_id}: {like_count}")
     return jsonify({'action': action, 'likeCount': like_count})
 
-# ---- いいね一覧ページ ----
+# MARK: いいね一覧ページ
 @app.route('/myLikeList')
 @login_required
 def myLikeList():
@@ -174,7 +204,7 @@ def myLikeList():
     print(myLikeList)
     return render_template('myLikeList.html', user=user, myLikeList=myLikeList)
 
-# ---- 並び順を渡すurl ----
+# MARK: 並び順を渡すurl
 @app.route('/sort_products')
 def sort_products():
     userId = session.get('userId')
@@ -197,11 +227,11 @@ def sort_products():
     for sale in myLikeList:
         sale.filePath = url_for('static', filename=sale.filePath)
 
-    product_list = [{'id': sale.saleId, 'title': sale.title, 'startingPrice': sale.startingPrice, 'filePath': sale.filePath} for sale in myLikeList]
+    product_list = [{'id': sale.sale_id, 'title': sale.title, 'startingPrice': sale.startingPrice, 'filePath': sale.filePath} for sale in myLikeList]
     # 結果をJSON形式で返す
     return jsonify(product_list)
 
-# ---- Mypage ----
+# MARK: マイページ
 @app.route('/myPage')
 @login_required
 def myPage():
@@ -221,7 +251,7 @@ def myPage():
     return render_template('myPage.html', user=user, sales=sales, listingNumber=listing_number)
 
 
-# image_dataを受け取り、base64デコードして画像データを返す
+# MARK: canvas→画像変換
 def decode_image(image_data):
     try:
         image_data = image_data.split(",")[1]
@@ -229,7 +259,7 @@ def decode_image(image_data):
     except (IndexError, base64.binascii.Error):
         return None
 
-# 画像データをファイルに保存し、ファイルパスを返す
+# MARK: 画像保存
 def save_image_to_file(image_bytes, upload_folder):
     file_name = f"image_{len(os.listdir(upload_folder)) + 1}.png"
     file_path = os.path.join(upload_folder, file_name).replace('\\', '/')
@@ -237,7 +267,7 @@ def save_image_to_file(image_bytes, upload_folder):
         f.write(image_bytes)
     return file_path
 
-# ---- 出品ページ処理 ----
+# MARK:　出品ページ
 @app.route('/add_sale', methods=['POST'])
 def add_sale():
     data = request.get_json()
@@ -261,24 +291,36 @@ def add_sale():
     displayName = user.displayName # displayNameの取得
 
     new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=file_path, startingPrice=price, creationTime=time)
-    db.session.add(new_sale)
+    new_bid = Bid(userId=userId, saleId=new_sale.saleId, bidPrice=price)
+    db.session.add(new_sale, new_bid)
     db.session.commit()
 
     return jsonify({'message': 'Sale added successfully'}), 201
 
-# ---- 描画ページ ----
+# MARK: 描画ページ
 @app.route('/draw')
 def draw():
     return render_template('draw.html')
 
-# ---- 出品ページ処理 ----
+# MARK: 出品ページ処理
 @app.route('/result')
 def result():
     return render_template('result.html')
 
+# ---- ユーザーデータの仮挿入 ----
+# def add_user():
+#     dummy_users = [
+#         User(userName='user1', displayName='User One', mailAddress='user1@example.com', password='password1'),
+#         User(userName='user2', displayName='User Two', mailAddress='user2@example.com', password='password2'),
+#         User(userName='user3', displayName='User Three', mailAddress='user3@example.com', password='password3')
+#     ]
+#     db.session.bulk_save_objects(dummy_users)
+#     db.session.commit()
+
+# MARK: テーブルの作成
 if __name__ == '__main__': 
     with app.app_context():
-        db.drop_all() # テーブルの全削除
+        # db.drop_all() # テーブルの全削除
         db.create_all()
         # add_user() # userデータの仮挿入
     app.run(debug=True)

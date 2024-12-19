@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/saleDetail.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <script src="{{ url_for('static', filename='js/saleDetail.js') }}"></script>
+    <title>Document</title>
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <div class="flex-container">
+        <div class="main">
+            <img src="{{ url_for('static', filename=sale.filePath) }}" alt="">
+        </div>
+        <div class="text">
+            <h1>{{ sale.title }}</h1>
+            <p id="saleId" data-sale-id="{{ sale.saleId }}">{{ sale.saleId }}</p>
+            <p>{{ sale.displayName }}</p>
+            <p>カテゴリ/サブカテゴリ</p>
+            <hr>
+            <p>制作時間:{{ sale.creationTime }}秒</p>
+            <p>現在の入札価格</p>
+            <p id="currentPrice">{{ currentPrice }}円</p>
+            <p>最低入札価格</p>
+            <p id="minBidPrice">{{ currentPrice + 1 }}円</p>
+        </div>
+    </div>
+    <br><br>
+    <div class="button-contents">
+        <div class="botan">
+            <div class="addAmountBtn" name="amount">入札額：<span id="addAmount">{{ currentPrice }}</span>円</div>
+        </div>
+        <br>
+        <div class="botan2">
+            <button class="btn" id="addTen">+10</button>
+            <button class="btn" id="addHundred">+100</button>
+        </div>
+        <br>
+        <div class="botan">
+            <input class="btn" id="specify" type="number" placeholder="金額を指定">
+        </div>
+        <br>
+        <br>
+        <div class="botan">
+            <input type="submit" class="btn2" id="bid" value="入札"></input>
+        </div>
+    </div>
+    <br>
+    <div class="bidHistory">
+        <h1>入札履歴</h1>
+        <div class="contents">
+            <div class="scroll-contents">
+                <table>
+                    <tr>
+                        <th>入札者ID</th>
+                        <th>入札額</th>
+                        <th>日時</th>
+                    </tr>
+                    {% for bid in bids %}
+                        <tr>
+                            <td>{{ bid.userId }}</td>
+                            <td>{{ bid.bidPrice }}円</td>
+                            <td>{{ bid.bidTime.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+    {% include 'footer.html' %}
+</body>
+</html>

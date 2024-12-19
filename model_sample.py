@@ -55,6 +55,7 @@ class Sale(db.Model):
     displayName = db.Column(db.String(10))
     categoryId = db.Column(db.Integer, ForeignKey('category.categoryId'))
     filePath = db.Column(db.String(30))
+    categoryId = db.Column(db.Integer, ForeignKey('category.categoryId'))
     startingPrice = db.Column(db.Integer)
     creationTime = db.Column(db.String(5))
     startingTime = db.Column(db.DATETIME, default=datetime.now, nullable=False)
@@ -75,7 +76,7 @@ class Sale(db.Model):
 class Bid(db.Model):    
     __tablename__ = "bid"
     bidId = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    saleId = db.Column(db.String(6), ForeignKey('sale.saleId'))
+    saleId = db.Column(db.Integer, ForeignKey('sale.saleId'))
     userId = db.Column(db.Integer, ForeignKey('user.userId'))
 
     bidPrice = db.Column(db.Integer)
