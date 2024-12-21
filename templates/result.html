@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/css/result.css">
     <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
 </head>
 
 <body>
@@ -20,11 +22,26 @@
         <article class="side">
 
             <div class="timerResult">
-                <p>制作時間: <p2>x:xx</p2>秒</p>
+                <p>制作時間: <p2>0:00</p2>秒</p>
             </div>
             <div class="moneyResult">
-                <p>出品価格: <p2>yyy</p2>円</p>
+                <p>出品価格: <p2>500</p2>円</p>
             </div>
+
+            <section class="combobox-container">
+                <label for="cb1-input">カテゴリ</label>
+                <div class="combobox combobox-list">
+                  <div class="group">
+                    <input id="cb1-input" class="cb_edit" type="text" role="combobox" aria-autocomplete="both" aria-expanded="false" aria-controls="cb1-listbox" placeholder="カテゴリを選択">
+                    <button type="button" id="cb1-button" aria-label="States" aria-expanded="false" aria-controls="cb1-listbox" tabindex="-1" class="material-symbols-outlined">expand_more</button>
+                  </div>
+                  <ul id="cb1-listbox" role="listbox" aria-label="States">
+                    {% for category in categories %}
+                    <li role="option">{{ category.categoryName }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </section>
 
             <div class="titleComponent">
                 <span class="label">タイトル</span>

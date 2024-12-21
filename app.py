@@ -1,7 +1,7 @@
 # MARK:インポート
 from flask import Flask, render_template, request, redirect, url_for, flash, Response, make_response, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
-from model_sample import db, User, Sale, Category, Bid, Like, Inquiry, WinningBid, Payment, PaymentWay, InquiryKind
+from model_sample import db, User, Sale, Category, Bid, Like, Inquiry, WinningBid, Payment, PaymentWay, InquiryKind, saleCategoryAssociation
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
@@ -281,7 +281,8 @@ def add_sale():
     time = data.get('time')
     price = data.get('price')
     title = data.get('title')
-
+    category = data.get('category')
+    
     if not image_data:
         return jsonify({'error': 'No image data provided'}), 400
 
@@ -311,16 +312,51 @@ def draw():
 # MARK: 出品ページ処理
 @app.route('/result')
 def result():
-    return render_template('result.html')
+    # 既存のカテゴリを取得
+    categories = Category.query.all()
+    
+    return render_template('result.html', categories=categories)
 
-# ---- ユーザーデータの仮挿入 ----
-# def add_user():
+# # ---- ユーザーデータの仮挿入 ----
+# def add_users():
 #     dummy_users = [
 #         User(userName='user1', displayName='User One', mailAddress='user1@example.com', password='password1'),
 #         User(userName='user2', displayName='User Two', mailAddress='user2@example.com', password='password2'),
 #         User(userName='user3', displayName='User Three', mailAddress='user3@example.com', password='password3')
 #     ]
-#     db.session.bulk_save_objects(dummy_users)
+    
+#     db.session.add_all(dummy_users)
+#     db.session.commit()
+
+# ---- カテゴリデータの仮挿入 ----
+def add_categories():
+    dummy_categories = [
+        Category(categoryName='キャラクター'),
+        Category(categoryName='模写'),
+        Category(categoryName='空想'),
+        Category(categoryName='抽象'),
+        Category(categoryName='カラフル'),
+        Category(categoryName='風景'),
+        Category(categoryName='動物'),
+        Category(categoryName='静物'),
+        Category(categoryName='ポートレート'),
+
+    ]
+    
+    db.session.add_all(dummy_categories)
+    db.session.commit()
+    return dummy_categories
+
+# # ---- 商品データの仮挿入 ----
+# def add_sales(dummy_categories):    
+#     dummy_sales = [
+#         Sale(userId=1, displayName='User One', title='iPhone', filePath='0001.png', startingPrice=10000, currentPrice=10000, creationTime='10:00'),
+#         Sale(userId=2, displayName='User Two', title='小説', filePath='0002.png', startingPrice=50000, currentPrice=50000, creationTime='10:00')
+#     ]
+#     dummy_sales[0].categories.append(dummy_categories[0])
+#     dummy_sales[1].categories.append(dummy_categories[1])
+    
+#     db.session.add_all(dummy_sales)
 #     db.session.commit()
 
 # MARK: テーブルの作成
@@ -328,5 +364,7 @@ if __name__ == '__main__':
     with app.app_context():
         # db.drop_all() # テーブルの全削除
         db.create_all()
-        # add_user() # userデータの仮挿入
+        # add_users()
+        dummy_categories = add_categories()
+        # add_sales(dummy_categories)
     app.run(debug=True)
