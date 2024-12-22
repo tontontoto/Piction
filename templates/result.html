@@ -37,7 +37,7 @@
                   </div>
                   <ul id="cb1-listbox" role="listbox" aria-label="States">
                     {% for category in categories %}
-                    <li role="option">{{ category.categoryName }}</li>
+                    <li id="{{ category.categoryId }}"  role="option">{{ category.categoryName }}</li>
                     {% endfor %}
                   </ul>
                 </div>

@@ -97,6 +97,7 @@ class ComboboxAutocomplete {
 
     var nodes = this.listboxNode.getElementsByTagName('LI');
 
+    //MARK: リストのクリックイベントの監視
     for (var i = 0; i < nodes.length; i++) {
       var node = nodes[i];
       this.allOptions.push(node);
@@ -600,10 +601,11 @@ class ComboboxAutocomplete {
     setTimeout(this.close.bind(this, false), 300);
   }
 
-  // オプションのクリックイベントハンドラ
+  //MARK: オプションのクリックイベントハンドラ
   onOptionClick(event) {
     this.comboboxNode.value = event.target.textContent;
     this.close(true);
+    return this.comboboxNode.value;
   }
 
   // オプションのpointeroverイベントハンドラ
@@ -662,10 +664,13 @@ document.addEventListener("DOMContentLoaded", () => {
 //本保存
 const download = document.getElementById("download");
 download.addEventListener("click", () => {
+  const comboboxNode = document.querySelector('.combobox-list input');
   const time = localStorage.getItem("elapsedTime");
   const price = localStorage.getItem("moneyValue");
   const title = document.getElementById("title").value;
   const dataURL = canvas.toDataURL("image/png"); // 画像をBase64に変換
+
+  console.log("Selected category:", comboboxNode.value);
 
   localStorage.removeItem("canvasImage");
   localStorage.removeItem("timerValue");
@@ -679,7 +684,8 @@ download.addEventListener("click", () => {
       title, 
       image: dataURL, 
       time: time, 
-      price: price 
+      price: price,
+      categories: [comboboxNode.value] || ""
     }),
   })
     .then((response) => {
@@ -688,6 +694,7 @@ download.addEventListener("click", () => {
         alert("正常に保存されました。");
       } else {
         alert("保存に失敗しました。");
+        console.log("categories="+ comboboxNode.value)
       }
     })
     .then((title) => {

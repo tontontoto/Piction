@@ -281,7 +281,8 @@ def add_sale():
     time = data.get('time')
     price = data.get('price')
     title = data.get('title')
-    category = data.get('category')
+    categories = data.get("categories")
+    print(categories)
     
     if not image_data:
         return jsonify({'error': 'No image data provided'}), 400
@@ -298,11 +299,26 @@ def add_sale():
     displayName = user.displayName # displayNameの取得
 
     new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=file_path, startingPrice=price,currentPrice=price, creationTime=time)
+    
+    # categories 変数の値に基づいて Category を一度に取得
+    category_objects = Category.query.filter(Category.categoryName.in_(categories)).all()
+
+    # 存在しないカテゴリ名のチェック
+    found_category_names = {category.categoryName for category in category_objects}
+    missing_categories = set(categories) - found_category_names
+    if missing_categories:
+        # ログを出力するか、エラー処理を追加
+        print(f"Warning: The following categories were not found: {missing_categories}")
+
+    # 中間テーブルにカテゴリーを追加
+    new_sale.categories.extend(category_objects)
+
+    
     new_bid = Bid(userId=userId, saleId=new_sale.saleId, bidPrice=price)
     db.session.add(new_sale, new_bid)
     db.session.commit()
 
-    return jsonify({'message': 'Sale added successfully'}), 201
+    return jsonify({'message': 'Sale added successfully'}), 201    
 
 # MARK: 描画ページ
 @app.route('/draw')
@@ -362,7 +378,7 @@ def add_categories():
 # MARK: テーブルの作成
 if __name__ == '__main__': 
     with app.app_context():
-        # db.drop_all() # テーブルの全削除
+        db.drop_all() # テーブルの全削除
         db.create_all()
         # add_users()
         dummy_categories = add_categories()
