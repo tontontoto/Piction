@@ -57,6 +57,9 @@ def saleDetail(sale_id):
     bids = Bid.query.filter_by(saleId=sale_id).all()
     currentPrice = db.session.query(Bid.bidPrice).filter_by(saleId=sale_id).order_by(Bid.bidPrice.desc()).first()
     currentPrice = currentPrice[0] if currentPrice else sale.startingPrice
+    categories = ', '.join([category.categoryName for category in sale.categories])
+
+    print(f"Sale ID: {sale_id}, categories: {categories}")
 
     if sale is None:
         # 商品が見つからない場合の処理
@@ -66,7 +69,7 @@ def saleDetail(sale_id):
     if sale is None:
         flash('Sale not found', 'error')
         return redirect(url_for('top'))
-    return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice)
+    return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories)
 
     
 # MARK: 入札
@@ -255,7 +258,6 @@ def myPage():
     listing_number = db.session.query(Sale).filter(Sale.userId == userId).count()
             
     return render_template('myPage.html', user=user, sales=sales, listingNumber=listing_number)
-
 
 # MARK: canvas→画像変換
 def decode_image(image_data):
