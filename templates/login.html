@@ -4,13 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ログインページ</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/signup_login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 </head>
 <body>
+    <div id="header">
+        <img src="{{ url_for('static', filename='icon/logo.png')}}" alt="Piction" class="headerLogo">
+    </div>
     <div id="mainContent">
-        <h1>ログイン</h1>
+        <h1 class="loginTitle">ログイン</h1>
+        <!-- error massage -->
         <p>{{ error }}</p>
-        <form method="POST" class="signupForm">
+
+        <form method="POST" id="loginForm">
             <div class="inputArea">
                 <p>ユーザーネーム</p>
                 <input type="text" name="userName" placeholder="user name">
@@ -19,9 +26,12 @@
                 <p>パスワード</p>
                 <input type="password" name="password" placeholder="password">
             </div>
-            <input type="submit" value="ログインする" class="signupSubmitButton"/>
+            <input type="submit" value="ログインする" class="loginSubmitButton"/>
+            <!-- signup link -->
+            <div class="signupLink">
+                <p><a href="/signup">または新規登録 →</a></p>
+            </div>
         </form>
-        <a href="/signup" role="button">新規登録する</a>
     </div>
 </body>
 </html>

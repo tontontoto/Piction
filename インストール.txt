@@ -3,3 +3,6 @@ pip freeze > requirements.txt
 
 ↓これをターミナルに記述してインストール
 pip install -r requirements.txt
+
+ロゴの筆の色
+#46A0DC
