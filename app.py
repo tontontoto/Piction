@@ -130,7 +130,7 @@ def login():
     if request.method == 'POST':
         userName = request.form.get('userName')
         password = request.form.get('password')
-        error = "ユーザーネームまたはパスワードが違います"
+        error = "ユーザーネームまたはパスワードが違います。"
         # Userテーブルからusernameに一致するユーザを取得
         user = User.query.filter_by(userName=userName).first()
         if user:
