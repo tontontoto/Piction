@@ -12,7 +12,8 @@
     <!-- footer -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
 
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/topRanking.css') }}"> -->
+    <!-- topRanking css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/topRanking.css') }}">
     
     <!-- lineup css -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/lineup.css') }}">
@@ -31,7 +32,10 @@
     {% include 'header.html' %}
     <!------------------->
 
-    <!-- {% include 'top_ranking.html' %} -->
+    <!-- スライダーエリア -->
+
+    <!-- ランキングエリア -->
+    {% include 'top_ranking.html' %}
 
     <!-- 商品一覧 -->
     {% with sales = sales %}

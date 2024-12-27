@@ -174,8 +174,17 @@ def top():
         .all()
     )  # ユーザーが過去に「いいね」をした商品IDのリストを取得
     liked_sale_ids = [sale[0] for sale in liked_sales]  # 取得したsale_idをリスト化
+    
+    likeRankings = db.session.query(Like.saleId, db.func.count(Like.saleId)).group_by(Like.saleId).order_by(db.func.count(Like.saleId).desc()).limit(3).all()
+    
+    #likeRankingsからsaleIdを取り出し、リスト化
+    saleIds = [sale[0] for sale in likeRankings]
+    #saleIdをもとにSaleテーブルから商品情報を取得
+    saleRankings = Sale.query.filter(Sale.saleId.in_(saleIds)).all()
+    
+    
     sales=db.session.query(Sale).all()        
-    return render_template('top.html', sales=sales, userId=userId, liked_sale_ids=liked_sale_ids)
+    return render_template('top.html', sales=sales, userId=userId, liked_sale_ids=liked_sale_ids, saleRankings=saleRankings)
 
 # MARK: いいね情報受け取りroute
 @app.route('/like', methods=['POST'])
