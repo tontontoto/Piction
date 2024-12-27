@@ -1,7 +1,7 @@
 # MARK:インポート
 from flask import Flask, render_template, request, redirect, url_for, flash, Response, make_response, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
-from model_sample import db, User, Sale, Category, Bid, Like, Inquiry, WinningBid, Payment, PaymentWay, InquiryKind
+from model_sample import db, User, Sale, Category, Bid, Like, Inquiry, WinningBid, Payment, PaymentWay, InquiryKind, saleCategoryAssociation
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
@@ -57,6 +57,9 @@ def saleDetail(sale_id):
     bids = Bid.query.filter_by(saleId=sale_id).all()
     currentPrice = db.session.query(Bid.bidPrice).filter_by(saleId=sale_id).order_by(Bid.bidPrice.desc()).first()
     currentPrice = currentPrice[0] if currentPrice else sale.startingPrice
+    categories = ', '.join([category.categoryName for category in sale.categories])
+
+    print(f"Sale ID: {sale_id}, categories: {categories}")
 
     if sale is None:
         # 商品が見つからない場合の処理
@@ -66,7 +69,7 @@ def saleDetail(sale_id):
     if sale is None:
         flash('Sale not found', 'error')
         return redirect(url_for('top'))
-    return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice)
+    return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories)
 
     
 # MARK: 入札
@@ -171,8 +174,17 @@ def top():
         .all()
     )  # ユーザーが過去に「いいね」をした商品IDのリストを取得
     liked_sale_ids = [sale[0] for sale in liked_sales]  # 取得したsale_idをリスト化
+    
+    likeRankings = db.session.query(Like.saleId, db.func.count(Like.saleId)).group_by(Like.saleId).order_by(db.func.count(Like.saleId).desc()).limit(3).all()
+    
+    #likeRankingsからsaleIdを取り出し、リスト化
+    saleIds = [sale[0] for sale in likeRankings]
+    #saleIdをもとにSaleテーブルから商品情報を取得
+    saleRankings = Sale.query.filter(Sale.saleId.in_(saleIds)).all()
+    
+    
     sales=db.session.query(Sale).all()        
-    return render_template('top.html', sales=sales, userId=userId, liked_sale_ids=liked_sale_ids)
+    return render_template('top.html', sales=sales, userId=userId, liked_sale_ids=liked_sale_ids, saleRankings=saleRankings)
 
 # MARK: いいね情報受け取りroute
 @app.route('/like', methods=['POST'])
@@ -256,7 +268,6 @@ def myPage():
             
     return render_template('myPage.html', user=user, sales=sales, listingNumber=listing_number)
 
-
 # MARK: canvas→画像変換
 def decode_image(image_data):
     try:
@@ -281,7 +292,9 @@ def add_sale():
     time = data.get('time')
     price = data.get('price')
     title = data.get('title')
-
+    categories = data.get("categories")
+    print(categories)
+    
     if not image_data:
         return jsonify({'error': 'No image data provided'}), 400
 
@@ -297,11 +310,26 @@ def add_sale():
     displayName = user.displayName # displayNameの取得
 
     new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=file_path, startingPrice=price,currentPrice=price, creationTime=time)
+    
+    # categories 変数の値に基づいて Category を一度に取得
+    category_objects = Category.query.filter(Category.categoryName.in_(categories)).all()
+
+    # 存在しないカテゴリ名のチェック
+    found_category_names = {category.categoryName for category in category_objects}
+    missing_categories = set(categories) - found_category_names
+    if missing_categories:
+        # ログを出力するか、エラー処理を追加
+        print(f"Warning: The following categories were not found: {missing_categories}")
+
+    # 中間テーブルにカテゴリーを追加
+    new_sale.categories.extend(category_objects)
+
+    
     new_bid = Bid(userId=userId, saleId=new_sale.saleId, bidPrice=price)
     db.session.add(new_sale, new_bid)
     db.session.commit()
 
-    return jsonify({'message': 'Sale added successfully'}), 201
+    return jsonify({'message': 'Sale added successfully'}), 201    
 
 # MARK: 描画ページ
 @app.route('/draw')
@@ -311,22 +339,59 @@ def draw():
 # MARK: 出品ページ処理
 @app.route('/result')
 def result():
-    return render_template('result.html')
+    # 既存のカテゴリを取得
+    categories = Category.query.all()
+    
+    return render_template('result.html', categories=categories)
 
-# ---- ユーザーデータの仮挿入 ----
-# def add_user():
+# # ---- ユーザーデータの仮挿入 ----
+# def add_users():
 #     dummy_users = [
 #         User(userName='user1', displayName='User One', mailAddress='user1@example.com', password='password1'),
 #         User(userName='user2', displayName='User Two', mailAddress='user2@example.com', password='password2'),
 #         User(userName='user3', displayName='User Three', mailAddress='user3@example.com', password='password3')
 #     ]
-#     db.session.bulk_save_objects(dummy_users)
+    
+#     db.session.add_all(dummy_users)
+#     db.session.commit()
+
+# ---- カテゴリデータの仮挿入 ----
+def add_categories():
+    dummy_categories = [
+        Category(categoryName='キャラクター'),
+        Category(categoryName='模写'),
+        Category(categoryName='空想'),
+        Category(categoryName='抽象'),
+        Category(categoryName='カラフル'),
+        Category(categoryName='風景'),
+        Category(categoryName='動物'),
+        Category(categoryName='静物'),
+        Category(categoryName='ポートレート'),
+
+    ]
+    
+    db.session.add_all(dummy_categories)
+    db.session.commit()
+    return dummy_categories
+
+# # ---- 商品データの仮挿入 ----
+# def add_sales(dummy_categories):    
+#     dummy_sales = [
+#         Sale(userId=1, displayName='User One', title='iPhone', filePath='0001.png', startingPrice=10000, currentPrice=10000, creationTime='10:00'),
+#         Sale(userId=2, displayName='User Two', title='小説', filePath='0002.png', startingPrice=50000, currentPrice=50000, creationTime='10:00')
+#     ]
+#     dummy_sales[0].categories.append(dummy_categories[0])
+#     dummy_sales[1].categories.append(dummy_categories[1])
+    
+#     db.session.add_all(dummy_sales)
 #     db.session.commit()
 
 # MARK: テーブルの作成
 if __name__ == '__main__': 
     with app.app_context():
-        # db.drop_all() # テーブルの全削除
+        db.drop_all() # テーブルの全削除
         db.create_all()
-        # add_user() # userデータの仮挿入
+        # add_users()
+        dummy_categories = add_categories()
+        # add_sales(dummy_categories)
     app.run(debug=True)

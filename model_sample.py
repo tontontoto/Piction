@@ -14,8 +14,8 @@ db = SQLAlchemy()
 	
 saleCategoryAssociation = Table(
     'saleCategoryAssociation', db.metadata,
-    Column('saleId', String(6), ForeignKey('sale.saleId')),
-    Column('categoryId', String(5), ForeignKey('category.categoryId'))
+    Column('saleId', Integer, ForeignKey('sale.saleId'), primary_key=True),
+    Column('categoryId', Integer, ForeignKey('category.categoryId'), primary_key=True)
 )
 
 class User(UserMixin, db.Model):
@@ -43,7 +43,7 @@ class Category(db.Model):
     __tablename__ = "category"
     categoryId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     categoryName = db.Column(db.String(20))
-    sales = db.relationship("Sale", secondary=saleCategoryAssociation, back_populates="categories")
+    sales = db.relationship("Sale", secondary=saleCategoryAssociation, back_populates="categories", lazy='dynamic')
 
 
 class Sale(db.Model):
@@ -53,7 +53,7 @@ class Sale(db.Model):
     displayName = db.Column(db.String(10), ForeignKey('user.displayName'))
     title = db.Column(db.String(40), default="無題")
     displayName = db.Column(db.String(10))
-    categoryId = db.Column(db.Integer, ForeignKey('category.categoryId'))
+    # categoryId = db.Column(db.Integer, ForeignKey('category.categoryId'))
     filePath = db.Column(db.String(30))
     startingPrice = db.Column(db.Integer)
     currentPrice = db.Column(db.Integer)
@@ -63,7 +63,7 @@ class Sale(db.Model):
     saleStatus = db.Column(db.Boolean, default=True)
 
     user = db.relationship("User", back_populates="sales")
-    categories = db.relationship("Category", secondary=saleCategoryAssociation, back_populates="sales")
+    categories = db.relationship("Category", secondary=saleCategoryAssociation, back_populates="sales", lazy='dynamic')
     bids = db.relationship("Bid", back_populates="sale")
     likes = db.relationship("Like", back_populates="sale")
     payment = db.relationship("Payment", back_populates="sale", uselist=False)

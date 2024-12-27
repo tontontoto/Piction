@@ -212,3 +212,100 @@ main {
   padding: 30px;
   font-weight: bold;
 }
+
+
+.combobox-container {
+  /* background-color: rgba(196, 196, 196, 0.3); */
+  border-radius: 24px;
+  display: grid;
+  /* padding: 16px; */
+  position: relative;
+  min-width: 150px;
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(15px);
+  &::before {
+    background: linear-gradient(135deg, rgb(255 255 255 / .4) 0, rgb(255 255 255 / 0) 40%, rgb(255 255 255 / 0) 60%, rgb(255 255 255 / .1) 100%);
+    border: 1.4px solid transparent;
+    border-radius: 24px;
+    content: "";
+    inset: 0;
+    position: absolute;
+    mask-composite: exclude;
+    z-index: -1;
+  }
+}
+
+label {
+  color: #070707;
+}
+
+.combobox-list {
+  position: relative;
+  margin-top: 4px;
+}
+
+.combobox .group {
+  display: inline-flex;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.combobox input,
+.combobox button {
+  background-color: #f7f7f7;
+  border: none;
+  color: #999;
+  border-radius: 3px;
+  margin: 0;
+  vertical-align: bottom;
+  position: relative;
+  cursor: pointer;
+}
+
+.combobox input {
+  color: #070707;
+  flex-grow: 1;
+  font-size: 16px;
+  padding: 8px 12px;
+}
+
+.combobox button {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  width: 32px;
+  color: #070707;
+  
+  &[aria-expanded="true"] {
+    transform: rotate(180deg);
+  }
+}
+
+
+ul[role="listbox"] {
+  margin: 0;
+  padding: 8px 0;
+  position: absolute;
+  left: 0;
+  top: 42px;
+  list-style: none;
+  background-color: rgb(128 128 128 / .3);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(15px);
+  border-radius: 8px;
+  display: none;
+  max-height: 100px;
+  overflow: auto;
+  width: 100%;
+}
+
+ul[role="listbox"] li[role="option"] {
+  cursor: pointer;
+  margin: 0;
+  display: block;
+  padding: 4px 12px;
+}
+
+[role="listbox"].focus [role="option"][aria-selected="true"], [role="listbox"] [role="option"]:hover {
+  background-color: rgb(128 128 128 / .5);
+}
