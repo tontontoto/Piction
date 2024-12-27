@@ -1,31 +1,3 @@
-window.onload = function () {
-  const canvas = document.getElementById("myCanvas");
-  const context = canvas.getContext("2d");
-  const dataURL = localStorage.getItem("canvasImage");
-  if (dataURL) {
-    const img = new Image();
-    img.onload = function () {
-      context.drawImage(img, 0, 0);
-    };
-    img.src = dataURL;
-  }
-};
-
-document.addEventListener("DOMContentLoaded", function () {
-  const time = localStorage.getItem("elapsedTime");
-  const price = localStorage.getItem("moneyValue");
-
-  if (time) {
-    document.querySelector(".timerResult p2").textContent = time;
-  }
-
-  if (price) {
-    document.querySelector(".moneyResult p2").textContent = price;
-  }
-});
-
-// このクラスはコピペだからわけわかんねえっす
-// ComboboxAutocompleteクラスはコンボボックスのオートコンプリート機能を処理します
 class ComboboxAutocomplete {
   constructor(comboboxNode, buttonNode, listboxNode) {
     this.comboboxNode = comboboxNode;
@@ -58,7 +30,7 @@ class ComboboxAutocomplete {
       this.isList = autocomplete === 'list';
       this.isBoth = autocomplete === 'both';
     } else {
-      // デフォルトのautocomplete値
+      // default value of autocomplete
       this.isNone = true;
     }
 
@@ -97,7 +69,6 @@ class ComboboxAutocomplete {
 
     var nodes = this.listboxNode.getElementsByTagName('LI');
 
-    //MARK: リストのクリックイベントの監視
     for (var i = 0; i < nodes.length; i++) {
       var node = nodes[i];
       this.allOptions.push(node);
@@ -116,12 +87,10 @@ class ComboboxAutocomplete {
     }
   }
 
-  // ノードのテキストコンテンツを小文字で取得
   getLowercaseContent(node) {
     return node.textContent.toLowerCase();
   }
 
-  // オプションが表示領域内にあるか確認
   isOptionInView(option) {
     var bounding = option.getBoundingClientRect();
     return (
@@ -145,7 +114,6 @@ class ComboboxAutocomplete {
     }
   }
 
-  // 値を設定
   setValue(value) {
     this.filter = value;
     this.comboboxNode.value = this.filter;
@@ -153,7 +121,6 @@ class ComboboxAutocomplete {
     this.filterOptions();
   }
 
-  // オプションを設定
   setOption(option, flag) {
     if (typeof flag !== 'boolean') {
       flag = false;
@@ -181,16 +148,14 @@ class ComboboxAutocomplete {
     }
   }
 
-  // コンボボックスに視覚的フォーカスを設定
   setVisualFocusCombobox() {
     this.listboxNode.classList.remove('focus');
-    this.comboboxNode.parentNode.classList.add('focus'); // 親にフォーカスクラスを設定してスタイリングを簡単に
+    this.comboboxNode.parentNode.classList.add('focus'); // set the focus class to the parent for easier styling
     this.comboboxHasVisualFocus = true;
     this.listboxHasVisualFocus = false;
     this.setActiveDescendant(false);
   }
 
-  // リストボックスに視覚的フォーカスを設定
   setVisualFocusListbox() {
     this.comboboxNode.parentNode.classList.remove('focus');
     this.comboboxHasVisualFocus = false;
@@ -199,7 +164,6 @@ class ComboboxAutocomplete {
     this.setActiveDescendant(this.option);
   }
 
-  // すべての視覚的フォーカスを削除
   removeVisualFocusAll() {
     this.comboboxNode.parentNode.classList.remove('focus');
     this.comboboxHasVisualFocus = false;
@@ -209,9 +173,10 @@ class ComboboxAutocomplete {
     this.setActiveDescendant(false);
   }
 
-  // オプションをフィルタリング
+  // ComboboxAutocomplete Events
+
   filterOptions() {
-    // autocompleteがnoneの場合はオプションをフィルタリングしない
+    // do not filter any options if autocomplete is none
     if (this.isNone) {
       this.filter = '';
     }
@@ -234,7 +199,7 @@ class ComboboxAutocomplete {
       }
     }
 
-    // フィルタリングされたオプション配列を使用してfirstOptionとlastOptionを初期化
+    // Use populated options array to initialize firstOption and lastOption.
     var numItems = this.filteredOptions.length;
     if (numItems > 0) {
       this.firstOption = this.filteredOptions[0];
@@ -254,7 +219,6 @@ class ComboboxAutocomplete {
     return option;
   }
 
-  // 現在のオプションのスタイルを設定
   setCurrentOptionStyle(option) {
     for (var i = 0; i < this.filteredOptions.length; i++) {
       var opt = this.filteredOptions[i];
@@ -275,7 +239,6 @@ class ComboboxAutocomplete {
     }
   }
 
-  // 前のオプションを取得
   getPreviousOption(currentOption) {
     if (currentOption !== this.firstOption) {
       var index = this.filteredOptions.indexOf(currentOption);
@@ -284,7 +247,6 @@ class ComboboxAutocomplete {
     return this.lastOption;
   }
 
-  // 次のオプションを取得
   getNextOption(currentOption) {
     if (currentOption !== this.lastOption) {
       var index = this.filteredOptions.indexOf(currentOption);
@@ -293,34 +255,28 @@ class ComboboxAutocomplete {
     return this.firstOption;
   }
 
-  // オプションがフォーカスを持っているか確認
   doesOptionHaveFocus() {
     return this.comboboxNode.getAttribute('aria-activedescendant') !== '';
   }
 
-  // リストボックスが開いているか確認
   isOpen() {
     return this.listboxNode.style.display === 'block';
   }
 
-  // リストボックスが閉じているか確認
   isClosed() {
     return this.listboxNode.style.display !== 'block';
   }
 
-  // オプションが存在するか確認
   hasOptions() {
     return this.filteredOptions.length;
   }
 
-  // リストボックスを開く
   open() {
     this.listboxNode.style.display = 'block';
     this.comboboxNode.setAttribute('aria-expanded', 'true');
     this.buttonNode.setAttribute('aria-expanded', 'true');
   }
 
-  // リストボックスを閉じる
   close(force) {
     if (typeof force !== 'boolean') {
       force = false;
@@ -341,7 +297,6 @@ class ComboboxAutocomplete {
     }
   }
 
-  // コンボボックスのkeydownイベントハンドラ
   onComboboxKeyDown(event) {
     var flag = false,
       altKey = event.altKey;
@@ -443,12 +398,10 @@ class ComboboxAutocomplete {
     }
   }
 
-  // 文字が印刷可能か確認
   isPrintableCharacter(str) {
     return str.length === 1 && str.match(/\S| /);
   }
 
-  // コンボボックスのkeyupイベントハンドラ
   onComboboxKeyUp(event) {
     var flag = false,
       option = null,
@@ -542,7 +495,6 @@ class ComboboxAutocomplete {
     }
   }
 
-  // コンボボックスのクリックイベントハンドラ
   onComboboxClick() {
     if (this.isOpen()) {
       this.close(true);
@@ -551,7 +503,6 @@ class ComboboxAutocomplete {
     }
   }
 
-  // コンボボックスのフォーカスイベントハンドラ
   onComboboxFocus() {
     this.filter = this.comboboxNode.value;
     this.filterOptions();
@@ -560,12 +511,10 @@ class ComboboxAutocomplete {
     this.setCurrentOptionStyle(null);
   }
 
-  // コンボボックスのブラーイベントハンドラ
   onComboboxBlur() {
     this.removeVisualFocusAll();
   }
 
-  // 背景のpointerupイベントハンドラ
   onBackgroundPointerUp(event) {
     if (
       !this.comboboxNode.contains(event.target) &&
@@ -579,7 +528,6 @@ class ComboboxAutocomplete {
     }
   }
 
-  // ボタンのクリックイベントハンドラ
   onButtonClick() {
     if (this.isOpen()) {
       this.close(true);
@@ -590,38 +538,31 @@ class ComboboxAutocomplete {
     this.setVisualFocusCombobox();
   }
 
-  // リストボックスのpointeroverイベントハンドラ
   onListboxPointerover() {
     this.hasHover = true;
   }
 
-  // リストボックスのpointeroutイベントハンドラ
   onListboxPointerout() {
     this.hasHover = false;
     setTimeout(this.close.bind(this, false), 300);
   }
 
-  //MARK: オプションのクリックイベントハンドラ
   onOptionClick(event) {
     this.comboboxNode.value = event.target.textContent;
     this.close(true);
-    return this.comboboxNode.value;
   }
 
-  // オプションのpointeroverイベントハンドラ
   onOptionPointerover() {
     this.hasHover = true;
     this.open();
   }
 
-  // オプションのpointeroutイベントハンドラ
   onOptionPointerout() {
     this.hasHover = false;
     setTimeout(this.close.bind(this, false), 300);
   }
 }
 
-// ページのロード時にComboboxAutocompleteを初期化
 window.addEventListener('load', function () {
   var comboboxes = document.querySelectorAll('.combobox-list');
 
@@ -634,70 +575,4 @@ window.addEventListener('load', function () {
   }
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-  // 要素を取得
-  const close = document.querySelector(".modalClose");
-  const container = document.querySelector(".modalContainer");
-  const open = document.getElementById("openModal");
-
-  // openボタンをクリックしたらモーダルウィンドウを表示する
-  open.addEventListener("click", () => {
-    container.classList.add("active"); // クラスを追加
-  });
-
-  // closeボタンをクリックしたらモーダルウィンドウを閉じる
-  close.addEventListener("click", () => {
-    container.classList.remove("active"); // クラスを削除
-  });
-
-  // モーダルウィンドウの外側をクリックしたら閉じる
-  container.addEventListener("click", (e) => {
-    if (
-      !e.target.closest(".modalBody") &&
-      container.classList.contains("active")
-    ) {
-      container.classList.remove("active");
-    }
-  });
-});
-
-//本保存
-const download = document.getElementById("download");
-download.addEventListener("click", () => {
-  const comboboxNode = document.querySelector('.combobox-list input');
-  const time = localStorage.getItem("elapsedTime");
-  const price = localStorage.getItem("moneyValue");
-  const title = document.getElementById("title").value;
-  const dataURL = canvas.toDataURL("image/png"); // 画像をBase64に変換
-
-  console.log("Selected category:", comboboxNode.value);
-
-  localStorage.removeItem("canvasImage");
-  localStorage.removeItem("timerValue");
-  localStorage.removeItem("elapsedTime");
-  localStorage.removeItem("moneyValue");
-
-  fetch("/add_sale", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ 
-      title, 
-      image: dataURL, 
-      time: time, 
-      price: price,
-      categories: [comboboxNode.value] || ""
-    }),
-  })
-    .then((response) => {
-      // 画像保存の結果を表示 デバック用
-      if (response.ok) {
-        alert("正常に保存されました。");
-      } else {
-        alert("保存に失敗しました。");
-        console.log("categories="+ comboboxNode.value)
-      }
-    })
-    .then((title) => {
-      console.log(title);
-    });
-});
+aria-expanded

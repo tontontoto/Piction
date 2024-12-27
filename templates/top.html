@@ -11,15 +11,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <!-- footer -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
-
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/topRanking.css') }}"> -->
-    
-    <!-- lineup css -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/lineup.css') }}">
-    <!-- sale css -->
+    <!-- sale -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sale.css') }}">
     
-
     <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
     
     <script src="{{ url_for('static', filename='js/top.js') }}" defer></script>
@@ -31,13 +25,13 @@
     {% include 'header.html' %}
     <!------------------->
 
-    <!-- {% include 'top_ranking.html' %} -->
+    <!-- スライダーエリア -->
+
+    <!-- ランキングエリア -->
+    {% include 'top_ranking.html' %}
 
     <!-- 商品一覧 -->
-    {% with sales = sales %}
-        {% include 'lineup.html' %}
-    {% endwith %}
-    
+    {% include 'sale.html' %}
     
     <p style="font-weight: bold;">デバック用ショートカット</p>
     <a href="/saleDetail">商品詳細ページ</a>
