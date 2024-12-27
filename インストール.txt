@@ -1,4 +1,8 @@
-pip install flask flask_sqlalchemy flask_login flask_bcrypt
-
 ロゴの筆の色
 #46A0DC
+
+↓これをターミナルに記述してインストールされているライブラリをテキスト化
+pip freeze > requirements.txt
+
+↓これをターミナルに記述してインストール
+pip install -r requirements.txt
