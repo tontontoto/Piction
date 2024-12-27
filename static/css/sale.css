@@ -1,7 +1,48 @@
-/* sale.html */
+* {
+    margin: 0;
+    padding: 0;
+}
 
-.saleBox {
-    width: calc(20% - 40px);
+.lineup, .ranking{
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    align-items: center;
+}
+.ranking{
+    width: 70%
+}
+.lineup{
+    width: 100%
+}
+
+.saleTitle {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 4vh auto;
+    align-items: center;
+}
+.saleTitle h2 {
+    margin-right: 30px;
+}
+
+/* sale box */
+.sale, .saleRanking{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0 auto;
+    align-items: center;
+}
+.sale{
+    gap: 40px;
+}
+.saleRanking{
+    gap: 10%;
+}
+.saleBox, .saleRankingBox {
+    padding: 3% 2%;
     align-items: center;
     background: rgb(255, 255, 255);
     box-shadow: 4px 4px 9px -3px #c2c2c2;
@@ -9,6 +50,40 @@
     padding: 10px;
     text-decoration: none;
     color: #070707;
+}
+.saleBox{
+    width: 15%;
+}
+.saleRankingBox {
+    width: 20%;
+    position: relative;
+}
+.saleBoxImg {
+    width: 200px;
+    height: 200px;
+    border: #e0e0e0 1px solid;
+}
+.saleHeart {
+    position: absolute;
+    top: 0;
+    right: 7%;
+}
+.saleRankingBox::before {
+    content: attr(data-rank);
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 4px;
+    font-size: 14px;
+}
+.saleRankingBox[data-rank="No.1"]::before {
+    background-color: gold;
+}
+.saleRankingBox[data-rank="No.2"]::before {
+    background-color: silver;
+}
+.saleRankingBox[data-rank="No.3"]::before {
+    background-color: #cd7f32;
 }
 #uploadImg {
     width: 100%;
@@ -29,4 +104,17 @@
     height: 30px;
     cursor: pointer;
     z-index: 10;
+}
+.showMore {
+    font-size: large;
+    background-color: #eeeeee;
+    border: #eeeeee 1px solid;
+    border-radius: 10px;
+    width: 40%;
+    margin: 6%;
+    line-height: 2.5;
+}
+.showMore a {
+    color: #333333;
+    text-decoration: none;
 }
