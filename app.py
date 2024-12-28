@@ -5,7 +5,7 @@ from model_sample import db, User, Sale, Category, Bid, Like, Inquiry, WinningBi
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from sqlalchemy.orm import joinedload, Session
 import os
 import base64
@@ -58,7 +58,9 @@ def saleDetail(sale_id):
     currentPrice = db.session.query(Bid.bidPrice).filter_by(saleId=sale_id).order_by(Bid.bidPrice.desc()).first()
     currentPrice = currentPrice[0] if currentPrice else sale.startingPrice
     categories = ', '.join([category.categoryName for category in sale.categories])
+    # remainingHour = sale.
 
+    print(sale)
     print(f"Sale ID: {sale_id}, categories: {categories}")
 
     if sale is None:
@@ -79,9 +81,9 @@ def bid():
     data = request.get_json()
     userId = session.get('userId')
     sale_id = data.get('saleId')
-    amount = data.get('amount')
+    amount = data.get('amount') #入札金額
     
-    # saleテーブルのcurrentPriceを更新
+    # saleテーブルのcurrentPrice（現在価格）を更新
     sale = Sale.query.filter_by(saleId=sale_id).first()
     sale.currentPrice = amount
     
@@ -292,7 +294,10 @@ def add_sale():
     time = data.get('time')
     price = data.get('price')
     title = data.get('title')
+    postingTime = data.get('postingTime')
     categories = data.get("categories")
+    print(title)
+    print(postingTime)
     print(categories)
     
     if not image_data:
@@ -309,8 +314,17 @@ def add_sale():
     user = User.query.get(userId) # userIdからuser情報受け取り
     displayName = user.displayName # displayNameの取得
 
-    new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=file_path, startingPrice=price,currentPrice=price, creationTime=time)
-    
+    #現在時刻取得
+    dt = datetime.now()
+    datetimeStr = dt.strftime('%Y/%m/%d %H:%M:%S')
+    #掲載時間計算
+    postingTimePlus = dt + timedelta(minutes=int(postingTime))
+    postingTimeStr = postingTimePlus.strftime('%Y/%m/%d %H:%M:%S')
+    print("現在時刻：", datetimeStr)
+    print("掲載満了時刻：", postingTimeStr)
+
+    new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=file_path, startingPrice=price,currentPrice=price, creationTime=time, startingTime=datetimeStr, finishTime=postingTimeStr)
+
     # categories 変数の値に基づいて Category を一度に取得
     category_objects = Category.query.filter(Category.categoryName.in_(categories)).all()
 
