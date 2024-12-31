@@ -37,7 +37,10 @@
             <p id="currentPrice">{{ currentPrice }}円</p>
             <p>最低入札価格</p>
             <p id="minBidPrice">{{ currentPrice + 1 }}円</p>
-
+            
+            <!-- 残り時間 -->
+            <p>残り時間</p>
+            <p>{{ timeDifference }}</p>
             <!-- 終了時間 -->
             <p>終了日時</p>
             <p id="remainingHour">{{ sale.finishTime }}</p>

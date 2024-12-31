@@ -81,12 +81,22 @@ def saleDetail(sale_id):
         finished = "この作品のオークションは終了しています"
         return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, finished=finished, bidUserId=bidUserId ,lastAmount=lastAmount)
 
-
-    # 商品情報をテンプレートに渡す
+    # 商品なかった時のerror処理
     if sale is None:
         flash('Sale not found', 'error')
         return redirect(url_for('top'))
-    return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories)
+    
+    #現在時刻取得
+    dt = datetime.now()
+    datetimeStr = datetime.strptime(dt.strftime('%Y/%m/%d %H:%M:%S'), '%Y/%m/%d %H:%M:%S')
+    #終了時刻取得
+    finishTime = datetime.strptime(sale.finishTime, '%Y/%m/%d %H:%M:%S')
+    # 計算（差分）
+    timeDifference = finishTime - datetimeStr
+    print(timeDifference, type(timeDifference))
+    
+    # 商品情報をテンプレートに渡す
+    return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, timeDifference=timeDifference)
 
     
 # MARK: 入札
