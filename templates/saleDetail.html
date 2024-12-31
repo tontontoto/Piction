@@ -12,6 +12,16 @@
 <body>
     {% include 'header.html' %}
 
+    {% if finished %}
+    <div class="finishedContent">
+        <p>{{ finished }}</p>
+    </div>
+    <div class="successfulBidderInfo">
+        <p>落札者：{{ bidUserId }}</p>
+        <p>落札金額：{{ lastAmount }}</p>
+    </div>
+    
+    {% else %}
     <div class="flex-container">
         <div class="main">
             <img src="{{ url_for('static', filename=sale.filePath) }}" alt="">
@@ -75,6 +85,9 @@
             </div>
         </div>
     </div>
+    {% endif %}
+
+    
     {% include 'footer.html' %}
 </body>
 </html>

@@ -6,6 +6,7 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
 from datetime import date, datetime, timedelta
+from sqlalchemy import func
 from sqlalchemy.orm import joinedload, Session
 import os
 import base64
@@ -66,7 +67,21 @@ def saleDetail(sale_id):
     if sale is None:
         # 商品が見つからない場合の処理
         return "商品が見つかりません", 404
-    
+        
+    # 商品の入札終了日時が現在時刻の前であるかどうか
+    # 終了していた時の処理↓
+    if sale.finishTime and datetime.now().strftime('%Y/%m/%d %H:%M:%S') > sale.finishTime:
+        # 落札者情報の取得
+        # 落札金額
+        lastAmount = db.session.query(func.max(Bid.bidPrice)).scalar()
+        # 落札者userIdの取得
+        bidUserId = db.session.query(Bid.userId).filter(Bid.bidPrice == lastAmount).scalar()
+
+        print("最大金額（落札金額）:",lastAmount)
+        finished = "この作品のオークションは終了しています"
+        return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, finished=finished, bidUserId=bidUserId ,lastAmount=lastAmount)
+
+
     # 商品情報をテンプレートに渡す
     if sale is None:
         flash('Sale not found', 'error')
