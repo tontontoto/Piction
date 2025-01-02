@@ -1,12 +1,1 @@
-{
-  "routes": [
-    {
-      "route": "/",
-      "methods": [
-        "get",
-        "post"
-      ],
-      "rewrite": "index.html, user = user"
-    }
-  ]
-}
+{}
