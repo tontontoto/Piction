@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Table, String, Integer, Date, DATETIME, text, Boolean, ForeignKey, create_engine
+from sqlalchemy import Column, ForeignKey, Table, String, Integer, Date, DATETIME, text, Boolean, ForeignKey, create_engine, func
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import date, datetime
@@ -58,9 +58,10 @@ class Sale(db.Model):
     startingPrice = db.Column(db.Integer)
     currentPrice = db.Column(db.Integer)
     creationTime = db.Column(db.String(5))
-    startingTime = db.Column(db.DATETIME, default=datetime.now, nullable=False)
-    finishTime = db.Column(db.DATETIME, default=datetime.now, nullable=False)
+    startingTime = db.Column(db.String(19))
+    finishTime = db.Column(db.String(19))
     saleStatus = db.Column(db.Boolean, default=True)
+    listingTime = db.Column(db.String(19))
 
     user = db.relationship("User", back_populates="sales")
     categories = db.relationship("Category", secondary=saleCategoryAssociation, back_populates="sales", lazy='dynamic')

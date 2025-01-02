@@ -1,3 +1,13 @@
+.finishedContent {
+    text-align: center;
+    width: 330px;
+    white-space: nowrap;
+    margin: 30px auto 0;
+    padding: 12px 0;
+    box-shadow: 0px 0px 18px -2px #777777;
+    border-radius: 10px;
+}
+
 .flex-container{
     background-color:#ffffff;
     display:flex;
