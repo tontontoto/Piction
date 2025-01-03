@@ -1,6 +1,7 @@
 # MARK:インポート
 from flask import Flask, render_template, request, redirect, url_for, flash, Response, make_response, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 from model_sample import db, User, Sale, Category, Bid, Like, Inquiry, WinningBid, Payment, PaymentWay, InquiryKind, saleCategoryAssociation
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -18,6 +19,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.urandom(24) # 複数ユーザーが各々のページにアクセスできる
 app.config['UPLOAD_FOLDER'] = './static/upload_images'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+CORS(app)
 
 db.init_app(app)
 bcrypt = Bcrypt()
