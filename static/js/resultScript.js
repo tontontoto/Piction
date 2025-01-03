@@ -668,6 +668,7 @@ download.addEventListener("click", () => {
   const time = localStorage.getItem("elapsedTime");
   const price = localStorage.getItem("moneyValue");
   const title = document.getElementById("title").value;
+  const postingTime = document.getElementById("postingTime").value;
   const dataURL = canvas.toDataURL("image/png"); // 画像をBase64に変換
 
   console.log("Selected category:", comboboxNode.value);
@@ -681,7 +682,8 @@ download.addEventListener("click", () => {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ 
-      title, 
+      title,
+      postingTime,
       image: dataURL, 
       time: time, 
       price: price,

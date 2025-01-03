@@ -5,7 +5,8 @@ from model_sample import db, User, Sale, Category, Bid, Like, Inquiry, WinningBi
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
+from sqlalchemy import func
 from sqlalchemy.orm import joinedload, Session
 import os
 import base64
@@ -58,18 +59,44 @@ def saleDetail(sale_id):
     currentPrice = db.session.query(Bid.bidPrice).filter_by(saleId=sale_id).order_by(Bid.bidPrice.desc()).first()
     currentPrice = currentPrice[0] if currentPrice else sale.startingPrice
     categories = ', '.join([category.categoryName for category in sale.categories])
+    # remainingHour = sale.
 
+    print(sale)
     print(f"Sale ID: {sale_id}, categories: {categories}")
 
     if sale is None:
         # 商品が見つからない場合の処理
         return "商品が見つかりません", 404
-    
-    # 商品情報をテンプレートに渡す
+        
+    # 商品の入札終了日時が現在時刻の前であるかどうか
+    # 終了していた時の処理↓
+    if sale.finishTime and datetime.now().strftime('%Y/%m/%d %H:%M:%S') > sale.finishTime:
+        # 落札者情報の取得
+        # 落札金額
+        lastAmount = db.session.query(func.max(Bid.bidPrice)).scalar()
+        # 落札者userIdの取得
+        bidUserId = db.session.query(Bid.userId).filter(Bid.bidPrice == lastAmount).scalar()
+
+        print("最大金額（落札金額）:",lastAmount)
+        finished = "この作品のオークションは終了しています"
+        return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, finished=finished, bidUserId=bidUserId ,lastAmount=lastAmount)
+
+    # 商品なかった時のerror処理
     if sale is None:
         flash('Sale not found', 'error')
         return redirect(url_for('top'))
-    return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories)
+    
+    #現在時刻取得
+    dt = datetime.now()
+    datetimeStr = datetime.strptime(dt.strftime('%Y/%m/%d %H:%M:%S'), '%Y/%m/%d %H:%M:%S')
+    #終了時刻取得
+    finishTime = datetime.strptime(sale.finishTime, '%Y/%m/%d %H:%M:%S')
+    # 計算（差分）
+    timeDifference = finishTime - datetimeStr
+    print(timeDifference, type(timeDifference))
+    
+    # 商品情報をテンプレートに渡す
+    return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, timeDifference=timeDifference)
 
     
 # MARK: 入札
@@ -79,9 +106,9 @@ def bid():
     data = request.get_json()
     userId = session.get('userId')
     sale_id = data.get('saleId')
-    amount = data.get('amount')
+    amount = data.get('amount') #入札金額
     
-    # saleテーブルのcurrentPriceを更新
+    # saleテーブルのcurrentPrice（現在価格）を更新
     sale = Sale.query.filter_by(saleId=sale_id).first()
     sale.currentPrice = amount
     
@@ -130,7 +157,7 @@ def login():
     if request.method == 'POST':
         userName = request.form.get('userName')
         password = request.form.get('password')
-        error = "ユーザーネームまたはパスワードが違います"
+        error = "ユーザーネームまたはパスワードが違います。"
         # Userテーブルからusernameに一致するユーザを取得
         user = User.query.filter_by(userName=userName).first()
         if user:
@@ -292,7 +319,10 @@ def add_sale():
     time = data.get('time')
     price = data.get('price')
     title = data.get('title')
+    postingTime = data.get('postingTime')
     categories = data.get("categories")
+    print(title)
+    print(postingTime)
     print(categories)
     
     if not image_data:
@@ -309,8 +339,17 @@ def add_sale():
     user = User.query.get(userId) # userIdからuser情報受け取り
     displayName = user.displayName # displayNameの取得
 
-    new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=file_path, startingPrice=price,currentPrice=price, creationTime=time)
-    
+    #現在時刻取得
+    dt = datetime.now()
+    datetimeStr = dt.strftime('%Y/%m/%d %H:%M:%S')
+    #掲載時間計算
+    postingTimePlus = dt + timedelta(minutes=int(postingTime))
+    postingTimeStr = postingTimePlus.strftime('%Y/%m/%d %H:%M:%S')
+    print("現在時刻：", datetimeStr)
+    print("掲載満了時刻：", postingTimeStr)
+
+    new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=file_path, startingPrice=price,currentPrice=price, creationTime=time, startingTime=datetimeStr, finishTime=postingTimeStr)
+
     # categories 変数の値に基づいて Category を一度に取得
     category_objects = Category.query.filter(Category.categoryName.in_(categories)).all()
 
