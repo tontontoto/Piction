@@ -435,4 +435,4 @@ if __name__ == '__main__':
         # add_users()
         dummy_categories = add_categories()
         # add_sales(dummy_categories)
-    app.run(port=443, debug=True)
+    app.run(port=80, debug=True)
