@@ -13,3 +13,4 @@ htmlcov/
 .tox/
 docs/_build/
 main.py
+.env

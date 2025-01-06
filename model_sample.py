@@ -6,10 +6,20 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from dotenv import load_dotenv
+from os.path import join, dirname
+import os
+
+load_dotenv(verbose=True)
+
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
+DBNAME = os.environ.get("DB_URL")
 
 db = SQLAlchemy()
 Base = declarative_base()
-engine = create_engine('sqlite:///example.db')
+engine = create_engine(DBNAME)
 db = SQLAlchemy()
 	
 saleCategoryAssociation = Table(

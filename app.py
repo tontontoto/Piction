@@ -2,7 +2,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, Response, make_response, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
 # from flask_cors import CORS
-from model_sample import db, User, Sale, Category, Bid, Like, Inquiry, WinningBid, Payment, PaymentWay, InquiryKind, saleCategoryAssociation
+from model_sample import db, User, Sale, Category, Bid, Like, Inquiry, WinningBid, Payment, PaymentWay, InquiryKind, saleCategoryAssociation, DBNAME
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
@@ -14,7 +14,7 @@ import base64
 
 # MARK:インスタンス化
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sample.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = DBNAME
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.urandom(24) # 複数ユーザーが各々のページにアクセスできる
 app.config['UPLOAD_FOLDER'] = './static/upload_images'
