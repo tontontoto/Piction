@@ -122,7 +122,7 @@ class PaymentWay(db.Model):
 class Payment(db.Model):
     __tablename__ = "payment"
     paymentId = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    saleId = db.Column(db.String(6), ForeignKey('sale.saleId'))
+    saleId = db.Column(db.Integer, ForeignKey('sale.saleId'))
     winningBidId = db.Column(db.Integer, ForeignKey('winningBid.winningBidId'))
     paymentWayId = db.Column(db.Integer, ForeignKey('paymentWay.paymentWayId'))
     paymentDate = db.Column(db.DATETIME, default=datetime.now(), nullable=False)

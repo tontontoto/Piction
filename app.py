@@ -16,7 +16,7 @@ app.config['SECRET_KEY'] = os.urandom(24) # 複数ユーザーが各々のペー
 app.config['UPLOAD_FOLDER'] = './static/upload_images'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-print(DBNAME)
+print("データベースURL="+DBNAME)
 
 try:
     db.init_app(app)
