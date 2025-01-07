@@ -15,7 +15,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.urandom(24) # 複数ユーザーが各々のページにアクセスできる
 app.config['UPLOAD_FOLDER'] = './static/upload_images'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-# CORS(app)
+
+print(DBNAME)
 
 try:
     db.init_app(app)
