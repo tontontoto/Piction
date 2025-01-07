@@ -8,6 +8,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 from os.path import join, dirname
+import pymysql
 import os
 
 load_dotenv(verbose=True)
