@@ -18,7 +18,6 @@ load_dotenv(dotenv_path)
 
 DBNAME = os.environ.get("DB_URL")
 
-db = SQLAlchemy()
 Base = declarative_base()
 engine = create_engine(DBNAME)
 db = SQLAlchemy()
