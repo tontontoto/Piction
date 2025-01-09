@@ -6,7 +6,7 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
 from datetime import date, datetime, timedelta
-from sqlalchemy import func
+from sqlalchemy import func, Boolean, update
 from sqlalchemy.orm import joinedload, Session
 import os
 import base64
@@ -76,7 +76,10 @@ def saleDetail(sale_id):
         lastAmount = db.session.query(func.max(Bid.bidPrice)).scalar()
         # 落札者userIdの取得
         bidUserId = db.session.query(Bid.userId).filter(Bid.bidPrice == lastAmount).scalar()
-
+        
+        db.session.query(Sale).filter(Sale.saleId == sale_id).update({"saleStatus": False})
+        db.session.commit()
+        
         print("最大金額（落札金額）:",lastAmount)
         finished = "この作品のオークションは終了しています"
         return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, finished=finished, bidUserId=bidUserId ,lastAmount=lastAmount)
