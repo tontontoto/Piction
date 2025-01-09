@@ -35,7 +35,7 @@ class User(UserMixin, db.Model):
     userName = db.Column(db.String(15))
     displayName = db.Column(db.String(10))
     mailAddress = db.Column(db.String(254))
-    password = db.Column(db.String(15))
+    password = db.Column(db.String(254))
     registrationDate = db.Column(db.Date, default=date.today())
 
     sales= db.relationship("Sale", back_populates="user")
