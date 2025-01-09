@@ -36,7 +36,7 @@ def load_user(userId):
     try:
         return User.query.get(userId)
     except Exception as e:
-        print(f"Error loading user: {e}")
+        print(f"Error ログイン情報保持処理失敗: {e}")
         return None
 
 # ログインしているユーザに対してのアクセス制限をかけるデコレータ
@@ -57,7 +57,7 @@ def index():
         try:
             user = User.query.all()
         except Exception as e:
-            print(f"Error querying users: {e}")
+            print(f"Error ユーザー情報取得失敗: {e}")
             user = []
         return render_template('index.html', user=user)
     
@@ -72,7 +72,7 @@ def saleDetail(sale_id):
         currentPrice = currentPrice[0] if currentPrice else sale.startingPrice
         categories = ', '.join([category.categoryName for category in sale.categories])
     except Exception as e:
-        print(f"Error querying sale details: {e}")
+        print(f"Error 商品情報取得失敗: {e}")
         return "エラーが発生しました", 500
 
     print(sale)
@@ -95,7 +95,8 @@ def saleDetail(sale_id):
             db.session.query(Sale).filter(Sale.saleId == sale_id).update({"saleStatus": False})
             db.session.commit()
     except Exception as e:
-
+        print(f"Error 商品情報取得失敗: {e}")
+        
         print("最大金額（落札金額）:",lastAmount)
         finished = "この作品のオークションは終了しています"
         return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, finished=finished, bidUserId=bidUserId ,lastAmount=lastAmount)
@@ -140,7 +141,7 @@ def bid():
         db.session.add(new_bid)
         db.session.commit()
     except Exception as e:
-        print(f"Error bidding: {e}")
+        print(f"Error 入札処理失敗: {e}")
         return jsonify({'success': False, 'message': '入札に失敗しました'}), 500
 
     return jsonify({'success': True, 'message': '入札が成功しました'})
@@ -163,7 +164,7 @@ def signup():
             db.session.add(new_user)
             db.session.commit()
         except Exception as e:
-            print(f"Error signing up: {e}")
+            print(f"Error サインアップ処理失敗: {e}")
             return "エラーが発生しました", 500
     
         # ユーザーIDをセッションに保存　-> 後からIDから参照できるようになる
@@ -189,7 +190,7 @@ def login():
             # Userテーブルからusernameに一致するユーザを取得
             user = User.query.filter_by(userName=userName).first()
         except Exception as e:
-            print(f"Error logging in: {e}")
+            print(f"Error ログイン処理失敗: {e}")
             return "エラーが発生しました", 500
         if user:
             if user and bcrypt.check_password_hash(user.password, password):  # userがNoneでないかも確認
@@ -228,7 +229,7 @@ def top():
     try:
         sales = Sale.query.all()  # すべての商品を取得
     except Exception as e:
-        print(f"Error querying sales: {e}")
+        print(f"Error 商品情報取得失敗: {e}")
         sales = []
     
     try:
@@ -241,7 +242,7 @@ def top():
         
         likeRankings = db.session.query(Like.saleId, db.func.count(Like.saleId)).group_by(Like.saleId).order_by(db.func.count(Like.saleId).desc()).limit(3).all()
     except Exception as e:
-        print(f"Error querying liked sales: {e}")
+        print(f"Error いいねした商品のID取得失敗: {e}")
         liked_sale_ids = []
     
     #likeRankingsからsaleIdを取り出し、リスト化
@@ -251,13 +252,13 @@ def top():
         #saleIdをもとにSaleテーブルから商品情報を取得
         saleRankings = Sale.query.filter(Sale.saleId.in_(saleIds)).all()
     except Exception as e:
-        print(f"Error querying sale rankings: {e}")
+        print(f"Error 商品情報取得失敗: {e}")
         saleRankings = []
     
     try:
         sales=db.session.query(Sale).all()  
     except Exception as e:
-        print(f"Error querying sales: {e}")
+        print(f"Error 商品情報取得失敗: {e}")
         sales = []      
         
     return render_template('top.html', sales=sales, userId=userId, liked_sale_ids=liked_sale_ids, saleRankings=saleRankings)
@@ -272,7 +273,7 @@ def like_sale():
         # すでにこのユーザーがこの商品に「いいね」をしていないか確認
         existing_like = Like.query.filter_by(saleId=sale_id, userId=user_id).first()
     except Exception as e:
-        print(f"Error querying existing like: {e}")
+        print(f"Error いいねの確認処理失敗: {e}")
         return jsonify({'error': 'Failed to query existing like'}), 500
     
     if existing_like:
@@ -281,7 +282,7 @@ def like_sale():
             db.session.delete(existing_like)
             db.session.commit()
         except Exception as e:
-            print(f"Error removing like: {e}")
+            print(f"Error いいねの削除失敗: {e}")
             return jsonify({'error': 'Failed to remove like'}), 500
         action = 'removed'
     else:
@@ -291,7 +292,7 @@ def like_sale():
             db.session.add(new_like)
             db.session.commit()
         except Exception as e:
-            print(f"Error adding like: {e}")
+            print(f"Error いいね追加失敗: {e}")
             return jsonify({'error': 'Failed to add like'}), 500
         action = 'added'
     
@@ -299,7 +300,7 @@ def like_sale():
         # 「いいね」された商品に対する「いいね」の数を取得
         like_count = Like.query.filter_by(saleId=sale_id).count()
     except Exception as e:
-        print(f"Error querying like count: {e}")
+        print(f"Error いいね数の取得失敗: {e}")
         return jsonify({'error': 'Failed to query like count'}), 500
     
     print(f"Like count for sale {sale_id}: {like_count}")
@@ -314,7 +315,7 @@ def myLikeList():
         user = User.query.get(userId) # userIdからそのユーザー情報を取得
         myLikeList = db.session.query(Sale).join(Like).filter(Like.userId == userId).order_by(Like.likeId.desc()).all()
     except Exception as e:
-        print(f"Error querying liked sales: {e}")
+        print(f"Error いいね一覧の取得失敗: {e}")
         myLikeList = []
         
     print(myLikeList)
@@ -333,7 +334,7 @@ def sort_products():
             # いいねした順
             myLikeList = db.session.query(Sale).join(Like).filter(Like.userId == userId).order_by(Like.likeId.desc()).all()
         except Exception as e:
-            print(f"Error querying liked sales: {e}")
+            print(f"Error いいねした順の並び替え失敗: {e}")
             myLikeList = []
             
     elif sort_order == 'orderCheapPrice':
@@ -341,7 +342,7 @@ def sort_products():
             # 価格の安い順
             myLikeList = db.session.query(Sale).join(Like).filter(Like.userId == userId).order_by(Sale.startingPrice.asc()).all()
         except Exception as e:
-            print(f"Error querying liked sales: {e}")
+            print(f"Error 価格の安い順の並び替え失敗: {e}")
             myLikeList = []
             
     elif sort_order == 'orderHighPrice':
@@ -349,7 +350,7 @@ def sort_products():
             # 価格の高い順
             myLikeList = db.session.query(Sale).join(Like).filter(Like.userId == userId).order_by(Sale.startingPrice.desc()).all()
         except Exception as e:
-            print(f"Error querying liked sales: {e}")
+            print(f"Error 価格の高い順の並び替え失敗: {e}")
             myLikeList = []
 
     # 商品情報を辞書形式に整形
@@ -368,11 +369,11 @@ def myPage():
     userId = session.get('userId')
     try:
         user = User.query.get(userId)
-         # session(ログイン状態のuserId)のsaleの行を取り出し、
+        # session(ログイン状態のuserId)のsaleの行を取り出し、
         # 外部キーのuserIdよりUserテーブルの中のデータを参照できる。
         sales = db.session.query(Sale).join(User).filter_by(userId=userId).all()
     except Exception as e:
-        print(f"Error querying user: {e}")
+        print(f"Error マイページの情報取得失敗: {e}")
         user = None
         sales = []
         
@@ -385,7 +386,7 @@ def myPage():
     try:
         listing_number = db.session.query(Sale).filter(Sale.userId == userId).count()
     except Exception as e:
-        print(f"Error querying user: {e}")
+        print(f"Error 商品のカウントに失敗: {e}")
         listing_number = 0
             
     return render_template('myPage.html', user=user, sales=sales, listingNumber=listing_number)
@@ -407,7 +408,7 @@ def save_image_to_file(image_bytes, upload_folder):
             f.write(image_bytes)
         return file_path
     except Exception as e:
-        print(f"Error saving image: {e}")
+        print(f"Error 画像保存失敗: {e}")
         return None
 
 # MARK:　出品ページ
@@ -425,7 +426,7 @@ def add_sale():
         print(postingTime)
         print(categories)
     except Exception as e:
-        print(f"Error parsing request data: {e}")
+        print(f"Error 出品情報取得失敗: {e}")
         return jsonify({'error': 'Failed to parse request data'}), 400
     
     if not image_data:
@@ -442,7 +443,7 @@ def add_sale():
     try:
         user = User.query.get(userId) # userIdからuser情報受け取り
     except Exception as e:
-        print(f"Error querying user: {e}")
+        print(f"Error ユーザー情報取得失敗: {e}")
         return jsonify({'error': 'Failed to query user'}), 500
     
     displayName = user.displayName # displayNameの取得
@@ -461,7 +462,7 @@ def add_sale():
          # categories 変数の値に基づいて Category を一度に取得
         category_objects = Category.query.filter(Category.categoryName.in_(categories)).all()
     except Exception as e:
-        print(f"Error creating sale: {e}")
+        print(f"Error 出品処理失敗: {e}")
         return jsonify({'error': 'Failed to create sale'}), 500
     
    
@@ -480,7 +481,7 @@ def add_sale():
         db.session.add(new_sale, new_bid)
         db.session.commit()
     except Exception as e:
-        print(f"Error adding categories: {e}")
+        print(f"Error 中間テーブルへの追加失敗: {e}")
         return jsonify({'error': 'Failed to add categories'}), 500
 
     return jsonify({'message': 'Sale added successfully'}), 201    
@@ -497,7 +498,7 @@ def result():
         # 既存のカテゴリを取得
         categories = Category.query.all()
     except Exception as e:
-        print(f"Error querying categories: {e}")
+        print(f"Error カテゴリ取得失敗: {e}")
         categories = []
     
     return render_template('result.html', categories=categories)
@@ -531,7 +532,7 @@ def add_categories():
         db.session.add_all(dummy_categories)
         db.session.commit()
     except Exception as e:
-        print(f"Error adding categories: {e}")
+        print(f"Error カテゴリ追加処理失敗: {e}")
         db.session.rollback()
         dummy_categories = []
         
@@ -559,7 +560,7 @@ if __name__ == '__main__':
             dummy_categories = add_categories()
             # add_sales(dummy_categories)
         except Exception as e:
-            print(f"Error creating tables: {e}")
+            print(f"Error テーブル作成失敗: {e}")
             db.session.rollback()
             db.session.close()
             exit()
