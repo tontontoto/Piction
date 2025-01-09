@@ -4,7 +4,7 @@ from model_sample import db, User, Sale, Category, Bid, Like, DBNAME
 from flask_login import LoginManager, login_user, logout_user, login_required
 from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
-from sqlalchemy import func
+from sqlalchemy import func, Boolean, update
 import os
 import base64
 
@@ -91,6 +91,9 @@ def saleDetail(sale_id):
             lastAmount = db.session.query(func.max(Bid.bidPrice)).scalar()
             # 落札者userIdの取得
             bidUserId = db.session.query(Bid.userId).filter(Bid.bidPrice == lastAmount).scalar()
+        
+            db.session.query(Sale).filter(Sale.saleId == sale_id).update({"saleStatus": False})
+            db.session.commit()
     except Exception as e:
 
         print("最大金額（落札金額）:",lastAmount)
