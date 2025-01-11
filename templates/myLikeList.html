@@ -88,7 +88,7 @@
                 {% for sale in myLikeList %}
                 <tr class="likeList_item">
                     <td class="likeList_itemCulumn">
-                        <img src="{{ url_for('static', filename=sale.filePath) }}" alt="saleImage" id="uploadImg">
+                        <img src="{{ sale.filePath+'?'+SAS}}" alt="saleImage" id="uploadImg">
                     </td>
                     <td class="likeList_itemCulumn">{{ sale.title }}</td>
                     <td class="likeList_itemCulumn">￥{{ sale.currentPrice }}</td>

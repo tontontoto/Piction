@@ -1,22 +1,45 @@
 # MARK:インポート
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session
-from model_sample import db, User, Sale, Category, Bid, Like, DBNAME
+from model_sample import db, User, Sale, Category, Bid, Like, DB_URL
 from flask_login import LoginManager, login_user, logout_user, login_required
 from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
 from sqlalchemy import func, Boolean, update
+from azure.storage.blob import BlobServiceClient
+from dotenv import load_dotenv
+from os.path import join, dirname
+# from werkzeug import secure_filename
+import random
+import string
+import mysql.connector
 import os
 import base64
 
+S_URL = os.environ.get("S_URL")
+S_KEY = os.environ.get("S_KEY")
+S_CNT = os.environ.get("S_CNT")
+SAS = os.environ.get("SAS")
+
+
 # MARK:インスタンス化
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = DBNAME
+#データベースのURLを設定
+app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.urandom(24) # 複数ユーザーが各々のページにアクセスできる
-app.config['UPLOAD_FOLDER'] = './static/upload_images'
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-print("データベースURL="+DBNAME)
+# ローカル画像保存先フォルダ
+# app.config['UPLOAD_FOLDER'] = './static/upload_images'
+# os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+# MARK: Azure Blob Storage設定
+AZURE_CONNECTION_STRING = S_URL
+AZURE_CONTAINER_NAME = S_CNT
+blob_service_client = BlobServiceClient.from_connection_string(AZURE_CONNECTION_STRING)
+container_client = blob_service_client.get_container_client(AZURE_CONTAINER_NAME)
+
+print("データベースURL=" + DB_URL)
+print("BLOB接続文字列=" + S_URL)
 
 try:
     db.init_app(app)
@@ -94,13 +117,14 @@ def saleDetail(sale_id):
         
             db.session.query(Sale).filter(Sale.saleId == sale_id).update({"saleStatus": False})
             db.session.commit()
-    except Exception as e:
-        print(f"Error 商品情報取得失敗: {e}")
-        
-        print("最大金額（落札金額）:",lastAmount)
+            
+            print("最大金額（落札金額）:",lastAmount)
         finished = "この作品のオークションは終了しています"
-        return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, finished=finished, bidUserId=bidUserId ,lastAmount=lastAmount)
-
+        return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, finished=finished, bidUserId=bidUserId ,lastAmount=lastAmount, SAS=SAS)
+    
+    except Exception as e:
+        print(f"Error オークション終了処理失敗: {e}")
+        
     # 商品なかった時のerror処理
     if sale is None:
         flash('Sale not found', 'error')
@@ -116,7 +140,7 @@ def saleDetail(sale_id):
     print(timeDifference, type(timeDifference))
     
     # 商品情報をテンプレートに渡す
-    return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, timeDifference=timeDifference)
+    return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, timeDifference=timeDifference, SAS=SAS)
 
     
 # MARK: 入札
@@ -261,7 +285,7 @@ def top():
         print(f"Error 商品情報取得失敗: {e}")
         sales = []      
         
-    return render_template('top.html', sales=sales, userId=userId, liked_sale_ids=liked_sale_ids, saleRankings=saleRankings)
+    return render_template('top.html', sales=sales, userId=userId, liked_sale_ids=liked_sale_ids, saleRankings=saleRankings, SAS=SAS)
 
 # MARK: いいね情報受け取りroute
 @app.route('/like', methods=['POST'])
@@ -389,7 +413,7 @@ def myPage():
         print(f"Error 商品のカウントに失敗: {e}")
         listing_number = 0
             
-    return render_template('myPage.html', user=user, sales=sales, listingNumber=listing_number)
+    return render_template('myPage.html', user=user, sales=sales, listingNumber=listing_number, SAS=SAS)
 
 # MARK: canvas→画像変換
 def decode_image(image_data):
@@ -400,13 +424,31 @@ def decode_image(image_data):
         return None
 
 # MARK: 画像保存
-def save_image_to_file(image_bytes, upload_folder):
+# ローカルフォルダに保存
+# def save_image_to_file(image_bytes, upload_folder):
+#     try:
+#         file_name = f"image_{len(os.listdir(upload_folder)) + 1}.png"
+#         file_path = os.path.join(upload_folder, file_name).replace('\\', '/')
+#         with open(file_path, 'wb') as f:
+#             f.write(image_bytes)
+#         return file_path
+#     except Exception as e:
+#         print(f"Error 画像保存失敗: {e}")
+#         return None
+
+# Azure Blob Storageに保存
+def save_image_to_azure(image_bytes):
     try:
-        file_name = f"image_{len(os.listdir(upload_folder)) + 1}.png"
-        file_path = os.path.join(upload_folder, file_name).replace('\\', '/')
-        with open(file_path, 'wb') as f:
-            f.write(image_bytes)
-        return file_path
+        # ランダムなファイル名を生成
+        file_name = f"image_{''.join(random.choices(string.ascii_letters + string.digits, k=8))}.png"
+
+        # Azure Blob Storageに画像をアップロード
+        blob_client = container_client.get_blob_client(file_name)
+        blob_client.upload_blob(image_bytes, overwrite=True)
+
+        # アップロードされた画像のURLを取得
+        blob_url = f"https://{blob_service_client.account_name}.blob.core.windows.net/{AZURE_CONTAINER_NAME}/{file_name}"
+        return blob_url
     except Exception as e:
         print(f"Error 画像保存失敗: {e}")
         return None
@@ -436,8 +478,19 @@ def add_sale():
     if not image_bytes:
         return jsonify({'error': 'Invalid image data'}), 400
 
-    file_path = save_image_to_file(image_bytes, app.config['UPLOAD_FOLDER'])
-    file_path = file_path.replace(app.config['UPLOAD_FOLDER'], 'upload_images')
+    # 画像をローカルフォルダに保存
+    # file_path = save_image_to_file(image_bytes, app.config['UPLOAD_FOLDER'])
+    # file_path = file_path.replace(app.config['UPLOAD_FOLDER'], 'upload_images')
+
+    try:
+        # 画像をAzure Blob Storageに保存
+        blob_url = save_image_to_azure(image_bytes)
+        if not blob_url:
+            return jsonify({"error": "Failed to save image"}), 500
+    except Exception as e:
+        # 保存成功時に画像のURLを返す
+        return jsonify({"message": "Image uploaded successfully", "image_url": blob_url}), 201
+
 
     userId = session.get('userId') # 今使っているユーザーのuserIdの取得
     try:
@@ -458,9 +511,11 @@ def add_sale():
     print("掲載満了時刻：", postingTimeStr)
 
     try:
-        new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=file_path, startingPrice=price,currentPrice=price, creationTime=time, startingTime=datetimeStr, finishTime=postingTimeStr)
+        new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=blob_url, startingPrice=price,currentPrice=price, creationTime=time, startingTime=datetimeStr, finishTime=postingTimeStr)
          # categories 変数の値に基づいて Category を一度に取得
         category_objects = Category.query.filter(Category.categoryName.in_(categories)).all()
+        db.session.add(new_sale)
+        db.session.commit()
     except Exception as e:
         print(f"Error 出品処理失敗: {e}")
         return jsonify({'error': 'Failed to create sale'}), 500
