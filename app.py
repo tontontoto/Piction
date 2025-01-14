@@ -316,13 +316,14 @@ def myLikeList():
         user = User.query.get(userId) 
         myLikeList = db.session.query(Sale).join(Like).filter(Like.userId == userId).order_by(Like.likeId.desc()).all()
         # 入札数の取得
-        bidCount = db.session.query(Sale.saleId, func.count(Bid.bidId).label('bid_count')) \
-                    .join(Bid, Bid.saleId == Sale.saleId) \
+        bidCount = db.session.query(Sale.saleId, func.coalesce(func.count(Bid.bidId), 0).label('bid_count')) \
+                    .outerjoin(Bid, Bid.saleId == Sale.saleId) \
                     .join(Like, Like.saleId == Sale.saleId) \
                     .filter(Like.userId == userId) \
                     .group_by(Sale.saleId) \
                     .all()
 
+        print(bidCount)
     except Exception as e:
         print(f"Error いいね一覧の取得失敗: {e}")
         myLikeList = []
@@ -363,12 +364,26 @@ def sort_products():
             print(f"Error 価格の高い順の並び替え失敗: {e}")
             myLikeList = []
 
-    # 商品情報を辞書形式に整形
-        # saleファイルパスを正しいURL形式に変換
-    for sale in myLikeList:
-        sale.filePath = url_for('static', filename=sale.filePath)
-
-    product_list = [{'id': sale.saleId, 'title': sale.title, 'currentPrice': sale.currentPrice, 'filePath': sale.filePath} for sale in myLikeList]
+    # 入札数の取得
+    bidCount = db.session.query(Sale.saleId, func.coalesce(func.count(Bid.bidId), 0).label('bid_count')) \
+                .outerjoin(Bid, Bid.saleId == Sale.saleId) \
+                .join(Like, Like.saleId == Sale.saleId) \
+                .filter(Like.userId == userId) \
+                .group_by(Sale.saleId) \
+                .all()
+    
+    # 商品情報を整形
+    product_list = [
+        {
+            'id': sale.saleId,
+            'title': sale.title,
+            'currentPrice': sale.currentPrice,
+            'filePath': url_for('static', filename=sale.filePath),
+            'bidCount': next((bid for sale_id, bid in bidCount if sale_id == sale.saleId), 0)
+        }
+        for sale in myLikeList
+    ]
+    
     # 結果をJSON形式で返す
     return jsonify(product_list)
 

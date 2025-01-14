@@ -11,7 +11,7 @@ function submitSortOrder() {
         .catch(error => console.error('Error:', error));
 }
 
-function updateProductList(products) {
+function updateProductList(products, bidCount) {
     const productList = document.getElementById("myLikeListContainer");
     productList.innerHTML = '';  // 既存のリストをクリア
 
@@ -29,7 +29,7 @@ function updateProductList(products) {
             </td>
             <td class="likeList_itemCulumn">${sale.title}</td>
             <td class="likeList_itemCulumn">￥${sale.currentPrice}</td>
-            <td class="likeList_itemCulumn">xxx</td>
+            <td class="likeList_itemCulumn">${sale.bidCount}</td>
             <td class="likeList_itemCulumn">xx:xx</td>
         `;
 
