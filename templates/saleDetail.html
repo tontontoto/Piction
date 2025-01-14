@@ -24,7 +24,8 @@
     {% else %}
     <div class="flex-container">
         <div class="main">
-            <img src="{{ sale.filePath+'?'+SAS}}" alt="">
+            <!-- <img src="{{ sale.filePath+'?'+SAS}}" alt=""> -->
+            <img src="{{ url_for('static', filename=sale.filePath) }}" alt="">
         </div>
         <div class="text">
             <h1>{{ sale.title }}</h1>
