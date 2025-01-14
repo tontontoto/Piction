@@ -11,7 +11,7 @@ function submitSortOrder() {
         .catch(error => console.error('Error:', error));
 }
 
-function updateProductList(products) {
+function updateProductList(products, bidCount) {
     const productList = document.getElementById("myLikeListContainer");
     productList.innerHTML = '';  // 既存のリストをクリア
 
@@ -28,9 +28,9 @@ function updateProductList(products) {
                 <img src="${imageUrl}" alt="saleImage" id="uploadImg">
             </td>
             <td class="likeList_itemCulumn">${sale.title}</td>
-            <td class="likeList_itemCulumn">￥${sale.startingPrice}</td>
-            <td class="likeList_itemCulumn">xxx</td>
-            <td class="likeList_itemCulumn">xx:xx</td>
+            <td class="likeList_itemCulumn">￥${sale.currentPrice}</td>
+            <td class="likeList_itemCulumn">${sale.bidCount}</td>
+            <td class="likeList_itemCulumn">${sale.remainingTime}</td>
         `;
 
         productList.appendChild(row);
