@@ -1,6 +1,8 @@
 console.log("hello!");
 
-function likeSale(saleId, userId) {
+function likeSale(saleId, userId, event) {
+    event.preventDefault();
+    event.stopPropagation();
     fetch('/like', {
         method: 'POST',
         body: new URLSearchParams({
