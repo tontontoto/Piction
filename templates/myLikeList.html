@@ -96,18 +96,15 @@
                     <td class="likeList_itemCulumn">￥{{ sale.currentPrice }}</td>
                     <!-- 入札数 -->
                     <td class="likeList_itemCulumn">
-                        <!-- 初期値0を設定 -->
                         {% for sale_id, bid in bidCount %}
                             {% if sale_id == sale.saleId %}
                                 {% set bid_count = bid %}
                             {% endif %}
                             {{ bid_count }} 
                         {% endfor %}
-                        <!-- 最終的な入札数を表示 -->
-                        
                     </td>
                     <!-- 残り時間 -->
-                    <td class="likeList_itemCulumn">xxx</td>
+                    <td class="likeList_itemCulumn">{{ sale.remaining_time_str   }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

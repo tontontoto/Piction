@@ -322,7 +322,32 @@ def myLikeList():
                     .filter(Like.userId == userId) \
                     .group_by(Sale.saleId) \
                     .all()
+        # 残り時間の取得
+        for sale in myLikeList:
+            # finishTimeをdatetime型に変換 (形式: '%Y/%m/%d %H:%M:%S')
+            finish_time_str = sale.finishTime
+            finish_time = datetime.strptime(finish_time_str, '%Y/%m/%d %H:%M:%S')  # 'YYYY/MM/DD HH:MM:SS' の形式
 
+            # 現在の時刻を取得
+            current_time = datetime.now()
+
+            # 残り時間を計算
+            remaining_time = finish_time - current_time  # 残り時間
+            remaining_seconds = int(remaining_time.total_seconds())  # 秒に変換
+
+            # 残り時間が0秒未満（終了後）の場合
+            if remaining_seconds < 0:
+                remaining_time_str = "終了"
+
+            else:
+                days, remainder = divmod(remaining_seconds, 86400)  # 日数を取得
+                hours, remainder = divmod(remainder, 3600)  # 時間を取得
+                minutes, seconds = divmod(remainder, 60)  # 分と秒を取得
+
+                remaining_time_str = f"{days}日{hours:02}時間{minutes:02}分"  # 残り時間を表示形式にする
+            
+            # saleに残り時間を追加
+            sale.remaining_time_str = remaining_time_str  # 各商品に残り時間を保持させる
         print(bidCount)
     except Exception as e:
         print(f"Error いいね一覧の取得失敗: {e}")
@@ -373,16 +398,40 @@ def sort_products():
                 .all()
     
     # 商品情報を整形
-    product_list = [
-        {
+    product_list = []
+    for sale in myLikeList:
+        # finishTimeをdatetime型に変換 (形式: '%Y/%m/%d %H:%M:%S')
+        finish_time_str = sale.finishTime
+        finish_time = datetime.strptime(finish_time_str, '%Y/%m/%d %H:%M:%S')  # 'YYYY/MM/DD HH:MM:SS' の形式
+
+        # 現在の時刻を取得
+        current_time = datetime.now()
+
+        # 残り時間を計算
+        remaining_time = finish_time - current_time  # 残り時間
+        remaining_seconds = int(remaining_time.total_seconds())  # 秒に変換
+
+        # 残り時間が0秒未満（終了後）の場合
+        if remaining_seconds < 0:
+            remaining_time_str = "終了"
+
+        else:
+            days, remainder = divmod(remaining_seconds, 86400)  # 日数を取得
+            hours, remainder = divmod(remainder, 3600)  # 時間を取得
+            minutes, seconds = divmod(remainder, 60)  # 分と秒を取得
+
+            remaining_time_str = f"{days}日{hours:02}時間{minutes:02}分"  # 残り時間を表示形式にする
+
+        # 商品情報に残り時間を追加
+        product_list.append({
             'id': sale.saleId,
             'title': sale.title,
             'currentPrice': sale.currentPrice,
             'filePath': url_for('static', filename=sale.filePath),
-            'bidCount': next((bid for sale_id, bid in bidCount if sale_id == sale.saleId), 0)
-        }
-        for sale in myLikeList
-    ]
+            'bidCount': next((bid for sale_id, bid in bidCount if sale_id == sale.saleId), 0),
+            'remainingTime': remaining_time_str  # 残り時間を追加
+        })
+
     
     # 結果をJSON形式で返す
     return jsonify(product_list)

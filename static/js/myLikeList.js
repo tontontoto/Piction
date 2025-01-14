@@ -30,7 +30,7 @@ function updateProductList(products, bidCount) {
             <td class="likeList_itemCulumn">${sale.title}</td>
             <td class="likeList_itemCulumn">￥${sale.currentPrice}</td>
             <td class="likeList_itemCulumn">${sale.bidCount}</td>
-            <td class="likeList_itemCulumn">xx:xx</td>
+            <td class="likeList_itemCulumn">${sale.remainingTime}</td>
         `;
 
         productList.appendChild(row);
