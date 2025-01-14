@@ -28,7 +28,7 @@ function updateProductList(products) {
                 <img src="${imageUrl}" alt="saleImage" id="uploadImg">
             </td>
             <td class="likeList_itemCulumn">${sale.title}</td>
-            <td class="likeList_itemCulumn">￥${sale.startingPrice}</td>
+            <td class="likeList_itemCulumn">￥${sale.currentPrice}</td>
             <td class="likeList_itemCulumn">xxx</td>
             <td class="likeList_itemCulumn">xx:xx</td>
         `;

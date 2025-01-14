@@ -90,10 +90,20 @@
                     <td class="likeList_itemCulumn">
                         <img src="{{ url_for('static', filename=sale.filePath) }}" alt="saleImage" id="uploadImg">
                     </td>
+                    <!-- 作品名 -->
                     <td class="likeList_itemCulumn">{{ sale.title }}</td>
+                    <!-- 現在価格 -->
                     <td class="likeList_itemCulumn">￥{{ sale.currentPrice }}</td>
+                    <!-- 入札数 -->
+                    <td class="likeList_itemCulumn">
+                        {% for sale_id, bid_count in bidCount %}
+                            {% if sale_id == sale.saleId %}
+                                {{ bid_count }}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <!-- 残り時間 -->
                     <td class="likeList_itemCulumn">xxx</td>
-                    <td class="likeList_itemCulumn">xx:xx</td>
                 </tr>
                 {% endfor %}
             </tbody>

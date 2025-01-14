@@ -312,14 +312,24 @@ def like_sale():
 def myLikeList():
     userId = session.get('userId')
     try:
-        user = User.query.get(userId) # userIdからそのユーザー情報を取得
+        # userIdからそのユーザー情報を取得
+        user = User.query.get(userId) 
         myLikeList = db.session.query(Sale).join(Like).filter(Like.userId == userId).order_by(Like.likeId.desc()).all()
+        # 入札数の取得
+        bidCount = db.session.query(Sale.saleId, func.count(Bid.bidId).label('bid_count')) \
+                    .join(Bid, Bid.saleId == Sale.saleId) \
+                    .join(Like, Like.saleId == Sale.saleId) \
+                    .filter(Like.userId == userId) \
+                    .group_by(Sale.saleId) \
+                    .all()
+
     except Exception as e:
         print(f"Error いいね一覧の取得失敗: {e}")
         myLikeList = []
+        bidCount = []
         
     print(myLikeList)
-    return render_template('myLikeList.html', user=user, myLikeList=myLikeList)
+    return render_template('myLikeList.html', user=user, myLikeList=myLikeList, bidCount=bidCount)
 
 # MARK: 並び順を渡すurl
 @app.route('/sort_products')
@@ -340,7 +350,7 @@ def sort_products():
     elif sort_order == 'orderCheapPrice':
         try:
             # 価格の安い順
-            myLikeList = db.session.query(Sale).join(Like).filter(Like.userId == userId).order_by(Sale.startingPrice.asc()).all()
+            myLikeList = db.session.query(Sale).join(Like).filter(Like.userId == userId).order_by(Sale.currentPrice.asc()).all()
         except Exception as e:
             print(f"Error 価格の安い順の並び替え失敗: {e}")
             myLikeList = []
@@ -348,7 +358,7 @@ def sort_products():
     elif sort_order == 'orderHighPrice':
         try:
             # 価格の高い順
-            myLikeList = db.session.query(Sale).join(Like).filter(Like.userId == userId).order_by(Sale.startingPrice.desc()).all()
+            myLikeList = db.session.query(Sale).join(Like).filter(Like.userId == userId).order_by(Sale.currentPrice.desc()).all()
         except Exception as e:
             print(f"Error 価格の高い順の並び替え失敗: {e}")
             myLikeList = []
@@ -358,7 +368,7 @@ def sort_products():
     for sale in myLikeList:
         sale.filePath = url_for('static', filename=sale.filePath)
 
-    product_list = [{'id': sale.saleId, 'title': sale.title, 'startingPrice': sale.startingPrice, 'filePath': sale.filePath} for sale in myLikeList]
+    product_list = [{'id': sale.saleId, 'title': sale.title, 'currentPrice': sale.currentPrice, 'filePath': sale.filePath} for sale in myLikeList]
     # 結果をJSON形式で返す
     return jsonify(product_list)
 
