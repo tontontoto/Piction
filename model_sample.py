@@ -16,10 +16,10 @@ load_dotenv(verbose=True)
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
-DBNAME = os.environ.get("DB_URL")
+DB_URL = os.environ.get("DB_URL")
 
 Base = declarative_base()
-engine = create_engine(DBNAME)
+engine = create_engine(DB_URL)
 db = SQLAlchemy()
 	
 saleCategoryAssociation = Table(
@@ -64,7 +64,7 @@ class Sale(db.Model):
     title = db.Column(db.String(40), default="無題")
     displayName = db.Column(db.String(10))
     # categoryId = db.Column(db.Integer, ForeignKey('category.categoryId'))
-    filePath = db.Column(db.String(30))
+    filePath = db.Column(db.String(254))
     startingPrice = db.Column(db.Integer)
     currentPrice = db.Column(db.Integer)
     creationTime = db.Column(db.String(5))

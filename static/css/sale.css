@@ -97,7 +97,6 @@
     align-items: start;
     display: flex;
     justify-content: center;
-    z-index: 100;
 }
 .heartlogo {
     width: 30px;
@@ -117,4 +116,4 @@
 .showMore a {
     color: #333333;
     text-decoration: none;
-}
+} 

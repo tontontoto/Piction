@@ -1,22 +1,27 @@
 # MARK:インポート
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session
-from model_sample import db, User, Sale, Category, Bid, Like, DBNAME
+from model_sample import db, User, Sale, Category, Bid, Like, DB_URL
 from flask_login import LoginManager, login_user, logout_user, login_required
 from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
-from sqlalchemy import func, Boolean, update
+from sqlalchemy import func
+from azure.storage.blob import BlobServiceClient
+# from werkzeug import secure_filename
+import random
+import string
 import os
 import base64
 
 # MARK:インスタンス化
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = DBNAME
+#データベースのURLを設定
+app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.urandom(24) # 複数ユーザーが各々のページにアクセスできる
+
+# ローカル画像保存先フォルダ
 app.config['UPLOAD_FOLDER'] = './static/upload_images'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-
-print("データベースURL="+DBNAME)
 
 try:
     db.init_app(app)
@@ -472,6 +477,7 @@ def decode_image(image_data):
         return None
 
 # MARK: 画像保存
+# ローカルフォルダに保存
 def save_image_to_file(image_bytes, upload_folder):
     try:
         file_name = f"image_{len(os.listdir(upload_folder)) + 1}.png"
@@ -508,6 +514,7 @@ def add_sale():
     if not image_bytes:
         return jsonify({'error': 'Invalid image data'}), 400
 
+    # 画像をローカルフォルダに保存
     file_path = save_image_to_file(image_bytes, app.config['UPLOAD_FOLDER'])
     file_path = file_path.replace(app.config['UPLOAD_FOLDER'], 'upload_images')
 
@@ -531,8 +538,11 @@ def add_sale():
 
     try:
         new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=file_path, startingPrice=price,currentPrice=price, creationTime=time, startingTime=datetimeStr, finishTime=postingTimeStr)
+        
          # categories 変数の値に基づいて Category を一度に取得
         category_objects = Category.query.filter(Category.categoryName.in_(categories)).all()
+        db.session.add(new_sale)
+        db.session.commit()
     except Exception as e:
         print(f"Error 出品処理失敗: {e}")
         return jsonify({'error': 'Failed to create sale'}), 500
@@ -626,7 +636,7 @@ def add_categories():
 if __name__ == '__main__': 
     with app.app_context():
         try:
-            # db.drop_all() # テーブルの全削除
+            db.drop_all() # テーブルの全削除
             db.create_all()
             # add_users()
             dummy_categories = add_categories()
