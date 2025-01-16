@@ -3,8 +3,8 @@
     <div class="mySales">
         {% for sale in sales %}
         <div class="mySale">
-            <!-- <img src="{{ url_for('static', filename=sale.filePath) }}" alt="saleImage"> -->
-            <img src="{{ sale.filePath+'?'+SAS}}" alt="saleImage">
+            <img src="{{ url_for('static', filename=sale.filePath) }}" alt="saleImage">
+            <!-- <img src="{{ sale.filePath+'?'+SAS}}" alt="saleImage"> -->
             <div class="mySaleInfo">
                 <h3>{{ sale.title }}</h3>
                 <p>作：{{ sale.user.displayName }}</p>

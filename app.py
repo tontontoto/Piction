@@ -33,9 +33,9 @@ container_client = blob_service_client.get_container_client(AZURE_CONTAINER_NAME
 print("データベースURL=" + DB_URL)
 print("BLOB接続文字列=" + S_URL)
 
-# # ローカル画像保存先フォルダ
-# app.config['UPLOAD_FOLDER'] = './static/upload_images'
-# os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+# ローカル画像保存先フォルダ
+app.config['UPLOAD_FOLDER'] = './static/upload_images'
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 try:
     db.init_app(app)
@@ -495,33 +495,33 @@ def decode_image(image_data):
 
 # MARK: 画像保存
 # ローカルフォルダに保存
-# def save_image_to_file(image_bytes, upload_folder):
-#     try:
-#         file_name = f"image_{len(os.listdir(upload_folder)) + 1}.png"
-#         file_path = os.path.join(upload_folder, file_name).replace('\\', '/')
-#         with open(file_path, 'wb') as f:
-#             f.write(image_bytes)
-#         return file_path
-#     except Exception as e:
-#         print(f"Error 画像保存失敗: {e}")
-#         return None
-    
-# Azure Blob Storageに保存
-def save_image_to_azure(image_bytes):
+def save_image_to_file(image_bytes, upload_folder):
     try:
-        # ランダムなファイル名を生成
-        file_name = f"image_{''.join(random.choices(string.ascii_letters + string.digits, k=8))}.png"
-
-        # Azure Blob Storageに画像をアップロード
-        blob_client = container_client.get_blob_client(file_name)
-        blob_client.upload_blob(image_bytes, overwrite=True)
-
-        # アップロードされた画像のURLを取得
-        blob_url = f"https://{blob_service_client.account_name}.blob.core.windows.net/{AZURE_CONTAINER_NAME}/{file_name}"
-        return blob_url
+        file_name = f"image_{len(os.listdir(upload_folder)) + 1}.png"
+        file_path = os.path.join(upload_folder, file_name).replace('\\', '/')
+        with open(file_path, 'wb') as f:
+            f.write(image_bytes)
+        return file_path
     except Exception as e:
         print(f"Error 画像保存失敗: {e}")
         return None
+    
+# Azure Blob Storageに保存
+# def save_image_to_azure(image_bytes):
+#     try:
+#         # ランダムなファイル名を生成
+#         file_name = f"image_{''.join(random.choices(string.ascii_letters + string.digits, k=8))}.png"
+
+#         # Azure Blob Storageに画像をアップロード
+#         blob_client = container_client.get_blob_client(file_name)
+#         blob_client.upload_blob(image_bytes, overwrite=True)
+
+#         # アップロードされた画像のURLを取得
+#         blob_url = f"https://{blob_service_client.account_name}.blob.core.windows.net/{AZURE_CONTAINER_NAME}/{file_name}"
+#         return blob_url
+#     except Exception as e:
+#         print(f"Error 画像保存失敗: {e}")
+#         return None
 
 # MARK:　出品ページ
 @app.route('/add_sale', methods=['POST'])
@@ -549,17 +549,17 @@ def add_sale():
         return jsonify({'error': 'Invalid image data'}), 400
 
     # 画像をローカルフォルダに保存
-    # file_path = save_image_to_file(image_bytes, app.config['UPLOAD_FOLDER'])
-    # file_path = file_path.replace(app.config['UPLOAD_FOLDER'], 'upload_images')
+    file_path = save_image_to_file(image_bytes, app.config['UPLOAD_FOLDER'])
+    file_path = file_path.replace(app.config['UPLOAD_FOLDER'], 'upload_images')
     
-    try:
-        # 画像をAzure Blob Storageに保存
-        blob_url = save_image_to_azure(image_bytes)
-        if not blob_url:
-            return jsonify({"error": "Failed to save image"}), 500
-    except Exception as e:
-        # 保存成功時に画像のURLを返す
-        return jsonify({"message": "Image uploaded successfully", "image_url": blob_url}), 201
+    # try:
+    #     # 画像をAzure Blob Storageに保存
+    #     blob_url = save_image_to_azure(image_bytes)
+    #     if not blob_url:
+    #         return jsonify({"error": "Failed to save image"}), 500
+    # except Exception as e:
+    #     # 保存成功時に画像のURLを返す
+    #     return jsonify({"message": "Image uploaded successfully", "image_url": blob_url}), 201
 
 
     userId = session.get('userId') # 今使っているユーザーのuserIdの取得
@@ -581,7 +581,7 @@ def add_sale():
     print("掲載満了時刻：", postingTimeStr)
 
     try:
-        new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=blob_url, startingPrice=price,currentPrice=price, creationTime=time, startingTime=datetimeStr, finishTime=postingTimeStr)
+        new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=file_path, startingPrice=price,currentPrice=price, creationTime=time, startingTime=datetimeStr, finishTime=postingTimeStr)
         
          # categories 変数の値に基づいて Category を一度に取得
         category_objects = Category.query.filter(Category.categoryName.in_(categories)).all()
@@ -628,6 +628,10 @@ def result():
         categories = []
     
     return render_template('result.html', categories=categories)
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
 
 # # ---- ユーザーデータの仮挿入 ----
 # def add_users():
@@ -680,10 +684,10 @@ def add_categories():
 if __name__ == '__main__': 
     with app.app_context():
         try:
-            db.drop_all() # テーブルの全削除
+            # db.drop_all() # テーブルの全削除
             db.create_all()
             # add_users()
-            dummy_categories = add_categories()
+            # dummy_categories = add_categories()
             # add_sales(dummy_categories)
         except Exception as e:
             print(f"Error テーブル作成失敗: {e}")

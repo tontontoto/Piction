@@ -7,8 +7,8 @@
         <a class="saleBox" href="{{ url_for('saleDetail', sale_id=sale.saleId) }}">
             <div>
                 <div>
-                    <!-- <img src="{{ url_for('static', filename=sale.filePath) }}" alt="saleImage" id="uploadImg"> -->
-                    <img src="{{ sale.filePath+'?'+SAS}}" alt="saleImage" id="uploadImg">
+                    <img src="{{ url_for('static', filename=sale.filePath) }}" alt="saleImage" id="uploadImg">
+                    <!-- <img src="{{ sale.filePath }}" alt="saleImage" id="uploadImg"> -->
                 </div>
                 <div>
                     <h3>{{ sale.title }}</h3>

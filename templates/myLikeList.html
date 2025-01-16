@@ -89,8 +89,8 @@
                 <tr class="likeList_item">
                     <td class="likeList_itemCulumn">
                     
-                        <!-- <img src="{{ url_for('static', filename=sale.filePath) }}" alt="saleImage" id="uploadImg"> -->
-                        <img src="{{ sale.filePath+'?'+SAS}}" alt="saleImage" id="uploadImg">
+                        <img src="{{ url_for('static', filename=sale.filePath) }}" alt="saleImage" id="uploadImg">
+                        <!-- <img src="{{ sale.filePath+'?'+SAS}}" alt="saleImage" id="uploadImg"> -->
                     </td>
                     <!-- 作品名 -->
                     <td class="likeList_itemCulumn">{{ sale.title }}</td>

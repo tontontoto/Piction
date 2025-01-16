@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
+    <title>Document</title>
+</head>
+<body>
+<div class="main">
+    <div class="header">
+        <h1>お問い合わせ</h1>
+    </div>
+    <div class="content">
+        <div class="form-items">
+            <span class="required"><label for="name">お名前</label></span><br />
+            <input type="text" name="name" class="textbox" placeholder="お名前"><br />
+            <br>
+            
+            
+            <span class="required"><label for="name">お名前(フリガナ)</label></span><br />
+            <input type="text" name="name" class="textbox" placeholder="お名前"><br />
+            <br>
+            
+            
+            <span class="required"><label for="name">メールアドレス</label></span><br />
+            <input type="text" name="mail" class="textbox" placeholder="メールアドレス"><br />
+            <br>
+            
+            
+            <span class="required"><label for="name">お電話番号(ハイフンあり)</label></span><br />
+            <form method="post">
+                <input type="tel" name="phone" class="textbox" placeholder="xxx-xxxx-xxxx" pattern="\d{2,4}-\d{2,4}-\d{3,4}"><br />
+            </form>
+            <br>
+            
+            
+            <span class="required"><label for="name">件名</label></span><br />
+            <select class="options" title="件名">
+                <option value="option1">xxx</option>
+                <option value="option2">yyy</option>
+                <option value="option3">zzz</option>
+            </select><br />
+            <br>
+
+
+            <span class="required"><label for="name">お問い合わせ内容</label></span><br />
+            <textarea class="textarea" title="お問い合わせ内容" placeholder="お問い合わせ内容を入力してください"></textarea>
+            <br>
+
+
+            <label for="name"></label>添付ファイルのアップロード<br />
+            <form action="index.html" method="post" enctype="multipart/form-data" ></form>
+            <input type="file" class="file" name="test" title="添付ファイルのアップロード" placeholder="ファイルを選択" required>
+            
+            <br><br>
+
+
+            <div class="check">
+                <label><input type="checkbox">個人情報の取扱いについて、プライバシーポリシーに同意する。<br /></label>
+            </div>
+            <br>
+
+            
+            <div class="button">
+                <a href="" class="btn">送信</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
