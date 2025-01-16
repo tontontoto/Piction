@@ -113,32 +113,29 @@ def saleDetail(sale_id):
         
             db.session.query(Sale).filter(Sale.saleId == sale_id).update({"saleStatus": False})
             db.session.commit()
-            
             print("最大金額（落札金額）:",lastAmount)
-        finished = "この作品のオークションは終了しています"
-        return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, finished=finished, bidUserId=bidUserId ,lastAmount=lastAmount, SAS=SAS)
-    
-    except Exception as e:
-        print(f"Error オークション終了処理失敗: {e}")
+            finished = "この作品のオークションは終了しています"
+            return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, finished=finished, bidUserId=bidUserId ,lastAmount=lastAmount)
         
-    # 商品なかった時のerror処理
-    if sale is None:
-        flash('Sale not found', 'error')
-        return redirect(url_for('top'))
-    
-    #現在時刻取得
-    dt = datetime.now()
-    datetimeStr = datetime.strptime(dt.strftime('%Y/%m/%d %H:%M:%S'), '%Y/%m/%d %H:%M:%S')
-    #終了時刻取得
-    finishTime = datetime.strptime(sale.finishTime, '%Y/%m/%d %H:%M:%S')
-    # 計算（差分）
-    timeDifference = finishTime - datetimeStr
-    print(timeDifference, type(timeDifference))
-    
-    # 商品情報をテンプレートに渡す
-    return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, timeDifference=timeDifference, SAS=SAS)
+        # 商品なかった時のerror処理
+        if sale is None:
+            flash('Sale not found', 'error')
+            return redirect(url_for('top'))
+        
+        #現在時刻取得
+        dt = datetime.now()
+        datetimeStr = datetime.strptime(dt.strftime('%Y/%m/%d %H:%M:%S'), '%Y/%m/%d %H:%M:%S')
+        #終了時刻取得
+        finishTime = datetime.strptime(sale.finishTime, '%Y/%m/%d %H:%M:%S')
+        # 計算（差分）
+        timeDifference = finishTime - datetimeStr
+        print(timeDifference, type(timeDifference))
+        
+        # 商品情報をテンプレートに渡す
+        return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, timeDifference=timeDifference)
 
-    
+    except Exception as e:
+        print(f"Error 商品情報取得失敗: {e}")
 # MARK: 入札
 @app.route('/bid', methods=['POST'])
 @login_required
@@ -440,7 +437,7 @@ def sort_products():
             hours, remainder = divmod(remainder, 3600)  # 時間を取得
             minutes, seconds = divmod(remainder, 60)  # 分と秒を取得
 
-            remaining_time_str = f"{days}日{hours:02}時間{minutes:02}分"  # 残り時間を表示形式にする
+            remaining_time_str = f"{days}日{hours:02}時間{minutes:02}分  "  # 残り時間を表示形式にする
 
         # 商品情報に残り時間を追加
         product_list.append({
