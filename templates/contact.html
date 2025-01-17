@@ -12,60 +12,45 @@
         <h1>お問い合わせ</h1>
     </div>
     <div class="content">
-        <div class="form-items">
+        <form class="form-items" action="/contact" method="post">
             <span class="required"><label for="name">お名前</label></span><br />
-            <input type="text" name="name" class="textbox" placeholder="お名前"><br />
+            <input type="text" name="name" class="textbox" placeholder="お名前" required><br />
             <br>
             
-            
-            <span class="required"><label for="name">お名前(フリガナ)</label></span><br />
-            <input type="text" name="name" class="textbox" placeholder="お名前"><br />
+            <span class="required"><label for="name_kana">お名前(フリガナ)</label></span><br />
+            <input type="text" name="name_kana" class="textbox" placeholder="お名前"><br />
             <br>
             
-            
-            <span class="required"><label for="name">メールアドレス</label></span><br />
-            <input type="text" name="mail" class="textbox" placeholder="メールアドレス"><br />
+            <span class="required"><label for="mail">メールアドレス</label></span><br />
+            <input type="email" name="mail" class="textbox" placeholder="メールアドレス" required><br />
             <br>
             
-            
-            <span class="required"><label for="name">お電話番号(ハイフンあり)</label></span><br />
-            <form method="post">
-                <input type="tel" name="phone" class="textbox" placeholder="xxx-xxxx-xxxx" pattern="\d{2,4}-\d{2,4}-\d{3,4}"><br />
-            </form>
-            <br>
-            
-            
-            <span class="required"><label for="name">件名</label></span><br />
-            <select class="options" title="件名">
+            <span class="required"><label for="subject">件名</label></span><br />
+            <select name="subject" class="options" title="件名" required>
                 <option value="option1">xxx</option>
                 <option value="option2">yyy</option>
                 <option value="option3">zzz</option>
             </select><br />
             <br>
 
-
-            <span class="required"><label for="name">お問い合わせ内容</label></span><br />
-            <textarea class="textarea" title="お問い合わせ内容" placeholder="お問い合わせ内容を入力してください"></textarea>
+            <span class="required"><label for="message">お問い合わせ内容</label></span><br />
+            <textarea name="message" class="textarea" title="お問い合わせ内容" placeholder="お問い合わせ内容を入力してください" required></textarea>
             <br>
 
-
-            <label for="name"></label>添付ファイルのアップロード<br />
-            <form action="index.html" method="post" enctype="multipart/form-data" ></form>
-            <input type="file" class="file" name="test" title="添付ファイルのアップロード" placeholder="ファイルを選択" required>
+            <label for="file">添付ファイルのアップロード</label><br />
+            <input type="file" class="file" name="test" id="file" title="添付ファイルのアップロード" placeholder="ファイルを選択">
             
             <br><br>
 
-
             <div class="check">
-                <label><input type="checkbox">個人情報の取扱いについて、プライバシーポリシーに同意する。<br /></label>
+                <label><input type="checkbox" required>個人情報の取扱いについて、プライバシーポリシーに同意する。<br /></label>
             </div>
             <br>
-
             
             <div class="button">
-                <a href="" class="btn">送信</a>
+                <button type="submit" class="btn">送信</button>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 </body>
