@@ -6,53 +6,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/myLikeList.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <script src="{{ url_for('static', filename='js/myLikeList.js') }}" defer></script>
     <title>Document</title>
 </head>
 
 <body>
-    <!-- header部 -->
-    <header>
-        <div class="header-wrapper">
-            <div class="header-top">
-                <div class="header-logo">
-                    <h1>
-                        <a href="/top">
-                            <img src="{{ url_for('static', filename='icon/logo.png') }}" alt="">
-                        </a>
-                    </h1>
-                </div>
-                <div class="search-box">
-                    <form action="#">
-                        <input type="text" placeholder="Search">
-                        <button type="submit"><img src="{{ url_for('static', filename='parts/magnifyingglass.svg') }}"
-                                alt="いいね"></button>
-                    </form>
-                </div>
-                <div class="header-icon">
-                    <div class="headerNav">
-                        <!-- userIcon,displayName -->
-                        <div class="accountButton" class="navButton">
-                            <a href="/myPage" class="accountButtonLink">
-                                <img src="{{ url_for('static', filename='img/icon_sample.jpg') }}" alt="マイページ"
-                                    class="accountButtonIcon">
-                                <p>{{ user.displayName }}</p>
-                            </a>
-                        </div>
-                        <!-- myLikeList -->
-                        <div class="myLikeListButton">
-                            <a href="/myLikeList"><img src="{{ url_for('static', filename='parts/heart.svg') }}"
-                                    alt="いいね"></a>
-                        </div>
-                        <!-- draw -->
-                        <div class="drawButton" class="navButton">
-                            <a href="/draw">出品する</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
+
+    {% include 'header.html' %}
 
     <div class="tableNav">
         <div class="title">

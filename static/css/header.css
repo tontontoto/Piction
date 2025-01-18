@@ -13,130 +13,172 @@ body {
 
 /* ヘッダー */
 header {
+    width: 100%;
     background-color: #ffffff;
-    color: #000000;
-    padding: 10px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .header-wrapper {
-    max-width: 100%;
     margin: 0 auto;
-    padding: 0 15px;
+    padding: 15px 20px;
 }
 
 .header-top {
-    max-width: 95%;
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding-bottom: 10px; /* 下のナビゲーションとの間隔 */
+    align-items: center;
+    margin-bottom: 15px;
 }
 
 .header-logo {
-    width: 200px;
-    text-align: left;
+    flex-shrink: 0;
 }
 
-.header-logo h1 a img {
-    height: 50px;
+.header-logo img {
+    height: 40px;
     width: auto;
 }
 
-/* 検索ボックス */
 .search-box {
-    text-align: left;
-    flex: 2;
-    display: flex;
-    /* justify-content: center; */
-    max-width: 90%;
+    flex-grow: 1;
+    max-width: 500px;
 }
 
 .search-box form {
-    text-align: left;
     position: relative;
     display: flex;
-    width: 100%;
-    max-width: 400px;
 }
 
 .search-box input[type="text"] {
-    padding: 8px 40px 8px 15px;
-    font-size: 16px;
-    border: 1px solid #000;
-    border-radius: 25px;
-    outline: none;
-    background-color: #fff;
     width: 100%;
+    padding: 12px 45px 12px 15px;
+    border: 2px solid #eaeaea;
+    border-radius: 25px;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.search-box input[type="text"]:focus {
+    outline: none;
+    border-color: #000;
 }
 
 .search-box button {
     position: absolute;
-    right: 10px;
+    right: 12px;
     top: 50%;
     transform: translateY(-50%);
     background: none;
     border: none;
     cursor: pointer;
-    padding: 0;
-    display: flex;
+    padding: 5px;
 }
 
 .search-box button img {
     width: 18px;
     height: 18px;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
 }
 
-/* アイコンナビゲーション */
+.search-box button:hover img {
+    opacity: 1;
+}
+
 .header-icon {
     display: flex;
+    gap: 20px;
     align-items: center;
-    justify-content: flex-end;
-    gap: 15px;
 }
 
-.header-icon .icon ul {
-    list-style-type: none;
+.header-icon .icon-item {
     display: flex;
-    gap: 15px;
+    justify-content: center;
 }
 
-.header-icon .icon ul li a img {
+.nav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    transition: color 0.2s ease;
+    padding: 0 5px;
+}
+
+.nav-link img {
     width: 24px;
     height: 24px;
+    margin-bottom: 4px;
 }
 
-/* 下部ナビゲーション */
+.nav-link span {
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.nav-link:hover {
+    color: #000;
+}
+
 .navigation-main {
-    display: flex;
-    justify-content: space-around; /* 横の間隔を均等に広げる */
-    border-top: 1px solid #000;
-    border-bottom: 1px solid #000;
-    padding: 15px 0;
-    margin-top: 30px;
+    border-top: 1px solid #eaeaea;
+    padding-top: 15px;
 }
 
 .navigation-main ul {
-    list-style-type: none;
     display: flex;
-    justify-content: space-around; /* リストアイテムを均等に配置 */
-    flex: 1;
+    justify-content: center;
+    gap: 40px;
+    list-style: none;
+    margin: 0;
     padding: 0;
 }
 
-.navigation-main ul li {
-    flex: 1; /* 各アイテムが均等に幅を取るように設定 */
-    text-align: center;
-}
-
 .navigation-main ul li a {
-    color: #000000;
     text-decoration: none;
-    padding: 5px 0;
+    color: #333;
     font-size: 14px;
-    display: block;
-    transition: color 0.3s;
+    font-weight: 500;
+    transition: color 0.2s ease;
 }
 
 .navigation-main ul li a:hover {
-    color: #333333;
+    color: #000;
+}
+
+@media (max-width: 768px) {
+    .header-wrapper {
+        padding: 10px 15px;
+    }
+
+    .header-top {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .search-box {
+        order: 3;
+        min-width: 100%;
+    }
+
+    .header-icon {
+        gap: 15px;
+    }
+
+    .navigation-main ul {
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .nav-link {
+        padding: 0;
+    }
+
+    .nav-link span {
+        display: none;
+    }
 }
