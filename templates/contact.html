@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
+    <title>Document</title>
+</head>
+<body>
+<div class="main">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message flash-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <div class="header">
+        <h1>お問い合わせ</h1>
+    </div>
+    <div class="content">
+        <form class="form-items" action="/contact" method="post">
+            <span class="required"><label for="name">お名前</label></span><br />
+            <input type="text" name="name" class="textbox" placeholder="お名前" required><br />
+            <br>
+            
+            <span class="required"><label for="name_kana">お名前(フリガナ)</label></span><br />
+            <input type="text" name="name_kana" class="textbox" placeholder="お名前"><br />
+            <br>
+            
+            <span class="required"><label for="mail">メールアドレス</label></span><br />
+            <input type="email" name="mail" class="textbox" placeholder="メールアドレス" required><br />
+            <br>
+            
+            <span class="required"><label for="subject">件名</label></span><br />
+            <select name="subject" class="options" title="件名" required>
+                <option value="option1">xxx</option>
+                <option value="option2">yyy</option>
+                <option value="option3">zzz</option>
+            </select><br />
+            <br>
+
+            <span class="required"><label for="message">お問い合わせ内容</label></span><br />
+            <textarea name="message" class="textarea" title="お問い合わせ内容" placeholder="お問い合わせ内容を入力してください" required></textarea>
+            <br>
+
+            <label for="file">添付ファイルのアップロード</label><br />
+            <input type="file" class="file" name="test" id="file" title="添付ファイルのアップロード" placeholder="ファイルを選択">
+            
+            <br><br>
+
+            <div class="check">
+                <label><input type="checkbox" required>個人情報の取扱いについて、プライバシーポリシーに同意する。<br /></label>
+            </div>
+            <br>
+            
+            <div class="button">
+                <button type="submit" class="btn">送信</button>
+            </div>
+        </form>
+    </div>
+</div>
+<a href="/" class="back-link">トップページへ戻る</a>
+</body>
+</html>

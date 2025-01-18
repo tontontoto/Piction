@@ -1,0 +1,135 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #000;
+}
+
+/* ---- contents ---- */
+.tableNav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 80%;
+    padding: 10px;
+    margin: 0 auto;
+}
+.title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.title p {
+    font-size: 25px;
+    font-weight: bold;
+    line-height: rem;
+}
+.title img {
+    height: 40px;
+    width: auto;
+}
+.chevronLeftImg {
+    width: 200px;
+}
+
+/* productSortSelectArea */
+.productSortSelectArea {
+    display: flex;
+    flex-direction: row;
+}
+.productSortSelectArea img {
+    width: 70%;
+}
+.productSortSelect {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+}
+
+.productSortSelect::after {
+    position: absolute;
+    right: 15px;
+    width: 10px;
+    height: 7px;
+    background-color: #535353;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    content: '';
+    pointer-events: none;
+}
+
+.productSortSelect select {
+    appearance: none;
+    min-width: 230px;
+    height: 2.8em;
+    padding: .4em calc(.8em + 30px) .4em .8em;
+    border: none;
+    border-bottom: 2px solid #000000;
+    background-color: #fff;
+    color: #333333;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.productSortSelect select:focus {
+    outline: none;
+}
+
+/* myLikeList */
+.table-wrapper {
+    box-shadow: 0px 0px 15px -5px #777777;
+    border-radius: 10px;
+    padding: 11px;
+    margin: 0 auto;
+    width: 80%;
+}
+.likeListTable {
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+}
+.likeListTable th, 
+.likeListTable td {
+    border-right: 1px solid #838383;
+}
+.likeList_headerCulumn,
+.likeList_itemCulumn {
+    padding: 15px;
+    white-space: nowrap;
+}
+.likeList_headerCulumn {
+    font-size: 20px;
+}
+.likeList_itemCulumn {
+    font-size: 17px;
+}
+.likeListTable th:first-child, 
+.likeListTable td:first-child {
+    width: 135px;
+}
+.likeListTable th:last-child, 
+.likeListTable td:last-child {
+    border-right: none;
+}
+.likeListTable tr, 
+.likeListTable th {
+    border-bottom: 1px solid #b7b7b7;
+    transition: background-color 0.5s;
+}
+.likeListTable tr:last-child {
+    border-bottom: none;
+}
+.likeListTable tbody tr:hover {
+    background-color: #f0f0f0; /* ホバー時の背景色 */
+}
+
+
+
+#uploadImg {
+    width: 115px;
+    border: 1px solid #acacac;
+}

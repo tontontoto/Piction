@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../static/icon/favicon.png">
+    <!------ css link ------>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/top.css') }}">
+    <!-- header -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <!-- footer -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <!-- sale -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sale.css') }}">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
+    
+    <script src="{{ url_for('static', filename='js/top.js') }}" defer></script>
+    <title>Piction Top</title>
+</head>
+
+<body>
+    <!-- ヘッダーエリア -->
+    {% include 'header.html' %}
+
+    <main>
+        <!-- スライダーエリア -->
+        {% include 'slider.html' %}
+        
+        <!-- ランキングエリア -->
+        {% include 'top_ranking.html' %}
+
+        <!-- 商品一覧 -->
+        {% include 'sale.html' %}
+    </main>
+
+    <!-- フッターエリア -->
+    {% include 'footer.html' %}
+</body>
+
+</html>

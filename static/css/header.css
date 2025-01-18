@@ -1,0 +1,184 @@
+/* 全体の設定 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #000;
+}
+
+/* ヘッダー */
+header {
+    width: 100%;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-wrapper {
+    margin: 0 auto;
+    padding: 15px 20px;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.header-logo {
+    flex-shrink: 0;
+}
+
+.header-logo img {
+    height: 40px;
+    width: auto;
+}
+
+.search-box {
+    flex-grow: 1;
+    max-width: 500px;
+}
+
+.search-box form {
+    position: relative;
+    display: flex;
+}
+
+.search-box input[type="text"] {
+    width: 100%;
+    padding: 12px 45px 12px 15px;
+    border: 2px solid #eaeaea;
+    border-radius: 25px;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.search-box input[type="text"]:focus {
+    outline: none;
+    border-color: #000;
+}
+
+.search-box button {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.search-box button img {
+    width: 18px;
+    height: 18px;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+}
+
+.search-box button:hover img {
+    opacity: 1;
+}
+
+.header-icon {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.header-icon .icon-item {
+    display: flex;
+    justify-content: center;
+}
+
+.nav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    transition: color 0.2s ease;
+    padding: 0 5px;
+}
+
+.nav-link img {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+}
+
+.nav-link span {
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.nav-link:hover {
+    color: #000;
+}
+
+.navigation-main {
+    border-top: 1px solid #eaeaea;
+    padding-top: 15px;
+}
+
+.navigation-main ul {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navigation-main ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.navigation-main ul li a:hover {
+    color: #000;
+}
+
+@media (max-width: 768px) {
+    .header-wrapper {
+        padding: 10px 15px;
+    }
+
+    .header-top {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .search-box {
+        order: 3;
+        min-width: 100%;
+    }
+
+    .header-icon {
+        gap: 15px;
+    }
+
+    .navigation-main ul {
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .nav-link {
+        padding: 0;
+    }
+
+    .nav-link span {
+        display: none;
+    }
+}
