@@ -6,7 +6,7 @@ from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
 from sqlalchemy import func
 from azure.storage.blob import BlobServiceClient
-# from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 import random
 import string
 import os
