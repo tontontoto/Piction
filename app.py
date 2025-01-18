@@ -8,7 +8,7 @@ from sqlalchemy import func
 from azure.storage.blob import BlobServiceClient
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
-# from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 import random
 import string
 import os
@@ -637,6 +637,8 @@ def result():
     
     return render_template('result.html', categories=categories)
 
+
+# MARK: お問い合わせページ
 @app.route('/contact', methods=['GET', 'POST'])
 @login_required
 def contact():
