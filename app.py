@@ -626,6 +626,8 @@ def result():
     
     return render_template('result.html', categories=categories)
 
+
+# MARK: お問い合わせページ
 @app.route('/contact', methods=['GET', 'POST'])
 @login_required
 def contact():
