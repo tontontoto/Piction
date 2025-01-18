@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新規登録ページ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/signup.js')}}" defer></script>
+</head>
+
+<body>
+    <div id="header">
+        <a href="/"><img src="{{ url_for('static', filename='icon/logo.png')}}" alt="Piction" class="headerLogo"></a>
+    </div>
+    <div id="mainContent">
+        <h1 class="signupTitle">新規登録</h1>
+        <form method="POST" id="signupForm" onsubmit="return validateForm(event)">
+            <!-- userName -->
+            <div class="inputArea">
+                <p>ユーザーネーム<span class="errorMessageRequired"></span></p>
+                <input type="text" id="userName" name="userName" placeholder="2文字以上15字以内, 半角英数記号( _ )のみ" maxlength="15">
+            </div>
+            <!-- displayName -->
+            <div class="inputArea">
+                <div class="inputAreaTextDetail">
+                    <p>表示名 ( <span id="displayNameCount">0</span> / 30 )<span class="errorMessageRequired"></span></p>
+                </div>
+                <input type="text" id="displayName" name="displayName" placeholder="30文字以内">
+            </div>
+            <!-- mailAddress -->
+            <div class="inputArea">
+                <p>メールアドレス<span class="errorMessageRequired"></span></p>
+                <input type="text" id="mailAddress" name="mailAddress" placeholder="Piction@sample.jp">
+            </div>
+            <!-- password -->
+            <div class="inputArea">
+                <p>パスワード<span class="errorMessageRequired"></span></p>
+                <div class="passwordContaier">
+                    <input type="password" id="password" name="password" placeholder="6文字以上15文字以下">
+                    <span id="buttonEye" class="fa fa-eye" onclick="pushHideButton()"></span>
+                </div>
+            </div>
+            <!-- privacy policy -->
+            <input type="checkbox" id="privacyPolicy" name="privacyPolicy">
+            <label for="privacyPolicy" class="privacyPolicy"><a href="privacyPolicy.html">利用規約、プライバシーポリシー</a>に同意する。</label>
+            <span class="errorMessageRequired"></span>
+            <!-- submit button -->
+            <input type="submit" value="登録する" class="signupSubmitButton" />
+            <!-- login link -->
+            <div class="loginLink">
+                <p><a href="/login">またはログイン →</a></p>
+            </div>
+        </form>
+    </div>
+
+
+</body>
+
+</html>

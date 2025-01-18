@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログインページ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/login.js')}}" defer></script>
+
+</head>
+<body>
+    <div id="header">
+        <a href="/"><img src="{{ url_for('static', filename='icon/logo.png')}}" alt="Piction" class="headerLogo"></a>
+    </div>
+    <div id="mainContent">
+        <h1 class="loginTitle">ログイン</h1>
+        <!-- error massage -->
+        {% if error %}
+            <p class="wrongErrorMassage">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST" id="loginForm">
+            <div class="inputArea">
+                <p>ユーザーネーム<span class="errorMessageRequired"></span></p>
+                <input type="text" id="userName" name="userName" placeholder="2文字以上15字以内, 半角英数記号( _ )のみ">
+            </div>
+            <div class="inputArea">
+                <p>パスワード<span class="errorMessageRequired"></span></p>
+                <input type="password" id="password" name="password" placeholder="6文字以上15文字以下">
+            </div>
+            <input type="submit" value="ログインする" class="loginSubmitButton"/>
+            <!-- signup link -->
+            <div class="signupLink">
+                <p><a href="/signup">または新規登録 →</a></p>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
