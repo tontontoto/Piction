@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>art</title>
+    <title>作品を描く | Piction</title>
     <link rel="stylesheet" href="../static/css/draw.css">
     <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
 </head>
@@ -11,42 +11,62 @@
     <main>
         <div class="drawArea">
             <div class="selectTool">
-                <span>
-                    <label>カラー変更</label>
-                    <input id="inputColor" type="color" value="#000" placeholder="カラーを選択">
-                </span>
-                <button class="btn_push" id="pen"><img src="../static/icon/pen.png" alt=""></button>
-                <button class="btn_push" id="eraser"><img src="../static/icon/eraser.png" alt=""></button>
-                <button class="btn_push" id="reset"><img src="../static/icon/reset.png" alt=""></button>
+                <div class="tool-group">
+                    <span class="color-picker">
+                        <label>カラー</label>
+                        <input id="inputColor" type="color" value="#000">
+                    </span>
+                    <button class="btn_push" id="pen">
+                        <img src="../static/icon/pen.png" alt="">
+                        <span>ペン</span>
+                    </button>
+                    <button class="btn_push" id="eraser">
+                        <img src="../static/icon/eraser.png" alt="">
+                        <span>消しゴム</span>
+                    </button>
+                    <button class="btn_push" id="reset">
+                        <img src="../static/icon/reset.png" alt="">
+                        <span>リセット</span>
+                    </button>
+                </div>
             </div>
+
             <canvas id="myCanvas"></canvas>  
+
             <div class="sliderContainer">
-                <label for="lineWidth">線の太さ</label>
-                <input type="range" id="lineWidth" min="1" max="30" value="5">
-                <label for="lineOpacity">透明度</label>
-                <input type="range" id="lineOpacity" min="0" max="1" step="0.1" value="1">
+                <div class="slider-group">
+                    <label for="lineWidth">線の太さ</label>
+                    <input type="range" id="lineWidth" min="1" max="30" value="5">
+                    <span class="value-display" id="lineWidth-value">5</span>
+                </div>
+                <div class="slider-group">
+                    <label for="lineOpacity">透明度</label>
+                    <input type="range" id="lineOpacity" min="0" max="1" step="0.1" value="1">
+                    <span class="value-display" id="lineOpacity-value">100%</span>
+                </div>
             </div>
         </div>
         
         <div class="side">
-
             <div class="sideTop">
-                <div class="timer">
-                    <p>xx:xx</p>
+                <div class="info-card timer">
+                    <h3>残り時間</h3>
+                    <p>00:00</p>
                 </div>
-                <div class="money">
-                    <p>yyy円</p>
-                    
+                <div class="info-card money">
+                    <h3>現在の価格</h3>
+                    <p>0円</p>
                 </div>
             </div>
 
             <form action="/result" class="btn">
-                <button type="submit" class="button" id="saveButton">&gt;完成、出品手続きへ</button>
+                <button type="submit" class="submit-button" id="saveButton">
+                    完成、出品手続きへ
+                    <span class="icon">→</span>
+                </button>
             </form>
-
         </div>
     </main>
     <script src="../static/js/script.js"></script>
-    
 </body>
 </html>
