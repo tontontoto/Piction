@@ -1,10 +1,35 @@
-<div id="lineup">
-    <h2>作品一覧</h2>
-    {% with sales = sales, user=user%}
-    <div class="lineupArea">
-        {% for sale in sales %}
-            {% include 'sale.html' %}
-        {% endfor %}
-    </div>
-    {% endwith %}
-</div>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../static/icon/favicon.png">
+    <!------ css link ------>
+    <!-- header -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <!-- footer -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <!-- sale -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sale.css') }}">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
+    
+    <script src="{{ url_for('static', filename='js/top.js') }}" defer></script>
+    <title>Piction</title>
+</head>
+
+<body>
+    <!-- ヘッダーエリア -->
+    {% include 'header.html' %}
+
+    <main>
+        <!-- 商品一覧 -->
+        {% include 'sale.html' %}
+    </main>
+
+    <!-- フッターエリア -->
+    {% include 'footer.html' %}
+</body>
+
+</html>

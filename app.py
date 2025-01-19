@@ -291,6 +291,30 @@ def top():
                          topPriceSales=topPriceSales,
                          SAS=SAS)
 
+# MARK: 作品一覧ページ
+@app.route('/lineup')
+def lineup():
+    userId = session.get('userId')
+    
+    try:
+        # 通常の商品一覧を取得
+        sales = Sale.query.all()
+        
+        # いいね情報の取得
+        liked_sales = db.session.query(Like.saleId).filter_by(userId=userId).all()
+        liked_sale_ids = [sale[0] for sale in liked_sales]
+        
+    except Exception as e:
+        print(f"Error 商品情報取得失敗: {e}")
+        sales = []
+        liked_sale_ids = []
+    
+    return render_template('lineup.html', 
+                         sales=sales, 
+                         userId=userId, 
+                         liked_sale_ids=liked_sale_ids, 
+                         SAS=SAS)
+
 # MARK: いいね情報受け取りroute
 @app.route('/like', methods=['POST'])
 def like_sale():
