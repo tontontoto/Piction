@@ -9,8 +9,8 @@
                 </h1>
             </div>
             <div class="search-box">
-                <form action="#">
-                    <input type="text" placeholder="作品を検索">
+                <form action="/search" method="get">
+                    <input type="text" name="query" placeholder="作品を検索" value="{{ request.args.get('query', '') }}">
                     <button type="submit">
                         <img src="{{ url_for('static', filename='parts/magnifyingglass.svg') }}" alt="検索">
                     </button>

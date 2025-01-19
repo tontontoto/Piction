@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 
 <head>
     <meta charset="UTF-8">
@@ -12,11 +12,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <!-- sale -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sale.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/lineup.css') }}">
     
     <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
     
     <script src="{{ url_for('static', filename='js/top.js') }}" defer></script>
-    <title>Piction</title>
+    <title>作品一覧 | Piction</title>
 </head>
 
 <body>
@@ -24,8 +25,21 @@
     {% include 'header.html' %}
 
     <main>
-        <!-- 商品一覧 -->
-        {% include 'sale.html' %}
+        {% if query %}
+        <div class="search-result-header">
+            <h1>"{{ query }}" の検索結果</h1>
+            <p>{{ sales|length }}件の作品が見つかりました</p>
+        </div>
+        {% endif %}
+
+        {% if sales %}
+            {% include 'sale.html' %}
+        {% else %}
+            <div class="empty-result">
+                <p>検索結果が見つかりませんでした</p>
+                <a href="/lineup" class="browse-all">すべての作品を見る</a>
+            </div>
+        {% endif %}
     </main>
 
     <!-- フッターエリア -->
