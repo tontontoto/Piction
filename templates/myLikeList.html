@@ -1,6 +1,6 @@
 <!-- myLikeList いいね一覧ページ -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 
 <head>
     <meta charset="UTF-8">
@@ -8,77 +8,63 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/myLikeList.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <script src="{{ url_for('static', filename='js/myLikeList.js') }}" defer></script>
-    <title>Document</title>
+    <title>いいね一覧 | Piction</title>
 </head>
 
 <body>
 
     {% include 'header.html' %}
 
-    <div class="tableNav">
-        <div class="title">
-            <a href="/top"><img src="{{ url_for('static', filename='parts/chevron-left.svg') }}" alt="cheron-left"
-                    class="chevronLeftImg"></a>
-            <p>いいね一覧</p>
+    <main>
+        <div class="page-header">
+            <a href="/top" class="back-link">
+                <img src="{{ url_for('static', filename='parts/chevron-left.svg') }}" alt="戻る">
+            </a> 
+            <h1 class="title">いいね一覧</h1>
+            <div class="sort-area">
+                <label class="sort-select">
+                    <select id="productSortSelect" name="productSortSelect" aria-label="並び替え">
+                        <option value="likedOrder">新しくいいねした順</option>
+                        <option value="orderCheapPrice">価格の安い順</option>
+                        <option value="orderHighPrice">価格の高い順</option>
+                    </select>
+                </label>
+            </div>
         </div>
-        <!-- productSortSelectArea -->
-        <div class="productSortSelectArea">
-            <label class="productSortSelect">
-                <select id="productSortSelect" name="productSortSelect" onclick="submitSortOrder()">
-                    <option value="likedOrder">新しくいいねした順</option>
-                    <option value="orderCheapPrice">価格の安い順</option>
-                    <option value="orderHighPrice">価格の高い順</option>
-                </select>
-            </label>
-        </div>
-    </div>
 
-    <div class="table-wrapper">
         {% if myLikeList %}
-        <table class="likeListTable">
-            <thead>
-                <tr class="likeList_header">
-                    <th class="likeList_headerCulumn">画像</th>
-                    <th class="likeList_headerCulumn">作品名</th>
-                    <th class="likeList_headerCulumn">現在価格</th>
-                    <th class="likeList_headerCulumn">入札数</th>
-                    <th class="likeList_headerCulumn">残り時間</th>
-                </tr>
-            </thead>
-            <tbody id="myLikeListContainer">
+        <div class="likes-container">
+            <div class="likes-grid">
                 {% for sale in myLikeList %}
-                <tr class="likeList_item">
-                    <td class="likeList_itemCulumn">
-                    
-                        <img src="{{ url_for('static', filename=sale.filePath) }}" alt="saleImage" id="uploadImg">
-                        <!-- <img src="{{ sale.filePath+'?'+SAS}}" alt="saleImage" id="uploadImg"> -->
-                    </td>
-                    <!-- 作品名 -->
-                    <td class="likeList_itemCulumn">{{ sale.title }}</td>
-                    <!-- 現在価格 -->
-                    <td class="likeList_itemCulumn">￥{{ sale.currentPrice }}</td>
-                    <!-- 入札数 -->
-                    <td class="likeList_itemCulumn">
-                        {% for sale_id, bid in bidCount %}
-                            {% if sale_id == sale.saleId %}
-                                {% set bid_count = bid %}
-                            {% endif %}
-                            {{ bid_count }} 
-                        {% endfor %}
-                    </td>
-                    <!-- 残り時間 -->
-                    <td class="likeList_itemCulumn">{{ sale.remaining_time_str   }}</td>
-                </tr>
+                <a href="{{ url_for('saleDetail', sale_id=sale.saleId) }}" class="like-card">
+                    <div class="card-image">
+                        <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">
+                    </div>
+                    <div class="card-content">
+                        <h2>{{ sale.title }}</h2>
+                        <div class="card-info">
+                            <div class="price">¥{{ sale.currentPrice }}</div>
+                            <div class="bid-count">
+                                入札 {% for sale_id, bid in bidCount %}
+                                    {% if sale_id == sale.saleId %}
+                                        {{ bid }}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="remaining-time">{{ sale.remaining_time_str }}</div>
+                        </div>
+                    </div>
+                </a>
                 {% endfor %}
-            </tbody>
-
-        </table>
-    </div>
-
-    {% else %}
-    <p>いいねはありません</p>
-    <p>他の人の商品をいいねしてみよう！</p>
-    {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p>いいねした作品はありません</p>
+            <a href="/top" class="browse-button">作品を見に行く</a>
+        </div>
+        {% endif %}
+    </main>
 </body>
 
 </html>
