@@ -42,7 +42,7 @@ body{
 }
 .finished-flex-container .main{
     flex: 0 0 500px;
-    height: 500px;
+    max-width: 60%;
     margin: 0;
     border: none;
     overflow: hidden;
@@ -223,7 +223,7 @@ body{
 
 .auction-result {
     flex: 1;
-    min-width: 300px;
+    /* min-width: 300px; */
 }
 
 .auction-result h1 {
@@ -313,7 +313,7 @@ body{
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 968px) {
     .sale-detail {
         margin: 20px auto;
         padding: 0 15px;
@@ -328,7 +328,7 @@ body{
     }
 
     .finished-flex-container .main {
-        height: 300px;
+        max-width: 100%;
     }
 
     .scroll-contents {
