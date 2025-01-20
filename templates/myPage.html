@@ -16,11 +16,10 @@
     <!-- ヘッダーエリア -->
     {% include 'header.html' %}
     <!------------------->
-    </header>
     <main id="main">
         <div class="profile">
             <div class="userIcon">
-                <img src="{{ url_for('static', filename='img/icon_sample.jpg') }}" class="icon">
+                <img src="{{ url_for('static', filename='img/icon_sample.jpg') }}" class="icon" alt="userIcon">
             </div>
             <div class="userInfo">
                 <p class="displayName">{{ user.displayName }}</p>
@@ -33,11 +32,11 @@
                 <div class="userWantSale">
                     <div class="listingNumber">
                         <h3>出品</h3>
-                        <p>{{ listingNumber }}</p>
+                        <p>{{ listingSaleNumber }}</p>
                     </div>
                     <div class="thumbsUpSaleNumber">
                         <h3>いいねした商品</h3>
-                        <p>{{ listingNumber }}</p>
+                        <p>{{ listingLikeNumber }}</p>
                     </div>
                 </div>
             </div>
@@ -55,13 +54,13 @@
                 <div class="thumbsUpSaleList">
                     <img src="{{ url_for('static', filename='../static/parts/heart.svg') }}" alt="heart">
                     <p>いいね一覧</p>
-                    <img src="{{ url_for('static', filename='../static/parts/chevron-right.svg')}}" class="chevron-right">
+                    <img src="{{ url_for('static', filename='../static/parts/chevron-right.svg')}}" class="chevron-right" alt="chevron-right">
                     <a href="/myLikeList"></a>
                 </div>
                 <div class="thumbsUpSaleList">
                     <img src="{{ url_for('static', filename='../static/parts/chart-line.svg') }}" alt="chart-line">
                     <p>販売状況</p>
-                    <img src="{{ url_for('static', filename='../static/parts/chevron-right.svg')}}" class="chevron-right">
+                    <img src="{{ url_for('static', filename='../static/parts/chevron-right.svg')}}" class="chevron-right" alt="chevron-right">
                 </div>
             </div>
         </div>

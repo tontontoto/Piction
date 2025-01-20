@@ -255,8 +255,8 @@ def top():
     print("userIdです！", userId)
     
     try:
-        # 通常の商品一覧を取得
-        sales = Sale.query.all()
+        # 新着順に10件取得
+        sales = Sale.query.order_by(Sale.saleId.desc()).limit(10).all()
         
         # 高額商品TOP5を取得（現在価格の高い順）
         topPriceSales = Sale.query.order_by(Sale.currentPrice.desc()).limit(5).all()
@@ -297,8 +297,8 @@ def lineup():
     userId = session.get('userId')
     
     try:
-        # 通常の商品一覧を取得
-        sales = Sale.query.all()
+        # 通常の商品一覧を取得(新着順)
+        sales = Sale.query.order_by(Sale.saleId.desc()).all()
         
         # いいね情報の取得
         liked_sales = db.session.query(Like.saleId).filter_by(userId=userId).all()
@@ -510,12 +510,20 @@ def myPage():
         print(f"ユーザーの表示名: {display_name}")
     
     try:
-        listing_number = db.session.query(Sale).filter(Sale.userId == userId).count()
+        # 自分の出品物の数を取得
+        listing_sale_number = db.session.query(Sale).filter(Sale.userId == userId).count()
     except Exception as e:
-        print(f"Error 商品のカウントに失敗: {e}")
-        listing_number = 0
+        print(f"Error 出品した商品のカウントに失敗: {e}")
+        listing_sale_number = 0
+        
+    try:
+        # 自分のいいねした商品の数を取得
+        listing_like_number = db.session.query(Like).filter(Like.userId == userId).count()
+    except Exception as e:
+        print(f"Error いいねした商品のカウントに失敗: {e}")
+        listing_like_number = 0
             
-    return render_template('myPage.html', user=user, sales=sales, listingNumber=listing_number, SAS=SAS)
+    return render_template('myPage.html', user=user, sales=sales, listingSaleNumber=listing_sale_number, listingLikeNumber=listing_like_number, SAS=SAS)
 
 # MARK: canvas→画像変換
 def decode_image(image_data):
@@ -748,3 +756,4 @@ if __name__ == '__main__':
             db.session.close()
             exit()
     app.run(host='0.0.0.0', port=80, debug=True)
+

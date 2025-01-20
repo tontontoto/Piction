@@ -71,7 +71,6 @@ class Sale(db.Model):
     startingTime = db.Column(db.String(19))
     finishTime = db.Column(db.String(19))
     saleStatus = db.Column(db.Boolean, default=True)
-    listingTime = db.Column(db.String(19))
 
     user = db.relationship("User", back_populates="sales")
     categories = db.relationship("Category", secondary=saleCategoryAssociation, back_populates="sales", lazy='dynamic')
