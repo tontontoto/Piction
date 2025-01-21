@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/myPage.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/userSales.css') }}">
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
@@ -30,13 +31,13 @@
                 </p>
 
                 <div class="userWantSale">
-                    <div class="listingNumber">
+                    <div class="listingNumber"> 
                         <h3>出品</h3>
-                        <p>{{ listingSaleNumber }}</p>
+                        <p>{{ listingCount }}</p>
                     </div>
                     <div class="thumbsUpSaleNumber">
                         <h3>いいねした商品</h3>
-                        <p>{{ listingLikeNumber }}</p>
+                        <p>{{ likeCount }}</p>
                     </div>
                 </div>
             </div>
@@ -74,6 +75,14 @@
         {% include 'userSales.html' %}
         {% endwith %}
     </div>
+
+    <!-- 落札完了出品物表示エリア -->
+    <div>
+        {% with myBidSales = myBidSales %}
+        {% include 'successfulBid.html' %}
+        {% endwith %}
+    </div>
+
 
     <!-- フッターエリア -->
     {% include 'footer.html' %}

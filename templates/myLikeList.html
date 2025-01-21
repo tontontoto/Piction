@@ -36,25 +36,32 @@
         <div class="likes-container">
             <div class="likes-grid">
                 {% for sale in myLikeList %}
-                <a href="{{ url_for('saleDetail', sale_id=sale.saleId) }}" class="like-card">
-                    <div class="card-image">
-                        <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">
-                    </div>
-                    <div class="card-content">
-                        <h2>{{ sale.title }}</h2>
-                        <div class="card-info">
-                            <div class="price">¥{{ sale.currentPrice }}</div>
-                            <div class="bid-count">
-                                入札 {% for sale_id, bid in bidCount %}
-                                    {% if sale_id == sale.saleId %}
-                                        {{ bid }}
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                            <div class="remaining-time">{{ sale.remaining_time_str }}</div>
-                        </div>
-                    </div>
-                </a>
+
+                <tr class="likeList_item">
+
+                    <td class="likeList_itemCulumn">
+                        <a href="{{ url_for('saleDetail', sale_id=sale.saleId) }}">
+                            <img src="{{ url_for('static', filename=sale.filePath) }}" alt="saleImage" id="uploadImg">
+                        </a>
+                        <!-- <img src="{{ sale.filePath+'?'+SAS}}" alt="saleImage" id="uploadImg"> -->
+                    </td>
+                    <!-- 作品名 -->
+                    <td class="likeList_itemCulumn">{{ sale.title }}</td>
+                    <!-- 現在価格 -->
+                    <td class="likeList_itemCulumn">￥{{ sale.currentPrice }}</td>
+                    <!-- 入札数 -->
+                    <td class="likeList_itemCulumn">
+                        {% for sale_id, bid in bidCount %}
+                        {% if sale_id == sale.saleId %}
+                        {% set bid_count = bid %}
+                        {% endif %}
+                        {{ bid_count }}
+                        {% endfor %}
+                    </td>
+                    <!-- 残り時間 -->
+                    <td class="likeList_itemCulumn">{{ sale.remaining_time_str }}</td>
+
+                </tr>
                 {% endfor %}
             </div>
         </div>
