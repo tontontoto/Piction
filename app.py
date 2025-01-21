@@ -474,13 +474,24 @@ def myPage():
         print(title)
         print(f"ユーザーの表示名: {display_name}")
     
+    # ユーザーの出品数の取得
     try:
-        listing_number = db.session.query(Sale).filter(Sale.userId == userId).count()
+        listingCount = db.session.query(Sale).filter(Sale.userId == userId).count()
     except Exception as e:
-        print(f"Error 商品のカウントに失敗: {e}")
-        listing_number = 0
-            
-    return render_template('myPage.html', user=user, sales=sales, listingNumber=listing_number, SAS=SAS)
+        print(f"Error 出品数のカウントに失敗: {e}")
+        listingCount = "---"
+
+    # いいねした数の取得
+    try:
+        likeCount = db.session.query(Like).filter(Like.userId == userId).count()
+    except Exception as e:
+        print(f"Error いいねした商品のカウントに失敗: {e}")
+        likeCount = "---"
+    
+    # 落札した商品の取得
+    successfulBidSales = db.session.query()
+
+    return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, SAS=SAS)
 
 # MARK: canvas→画像変換
 def decode_image(image_data):
