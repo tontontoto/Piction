@@ -3,7 +3,7 @@
 .mySales,
 .mySale,
 .mySaleInfo {
-    display: none;
+    
 }
 
 /* 新しいスタイルはそのまま */
@@ -11,6 +11,11 @@
     max-width: 1200px;
     margin: 40px auto;
     padding: 0 20px;
+}
+
+.user-sales-container:nth-child(1) {
+    border-top: 1px solid #000000;
+    padding-top: 2%;
 }
 
 .section-header {
@@ -115,6 +120,11 @@
     font-size: 16px;
     line-height: 1.4;
     color: #333;
+}
+
+.displayName {
+    font-size: 14px;
+    color: #666;
 }
 
 .sale-details {

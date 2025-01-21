@@ -1,19 +1,40 @@
-<div class="userSales">
-    <p>落札した商品</p>
-    <div class="mySales">
+<div class="user-sales-container">
+    <div class="section-header">
+        <h2>落札した商品</h2>
+    </div>
+
+    {% if sales %}
+    <div class="sales-grid">
         {% for sale in myBidSales %}
-        <a class="saleBox" href="{{ url_for('bidSaleDetail', sale_id=sale.saleId) }}">
-            <div class="mySale">
-                <img src="{{ url_for('static', filename=sale.filePath) }}" alt="saleImage">
-                <div class="mySaleInfo">
-                    <h3>{{ sale.title }}</h3>
-                    <p>作：{{ sale.user.displayName }}</p>
+        <a href="{{ url_for('bidSaleDetail', sale_id=sale.saleId) }}" class="sale-card">
+            <div class="sale-image">
+                <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">
+                <!-- {% if not sale.saleStatus %}
+                    <div class="status-badge ended">終了</div>
+                {% else %}
+                    <div class="status-badge active">出品中</div>
+                {% endif %} -->
+            </div>
+            <div class="sale-info">
+                <h3>{{ sale.title }}</h3>
+                <p class="displayName">作：{{ sale.user.displayName }}</p>
+                <div class="sale-details">
+                    <div class="price-info">
+                        <span class="current-price">¥{{ sale.currentPrice }}</span>
+                        <span class="starting-price">開始価格 ¥{{ sale.startingPrice }}</span>
+                    </div>
+                    <div class="time-info">
+                        <span class="time-remaining">終了時間 {{ sale.finishTime }}</span>
+                        <span class="creation-time">制作時間 {{ sale.creationTime }}</span>
+                    </div>
                 </div>
             </div>
         </a>
-        {% else %}
-        <p>落札した商品はありません。</p>
         {% endfor %}
-
     </div>
+    {% else %}
+    <div class="empty-state">
+        <p>出品した作品はありません</p>
+    </div>
+    {% endif %}
 </div>
