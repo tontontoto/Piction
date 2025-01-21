@@ -95,3 +95,214 @@
     background: #fff;
     color: #000;
 }
+
+:root {
+    --primary-color: #ff5a65;
+    --text-color: #333;
+    --border-color: #eee;
+    --background-color: #f8f8f8;
+    --shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.bid-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.bid-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: var(--shadow);
+}
+
+.artwork-section {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.artwork-image {
+    width: 300px;
+    height: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--background-color);
+}
+
+.artwork-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.artwork-info {
+    flex: 1;
+}
+
+.artwork-info h1 {
+    font-size: 24px;
+    margin: 0 0 20px;
+}
+
+.price-info {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: var(--background-color);
+    border-radius: 8px;
+}
+
+.price-info .label {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.price-info .price {
+    display: block;
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.user-info .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.user-info .label {
+    color: #666;
+}
+
+.payment-section,
+.comment-section {
+    margin-bottom: 40px;
+}
+
+h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.payment-options {
+    display: grid;
+    gap: 15px;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.payment-option:hover {
+    border-color: var(--primary-color);
+}
+
+.radio-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #666;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+}
+
+.payment-option input[type="radio"] {
+    display: none;
+}
+
+.payment-option input[type="radio"]:checked + .radio-custom::after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.comment-area textarea {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    resize: vertical;
+    min-height: 120px;
+    font-family: inherit;
+}
+
+.comment-area textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.confirm-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 16px;
+    background: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.confirm-button:hover {
+    background: #ff0011;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+@media (max-width: 768px) {
+    .bid-container {
+        padding: 15px;
+        margin: 20px auto;
+    }
+
+    .artwork-section {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .artwork-image {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1;
+    }
+
+    .price-info .price {
+        font-size: 28px;
+    }
+}

@@ -1,0 +1,55 @@
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bidSaleDetail.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
+    <title>購入手続き</title>
+</head>
+{% include 'header.html' %}
+<div class="bidSaleDetail">
+    <div class="saleInfo">
+        <div class="image">
+            <img src="{{ url_for('static', filename=sale.filePath) }}" alt="saleImage">
+        </div>
+        <div class="info">
+            <div class="title">
+                <h2>{{ sale.title }}</h2>
+            </div>
+            <div class="price">
+                <p>落札金額</p>
+                <h2>￥{{ sale.currentPrice }}</h2>
+            </div>
+            <div class="name">
+                <p>落札者名:{{ buyer_display_name }}</p>
+                <p>出品者名:{{ name }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="paymentMethods">
+        <h2 class="paymentMethodsTitle">お支払方法</h2>
+        <div class="paymentMethodsType">
+            <div>
+                <input type="radio" name="paymentMethod" value="cash" id="cash" checked>
+                <label for="cash">現金</label>
+            </div>
+            <div>
+                <input type="radio" name="paymentMethod" value="creditCard" id="creditCard">
+                <label for="creditCard">クレジットカード</label>
+            </div>
+            <div>
+                <input type="radio" name="paymentMethod" value="cvs" id="cvs">
+                <label for="cvs">コンビニ</label>
+            </div>
+            <div>
+                <input type="radio" name="paymentMethod" value="paypay" id="paypay">
+                <label for="paypay">PayPay</label>
+            </div>
+        </div>
+    </div>
+    <div class="comment">
+        <h2 class="commentTitle">その他希望</h2>
+        <div class="commentTextarea">
+            <textarea name="comment" id="commentTextarea"></textarea>
+        </div>
+    </div>
+    <input type="button" value="確認画面へ" class="confirmButton">
+</div>
