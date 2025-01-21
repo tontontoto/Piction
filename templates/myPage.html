@@ -10,18 +10,17 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
-    <title>My Page</title>
+    <title>マイページ | Piction</title>
 </head>
 
 <body>
     <!-- ヘッダーエリア -->
     {% include 'header.html' %}
     <!------------------->
-    </header>
     <main id="main">
         <div class="profile">
             <div class="userIcon">
-                <img src="{{ url_for('static', filename='img/icon_sample.jpg') }}" class="icon">
+                <img src="{{ url_for('static', filename='img/icon_sample.jpg') }}" class="icon" alt="userIcon">
             </div>
             <div class="userInfo">
                 <p class="displayName">{{ user.displayName }}</p>
@@ -56,13 +55,13 @@
                 <div class="thumbsUpSaleList">
                     <img src="{{ url_for('static', filename='../static/parts/heart.svg') }}" alt="heart">
                     <p>いいね一覧</p>
-                    <img src="{{ url_for('static', filename='../static/parts/chevron-right.svg')}}" class="chevron-right">
+                    <img src="{{ url_for('static', filename='../static/parts/chevron-right.svg')}}" class="chevron-right" alt="chevron-right">
                     <a href="/myLikeList"></a>
                 </div>
                 <div class="thumbsUpSaleList">
                     <img src="{{ url_for('static', filename='../static/parts/chart-line.svg') }}" alt="chart-line">
                     <p>販売状況</p>
-                    <img src="{{ url_for('static', filename='../static/parts/chevron-right.svg')}}" class="chevron-right">
+                    <img src="{{ url_for('static', filename='../static/parts/chevron-right.svg')}}" class="chevron-right" alt="chevron-right">
                 </div>
             </div>
         </div>

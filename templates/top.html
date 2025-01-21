@@ -17,32 +17,26 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
     
     <script src="{{ url_for('static', filename='js/top.js') }}" defer></script>
-    <title>Piction Top</title>
+    <title>トップ | Piction</title>
 </head>
 
 <body>
     <!-- ヘッダーエリア -->
     {% include 'header.html' %}
-    <!------------------->
 
-    <!-- スライダーエリア -->
+    <main>
+        <!-- スライダーエリア -->
+        {% include 'slider.html' %}
+        
+        <!-- ランキングエリア -->
+        {% include 'top_ranking.html' %}
 
-    <!-- ランキングエリア -->
-    {% include 'top_ranking.html' %}
-
-    <!-- 商品一覧 -->
-    {% include 'sale.html' %}
-    
-    <p style="font-weight: bold;">デバック用ショートカット</p>
-    <a href="/saleDetail">商品詳細ページ</a>
-    <a href="/logout">ログアウトする</a>
-    <a href="/signup" role="button">新規登録する</a>
+        <!-- 商品一覧 -->
+        {% include 'sale.html' %}
+    </main>
 
     <!-- フッターエリア -->
     {% include 'footer.html' %}
-    
-    <!------------------->
-
 </body>
 
 </html>

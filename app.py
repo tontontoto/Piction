@@ -6,6 +6,8 @@ from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
 from sqlalchemy import func
 from azure.storage.blob import BlobServiceClient
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 from werkzeug.utils import secure_filename
 import random
 import string
@@ -47,6 +49,15 @@ bcrypt = Bcrypt()
 login_manager = LoginManager()
 #アプリをログイン機能を紐付ける
 login_manager.init_app(app)
+
+# MARK: 管理者画面
+admin = Admin(app, name='Piction', template_mode='bootstrap3')
+admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(Sale, db.session))
+admin.add_view(ModelView(Category, db.session))
+admin.add_view(ModelView(Bid, db.session))
+admin.add_view(ModelView(Like, db.session))
+admin.add_view(ModelView(Inquiry, db.session))
 
 # MARK:ログイン情報保持
 #現在のログインユーザーの情報を保持し、必要なときに参照できるようになる。
@@ -252,45 +263,69 @@ def logout():
 @app.route('/top')
 @login_required
 def top():
-    userId = session.get('userId') # 利用しているuserIdの取得
+    userId = session.get('userId')
     print("userIdです！", userId)
     
     try:
-        sales = Sale.query.all()  # すべての商品を取得
+        # 新着順に10件取得
+        sales = Sale.query.order_by(Sale.saleId.desc()).limit(10).all()
+        
+        # 高額商品TOP5を取得（現在価格の高い順）
+        topPriceSales = Sale.query.order_by(Sale.currentPrice.desc()).limit(5).all()
+        
+        # いいね情報の取得
+        liked_sales = db.session.query(Like.saleId).filter_by(userId=userId).all()
+        liked_sale_ids = [sale[0] for sale in liked_sales]
+        
+        # いいねランキングの取得
+        likeRankings = db.session.query(
+            Like.saleId, 
+            db.func.count(Like.saleId)
+        ).group_by(Like.saleId).order_by(
+            db.func.count(Like.saleId).desc()
+        ).limit(3).all()
+        
+        saleIds = [sale[0] for sale in likeRankings]
+        saleRankings = Sale.query.filter(Sale.saleId.in_(saleIds)).all()
+        
     except Exception as e:
         print(f"Error 商品情報取得失敗: {e}")
         sales = []
-    
-    try:
-        liked_sales = (
-            db.session.query(Like.saleId)
-            .filter_by(userId=userId)
-            .all()
-        )  # ユーザーが過去に「いいね」をした商品IDのリストを取得
-        liked_sale_ids = [sale[0] for sale in liked_sales]  # 取得したsale_idをリスト化
-        
-        likeRankings = db.session.query(Like.saleId, db.func.count(Like.saleId)).group_by(Like.saleId).order_by(db.func.count(Like.saleId).desc()).limit(3).all()
-    except Exception as e:
-        print(f"Error いいねした商品のID取得失敗: {e}")
+        topPriceSales = []
         liked_sale_ids = []
-    
-    #likeRankingsからsaleIdを取り出し、リスト化
-    saleIds = [sale[0] for sale in likeRankings]
-    
-    try:
-        #saleIdをもとにSaleテーブルから商品情報を取得
-        saleRankings = Sale.query.filter(Sale.saleId.in_(saleIds)).all()
-    except Exception as e:
-        print(f"Error 商品情報取得失敗: {e}")
         saleRankings = []
     
+    return render_template('top.html', 
+                         sales=sales, 
+                         userId=userId, 
+                         liked_sale_ids=liked_sale_ids, 
+                         saleRankings=saleRankings,
+                         topPriceSales=topPriceSales,
+                         SAS=SAS)
+
+# MARK: 作品一覧ページ
+@app.route('/lineup')
+def lineup():
+    userId = session.get('userId')
+    
     try:
-        sales=db.session.query(Sale).all()  
+        # 通常の商品一覧を取得(新着順)
+        sales = Sale.query.order_by(Sale.saleId.desc()).all()
+        
+        # いいね情報の取得
+        liked_sales = db.session.query(Like.saleId).filter_by(userId=userId).all()
+        liked_sale_ids = [sale[0] for sale in liked_sales]
+        
     except Exception as e:
         print(f"Error 商品情報取得失敗: {e}")
-        sales = []      
-        
-    return render_template('top.html', sales=sales, userId=userId, liked_sale_ids=liked_sale_ids, saleRankings=saleRankings, SAS=SAS)
+        sales = []
+        liked_sale_ids = []
+    
+    return render_template('lineup.html', 
+                         sales=sales, 
+                         userId=userId, 
+                         liked_sale_ids=liked_sale_ids, 
+                         SAS=SAS)
 
 # MARK: いいね情報受け取りroute
 @app.route('/like', methods=['POST'])
@@ -491,6 +526,7 @@ def myPage():
     
     # ユーザーの出品数の取得
     try:
+
         listingCount = db.session.query(Sale).filter(Sale.userId == userId).count()
     except Exception as e:
         print(f"Error 出品数のカウントに失敗: {e}")
@@ -549,7 +585,6 @@ def get_buyer_display_name(sale_id):
     except Exception as e:
         print(f"Error: {e}")
         return "エラーが発生しました"
-
 
 # MARK: canvas→画像変換
 def decode_image(image_data):
@@ -742,60 +777,38 @@ def contact():
             
     return render_template('contact.html')
 
-# # ---- ユーザーデータの仮挿入 ----
-# def add_users():
-#     dummy_users = [
-#         User(userName='user1', displayName='User One', mailAddress='user1@example.com', password='password1'),
-#         User(userName='user2', displayName='User Two', mailAddress='user2@example.com', password='password2'),
-#         User(userName='user3', displayName='User Three', mailAddress='user3@example.com', password='password3')
-#     ]
-    
-#     db.session.add_all(dummy_users)
-#     db.session.commit()
-
-# ---- カテゴリデータの仮挿入 ----
-def add_categories():
-    dummy_categories = [
-        Category(categoryName='キャラクター'),
-        Category(categoryName='模写'),
-        Category(categoryName='空想'),
-        Category(categoryName='抽象'),
-        Category(categoryName='カラフル'),
-        Category(categoryName='風景'),
-        Category(categoryName='動物'),
-        Category(categoryName='静物'),
-        Category(categoryName='ポートレート'),
-    ]
+# MARK: 検索機能
+# MARK: 検索ページ
+@app.route('/search')
+def search():
+    query = request.args.get('query', '').strip()
     
     try:
-        db.session.add_all(dummy_categories)
-        db.session.commit()
-    except Exception as e:
-        print(f"Error カテゴリ追加処理失敗: {e}")
-        db.session.rollback()
-        dummy_categories = []
+        if query:
+            # 作品名で検索
+            sales = Sale.query.filter(Sale.title.ilike(f'%{query}%')).all()
+        else:
+            # 検索クエリがない場合は全件取得
+            sales = Sale.query.all()
         
-    return dummy_categories
-
-# # ---- 商品データの仮挿入 ----
-# def add_sales(dummy_categories):    
-#     dummy_sales = [
-#         Sale(userId=1, displayName='User One', title='iPhone', filePath='0001.png', startingPrice=10000, currentPrice=10000, creationTime='10:00'),
-#         Sale(userId=2, displayName='User Two', title='小説', filePath='0002.png', startingPrice=50000, currentPrice=50000, creationTime='10:00')
-#     ]
-#     dummy_sales[0].categories.append(dummy_categories[0])
-#     dummy_sales[1].categories.append(dummy_categories[1])
-    
-#     db.session.add_all(dummy_sales)
-#     db.session.commit()
+        # 入札数の取得
+        bid_counts = {}
+        for sale in sales:
+            bid_counts[sale.saleId] = Bid.query.filter_by(saleId=sale.saleId).count()
+        
+        return render_template('lineup.html', sales=sales, bidCount=bid_counts, query=query)
+        
+    except Exception as e:
+        print(f"Error 検索処理失敗: {e}")
+        return render_template('lineup.html', sales=[], bidCount={}, query=query)
 
 # MARK: テーブルの作成
 if __name__ == '__main__': 
     with app.app_context():
         try:
-            #db.drop_all() # テーブルの全削除
+            # db.drop_all()  # テーブルの全削除
             db.create_all()
-            # add_users()
+            # dummy_users = add_users()
             # dummy_categories = add_categories()
             # add_sales(dummy_categories)
         except Exception as e:
@@ -804,3 +817,4 @@ if __name__ == '__main__':
             db.session.close()
             exit()
     app.run(host='0.0.0.0', port=80, debug=True)
+
