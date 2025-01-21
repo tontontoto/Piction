@@ -1,6 +1,6 @@
 # MARK:インポート
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session
-from model_sample import db, User, Sale, Category, Bid, Like, DB_URL, Inquiry
+from model_sample import db, User, Sale, Category, Bid, Like, DB_URL, Inquiry, WinningBid
 from flask_login import LoginManager, login_user, logout_user, login_required
 from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
@@ -79,7 +79,8 @@ def index():
             print(f"Error ユーザー情報取得失敗: {e}")
             user = []
         return render_template('index.html', user=user)
-    
+
+
 # MARK: saleDetail
 @app.route('/saleDetail/<int:sale_id>', methods=['GET', 'POST'])
 def saleDetail(sale_id):
@@ -90,6 +91,7 @@ def saleDetail(sale_id):
         currentPrice = db.session.query(Bid.bidPrice).filter_by(saleId=sale_id).order_by(Bid.bidPrice.desc()).first()
         currentPrice = currentPrice[0] if currentPrice else sale.startingPrice
         categories = ', '.join([category.categoryName for category in sale.categories])
+    
     except Exception as e:
         print(f"Error 商品情報取得失敗: {e}")
         return "エラーが発生しました", 500
@@ -110,6 +112,16 @@ def saleDetail(sale_id):
             lastAmount = db.session.query(func.max(Bid.bidPrice)).scalar()
             # 落札者userIdの取得
             bidUserId = db.session.query(Bid.userId).filter(Bid.bidPrice == lastAmount).scalar()
+
+            # WinningBidテーブルの更新
+            buyerId = db.session.query(Sale).filter(Sale.saleStatus == False)
+
+            # 重複チェック
+            existing_winningBid = db.session.query(WinningBid).filter_by(buyerId=bidUserId, saleId=sale_id).first()
+            if not existing_winningBid:
+                new_winningBid = WinningBid(buyerId=bidUserId, saleId=sale_id)
+                db.session.add(new_winningBid)
+                db.session.commit()
         
             db.session.query(Sale).filter(Sale.saleId == sale_id).update({"saleStatus": False})
             db.session.commit()
@@ -329,8 +341,11 @@ def like_sale():
 def myLikeList():
     userId = session.get('userId')
     try:
+        # いいねした商品の情報を取得
+        sales = db.session.query(Sale).all()
         # userIdからそのユーザー情報を取得
-        user = User.query.get(userId) 
+        user = User.query.get(userId)
+        # 自分がいいねした商品の情報を取得
         myLikeList = db.session.query(Sale).join(Like).filter(Like.userId == userId).order_by(Like.likeId.desc()).all()
         # 入札数の取得
         bidCount = db.session.query(Sale.saleId, func.coalesce(func.count(Bid.bidId), 0).label('bid_count')) \
@@ -372,7 +387,7 @@ def myLikeList():
         bidCount = []
         
     print(myLikeList)
-    return render_template('myLikeList.html', user=user, myLikeList=myLikeList, bidCount=bidCount, SAS=SAS)
+    return render_template('myLikeList.html', sales=sales, user=user, myLikeList=myLikeList, bidCount=bidCount, SAS=SAS)
 
 # MARK: 並び順を渡すurl
 @app.route('/sort_products')
@@ -488,10 +503,53 @@ def myPage():
         print(f"Error いいねした商品のカウントに失敗: {e}")
         likeCount = "---"
     
-    # 落札した商品の取得
-    successfulBidSales = db.session.query()
+    # 自分が落札した商品の情報を取得
+    myBidList = db.session.query(WinningBid).join(Sale).filter(WinningBid.buyerId == userId).all()
 
-    return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, SAS=SAS)
+    # 落札した商品の情報を取得
+    myBidSales = []
+    for bid in myBidList:
+        sale = Sale.query.get(bid.saleId)
+        myBidSales.append(sale)
+
+    print("落札した商品の一覧", myBidSales)
+
+    return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, SAS=SAS)
+
+# MARK: 落札商品詳細ページ
+# MARK: 落札商品詳細ページ
+@app.route('/bidSaleDetail/<int:sale_id>')
+def bidSaleDetail(sale_id):
+    print(sale_id)
+    # Sale の情報を取得
+    sale = Sale.query.get(sale_id)
+    # 出品者の displayName を取得
+    name = db.session.query(User.displayName).filter(User.userId == sale.userId).scalar()    
+    # WinningBid を使って buyerId を取得し、購入者の displayName を取得
+    buyer_display_name = get_buyer_display_name(sale_id)
+    # テンプレートに必要な情報を渡してレンダリング
+    return render_template('bidSaleDetail.html', sale=sale, name=name, buyer_display_name=buyer_display_name)
+
+# 特定の saleId に対して、buyerId を持つ User の displayName を取得
+def get_buyer_display_name(sale_id):
+    try:
+        # saleId に関連する WinningBid を取得
+        winning_bid = db.session.query(WinningBid).filter_by(saleId=sale_id).first()
+        # WinningBid が存在し、buyerId が取得できた場合
+        if winning_bid and winning_bid.buyerId:
+            # buyerId を使って User を取得
+            buyer = User.query.get(winning_bid.buyerId)
+            # buyer が存在すれば、その displayName を返す
+            if buyer:
+                return buyer.displayName
+            else:
+                return "ユーザー情報が見つかりません"
+        else:
+            return "該当する落札者がいません"
+    except Exception as e:
+        print(f"Error: {e}")
+        return "エラーが発生しました"
+
 
 # MARK: canvas→画像変換
 def decode_image(image_data):
@@ -735,7 +793,7 @@ def add_categories():
 if __name__ == '__main__': 
     with app.app_context():
         try:
-            # db.drop_all() # テーブルの全削除
+            #db.drop_all() # テーブルの全削除
             db.create_all()
             # add_users()
             # dummy_categories = add_categories()

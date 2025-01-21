@@ -1,0 +1,97 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.bidSaleDetail {
+    width: 80%;
+    margin: 0 auto;
+    align-items: center;
+}
+.saleInfo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.image {
+    width: 30%;
+    min-width: 200px;
+    height: 100%;
+    min-height: 200px;
+    padding: 3%;
+    margin: 3% 3% 3% 10%;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px -5px #777777;
+}
+.image img {
+    width: 100%;
+    height: auto;
+    border: 1px solid rgb(212, 212, 212);
+    border-radius: 7px;
+}
+.info {
+    width: 50%;
+    margin: 3% 3% 3% 10%;
+}
+.title,
+.price,
+.name {
+    width: 100%;
+    margin-bottom: 10%;
+    padding: 4% 0;
+    font-size: large;
+    border-bottom: 1px solid rgb(118, 118, 118);
+}
+.price {
+    margin-bottom: 1%;
+}
+.name {
+    color: rgb(118, 118, 118);
+    font-size: small;
+    
+}
+
+/* お支払方法 */
+.paymentMethods {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px -5px #777777;
+}
+.paymentMethodsTitle,
+.commentTitle {
+    width: 100%;
+    padding: 10px 5% 5px; 
+    font-size: 1.5em;
+}
+.paymentMethodsType {
+    width: 100%;
+    padding: 1% 3% 3%;
+    display: flex;
+    flex-direction: column;
+}
+.comment {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px -5px #777777;
+    margin-top: 5%;
+}
+.commentTextarea {
+    width: 100%;
+    padding: 1% 3% 3%;
+}
+
+.confirmButton {
+    display: flex;
+    justify-content: center;
+    background: #000;
+    color: #fff;
+    margin: 5% auto;
+    transition: 0.4s;
+    width: 70%;
+    height: 4rem;
+}
+.confirmButton:hover {
+    background: #fff;
+    color: #000;
+}

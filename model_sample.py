@@ -103,6 +103,7 @@ class WinningBid(db.Model):
     __tablename__ = "winningBid"
     winningBidId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     buyerId = db.Column(db.Integer, ForeignKey('user.userId'))
+    saleId = db.Column(db.Integer, ForeignKey('sale.saleId'))
     sellerId = db.Column(db.Integer, ForeignKey('user.userId'))
     bidId = db.Column(db.Integer, ForeignKey('bid.bidId'))
 

@@ -1,6 +1,6 @@
 <div id="lineup">
     <h2>作品一覧</h2>
-    {% with sales = sales, user=user%}
+    {% with sales = sales, user=user%} <!-- with includeに変数渡す -->
     <div class="lineupArea">
         {% for sale in sales %}
             {% include 'sale.html' %}
