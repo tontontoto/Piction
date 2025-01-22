@@ -549,8 +549,16 @@ def myPage():
         myBidSales.append(sale)
 
     print("落札した商品の一覧", myBidSales)
-
-    return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, SAS=SAS)
+    
+    # 売上情報の取得
+    # 出品した商品からsaleStatusが0のものを取得
+    # 落札した商品のpaymentのamountを取得
+    # 売上情報の取得処理の改善
+    saleStatus = db.session.query(Sale).filter(Sale.userId == userId, Sale.saleStatus == 0).all()
+    sale_ids = [sale.saleId for sale in saleStatus]  # saleIdを正しく取得
+    revenue = db.session.query(func.sum(Payment.amount)).filter(Payment.saleId.in_(sale_ids)).scalar() or 0
+    
+    return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, SAS=SAS, revenue=revenue)
 
 
 # MARK: 落札商品詳細ページ
@@ -873,7 +881,7 @@ def add_sales(dummy_categories):
             title='一眼レフ', 
             filePath='upload_images/camera.png', 
             startingPrice=120, 
-            currentPrice=50000, 
+            currentPrice=120, 
             creationTime='10:00',
             startingTime='2024/03/20 10:00:00',
             finishTime='2025/04/20 10:00:00'
@@ -884,7 +892,7 @@ def add_sales(dummy_categories):
             title='パソコン', 
             filePath='upload_images/pc.png', 
             startingPrice=120, 
-            currentPrice=100000, 
+            currentPrice=120, 
             creationTime='11:30',
             startingTime='2024/03/20 11:30:00',
             finishTime='2025/04/20 11:30:00'
@@ -895,7 +903,7 @@ def add_sales(dummy_categories):
             title='ゾウ', 
             filePath='upload_images/elephant.png', 
             startingPrice=120, 
-            currentPrice=12000, 
+            currentPrice=120, 
             creationTime='12:45',
             startingTime='2024/03/20 12:45:00',
             finishTime='2025/04/20 12:45:00'
@@ -906,7 +914,7 @@ def add_sales(dummy_categories):
             title='お魚', 
             filePath='upload_images/fish2.png', 
             startingPrice=120, 
-            currentPrice=12000, 
+            currentPrice=120, 
             creationTime='14:15',
             startingTime='2024/03/20 14:15:00',
             finishTime='2025/04/20 14:15:00'
@@ -917,22 +925,44 @@ def add_sales(dummy_categories):
             title='雪だるま', 
             filePath='upload_images/snowman.png', 
             startingPrice=120, 
-            currentPrice=70000, 
+            currentPrice=120, 
             creationTime='15:30',
             startingTime='2024/03/20 15:30:00',
             finishTime='2025/04/20 15:30:00'
         ),
         Sale(
-            userId=6, 
+            userId=5, 
             displayName='高橋健一', 
             title='いちご', 
             filePath='upload_images/strawberry.png', 
             startingPrice=120, 
-            currentPrice=12000, 
+            currentPrice=120, 
             creationTime='15:30',
             startingTime='2024/03/20 15:30:00',
             finishTime='2025/04/20 15:30:00'
-        )
+        ),
+        Sale(
+            userId=5, 
+            displayName='高橋健一', 
+            title='タピオカ', 
+            filePath='upload_images/tapioca.png', 
+            startingPrice=120, 
+            currentPrice=120, 
+            creationTime='15:30',
+            startingTime='2024/03/20 15:30:00',
+            finishTime='2025/04/20 15:30:00'
+        ),
+        Sale(
+            userId=1, 
+            displayName='山田太郎', 
+            title='ヨット', 
+            filePath='upload_images/yacht.png', 
+            startingPrice=120, 
+            currentPrice=120, 
+            creationTime='15:30',
+            startingTime='2024/03/20 15:30:00',
+            finishTime='2025/04/20 15:30:00'
+        ),
     ]
 
     # カテゴリーの割り当て
@@ -942,6 +972,8 @@ def add_sales(dummy_categories):
     dummy_sales[3].categories.extend([dummy_categories[5], dummy_categories[2]])  # 風景、空想
     dummy_sales[4].categories.extend([dummy_categories[5], dummy_categories[4]])  # 風景、カラフル
     dummy_sales[5].categories.extend([dummy_categories[5], dummy_categories[4]])  # 風景、カラフル
+    dummy_sales[6].categories.extend([dummy_categories[5], dummy_categories[4]])  # 風景、カラフル
+    dummy_sales[7].categories.extend([dummy_categories[5], dummy_categories[4]])  # 風景、カラフル
     
     db.session.add_all(dummy_sales)
     db.session.commit()
