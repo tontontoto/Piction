@@ -1,6 +1,6 @@
 # MARK:インポート
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session
-from model_sample import db, User, Sale, Category, Bid, Like, DB_URL, Inquiry, WinningBid
+from model_sample import db, User, Sale, Category, Bid, Like, DB_URL, Inquiry, WinningBid, PaymentWay, Payment
 from flask_login import LoginManager, login_user, logout_user, login_required
 from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
@@ -554,17 +554,34 @@ def myPage():
 
 
 # MARK: 落札商品詳細ページ
-@app.route('/bidSaleDetail/<int:sale_id>')
+@app.route('/bidSaleDetail/<int:sale_id>', methods=['GET', 'POST'])
 def bidSaleDetail(sale_id):
     print(sale_id)
-    # Sale の情報を取得
-    sale = Sale.query.get(sale_id)
-    # 出品者の displayName を取得
-    name = db.session.query(User.displayName).filter(User.userId == sale.userId).scalar()    
-    # WinningBid を使って buyerId を取得し、購入者の displayName を取得
-    buyer_display_name = get_buyer_display_name(sale_id)
-    # テンプレートに必要な情報を渡してレンダリング
-    return render_template('bidSaleDetail.html', sale=sale, name=name, buyer_display_name=buyer_display_name)
+
+    if request.method == 'POST':
+        sale = Sale.query.get(sale_id)
+        saleId = sale.saleId # 商品ID
+        winningBidId = WinningBid.query.filter_by(saleId=saleId).first().winningBidId # 落札ID
+        PaymentMethod = request.form.get('paymentMethod') # 支払い方法
+        paymentWayId = db.session.query(PaymentWay.paymentWayId).filter(PaymentWay.paymentWayName == PaymentMethod).scalar() # 支払い方法ID
+        comment = request.form.get('comment') # コメント
+        amount = sale.currentPrice # 落札金額
+        
+        new_payment = Payment(saleId=saleId, winningBidId=winningBidId, paymentWayId=paymentWayId, amount=amount)
+        db.session.add(new_payment)
+        db.session.commit()
+        print(saleId, winningBidId, paymentWayId, comment, amount)
+        return render_template('bidConfirmation.html', sale=sale)
+
+    else:
+        # Sale の情報を取得
+        sale = Sale.query.get(sale_id)
+        # 出品者の displayName を取得
+        name = db.session.query(User.displayName).filter(User.userId == sale.userId).scalar()    
+        # WinningBid を使って buyerId を取得し、購入者の displayName を取得
+        buyer_display_name = get_buyer_display_name(sale_id)
+        # テンプレートに必要な情報を渡してレンダリング
+        return render_template('bidSaleDetail.html', sale=sale, name=name, buyer_display_name=buyer_display_name)
 
 # 特定の saleId に対して、buyerId を持つ User の displayName を取得
 def get_buyer_display_name(sale_id):
@@ -929,6 +946,16 @@ def add_sales(dummy_categories):
     db.session.add_all(dummy_sales)
     db.session.commit()
 
+# MARK: 支払い方法データの挿入
+def add_payment_methods():
+    dummy_payment_methods = [
+        PaymentWay(paymentWayName='現金'),
+        PaymentWay(paymentWayName='クレジットカード'),
+        PaymentWay(paymentWayName='コンビニ'),
+        PaymentWay(paymentWayName='PayPay')
+    ]
+    db.session.add_all(dummy_payment_methods)
+    db.session.commit()
 
 # MARK: テーブルの作成
 if __name__ == '__main__': 
@@ -939,6 +966,7 @@ if __name__ == '__main__':
             # dummy_users = add_users()
             # dummy_categories = add_categories()
             # add_sales(dummy_categories)
+            # add_payment_methods()
         except Exception as e:
             print(f"Error テーブル作成失敗: {e}")
             db.session.rollback()
