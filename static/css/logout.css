@@ -1,0 +1,117 @@
+:root {
+    --primary-color: #ff5a65;
+    --text-color: #333;
+    --border-color: #eee;
+    --background-color: #f8f8f8;
+    --shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.logout-container {
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 0 20px;
+}
+
+.logout-card {
+    background: white;
+    border-radius: 15px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: var(--shadow);
+}
+
+.logout-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.logout-card h1 {
+    font-size: 24px;
+    color: var(--text-color);
+    margin-bottom: 30px;
+}
+
+.message {
+    text-align: left;
+    margin-bottom: 40px;
+}
+
+.message p {
+    color: #666;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.message ul {
+    list-style: none;
+    padding: 0;
+}
+
+.message ul li {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.message ul li:last-child {
+    border-bottom: none;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.logout-button {
+    padding: 14px 32px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.logout-button:hover {
+    background: #ff0011;
+}
+
+.cancel-button {
+    padding: 14px 32px;
+    background: white;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.cancel-button:hover {
+    background: var(--background-color);
+    border-color: #ccc;
+}
+
+@media (max-width: 768px) {
+    .logout-container {
+        margin: 30px auto;
+        padding: 0 15px;
+    }
+
+    .logout-card {
+        padding: 30px 20px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .logout-button,
+    .cancel-button {
+        width: 100%;
+    }
+} 

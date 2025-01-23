@@ -251,13 +251,25 @@ def login():
         return render_template('login.html')
 
 # MARK: ログアウト
-@app.route('/logout')
+@app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
-    logout_user()
-    session.pop('userId') # ログアウト時にsessionからユーザーIDを削除
-    print("ログアウト完了")
-    return redirect('/login')
+    try:
+        if request.method == 'POST':
+            # セッションからユーザー情報を削除
+            session.clear()
+            # ログアウト処理
+            logout_user()
+            flash('ログアウトしました', 'success')
+            return render_template('index.html')
+        
+        # GETリクエストの場合は確認画面を表示
+        return render_template('logout.html')
+        
+    except Exception as e:
+        print(f"Error ログアウト処理失敗: {e}")
+        flash('ログアウトに失敗しました', 'error')
+        return redirect('/logout')
 
 # MARK: トップページ
 @app.route('/top')

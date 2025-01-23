@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログアウト | Piction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/logout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <main class="logout-container">
+        <div class="logout-card">
+            <h1>ログアウトしますか？</h1>
+            
+            <div class="message">
+                <p>ログアウトすると、再度ログインするまで以下の機能が利用できなくなります：</p>
+                <ul>
+                    <li>作品の出品</li>
+                    <li>オークションへの参加</li>
+                    <li>いいね機能</li>
+                    <li>メッセージの送受信</li>
+                </ul>
+            </div>
+
+            <div class="action-buttons">
+                <form action="{{ url_for('logout') }}" method="post">
+                    <button type="submit" class="logout-button">ログアウト</button>
+                </form>
+                <a href="{{ url_for('top') }}" class="cancel-button">キャンセル</a>
+            </div>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+</body>
+</html> 
