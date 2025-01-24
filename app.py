@@ -79,6 +79,12 @@ def logout_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+# MARK: Pageエラー
+@app.errorhandler(401) # 401: 認証エラー
+@app.errorhandler(404) # 404: Not Found エラー
+def error_401(error):
+    return render_template('error.html'),401 if error.code == 401 else 404
+
 #　MARK: Welcomeページ 
 @app.route('/', methods=['GET', 'POST'])
 @logout_required
