@@ -49,8 +49,8 @@
     color: #000000;
     line-height: 36px;
     text-decoration: none;
-    background-color: #efefef;
-    border: 1px solid #46A0DC;
+    background-color: rgb(222, 222, 222);
+    border: 2px solid #46A0DC;
     border-radius: 5px;
     transition: .4s;
 }
