@@ -39,6 +39,53 @@ print("BLOB接続文字列=" + S_URL)
 app.config['UPLOAD_FOLDER'] = './static/upload_images'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
+
+# アップロードフォルダの設定
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_ICON_FOLDER'] = './static/upload_icon'
+os.makedirs(app.config['UPLOAD_ICON_FOLDER'], exist_ok=True)
+
+# ファイルの拡張子を確認するヘルパー関数
+def allowed_file(filename):
+    # ファイル名に拡張子が含まれているかを確認
+    if '.' in filename:
+        # ファイル名を拡張子で分割して、拡張子が許可されたものかを確認
+        file_extension = filename.rsplit('.', 1)[1].lower()
+        return file_extension in ALLOWED_EXTENSIONS
+    return False
+
+
+
+
+# @app.route('/myPage', methods=['GET', 'POST'])
+# def upload_file():
+#     if request.method == 'POST':
+#         if 'file' not in request.files:
+#             return 'ファイルが送信されていません'
+#         file = request.files['file']
+        
+#         if file.filename == '':
+#             return 'ファイルが選択されていません'
+        
+#         if file and allowed_file(file.filename):
+#             # ファイル名を安全な名前に変更
+#             filename = secure_filename(file.filename)
+            
+#             # 保存先のファイルパスを決定
+#             iconFilePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            
+#             # ファイルを保存    
+#             file.save(iconFilePath)
+            
+#             # データベースにファイルパスを保存
+#             new_image = userIcon(iconFilePath=iconFilePath)
+#             db.session.add(new_image)
+#             db.session.commit()
+
+#             return f'ファイル {filename} がアップロードされ、データベースに保存されました！'
+    
+#     return render_template('myPage.html')
+
 try:
     db.init_app(app)
 except Exception as e:
@@ -522,10 +569,11 @@ def sort_products():
     return jsonify(product_list)
 
 # MARK: マイページ
-@app.route('/myPage')
+@app.route('/myPage', methods=['GET', 'POST'])
 @login_required
 def myPage():
     userId = session.get('userId')
+    
     try:
         user = User.query.get(userId)
         # session(ログイン状態のuserId)のsaleの行を取り出し、
@@ -544,7 +592,6 @@ def myPage():
     
     # ユーザーの出品数の取得
     try:
-
         listingCount = db.session.query(Sale).filter(Sale.userId == userId).count()
     except Exception as e:
         print(f"Error 出品数のカウントに失敗: {e}")
@@ -569,14 +616,63 @@ def myPage():
     print("落札した商品の一覧", myBidSales)
     
     # 売上情報の取得
-    # 出品した商品からsaleStatusが0のものを取得
-    # 落札した商品のpaymentのamountを取得
-    # 売上情報の取得処理の改善
     saleStatus = db.session.query(Sale).filter(Sale.userId == userId, Sale.saleStatus == 0).all()
     sale_ids = [sale.saleId for sale in saleStatus]  # saleIdを正しく取得
     revenue = db.session.query(func.sum(Payment.amount)).filter(Payment.saleId.in_(sale_ids)).scalar() or 0
-    
-    return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, SAS=SAS, revenue=revenue)
+
+
+    if request.method == 'POST':
+        displayName = request.form.get('displayName')
+        userName = request.form.get('userName')
+        mailAddress = request.form.get('mailAddress')
+
+        # 'file'がフォームから送信されているか確認
+        if 'file' not in request.files:
+            return 'ファイルが送信されていません'
+
+        file = request.files['file']
+        
+        # ファイル名が空かどうか確認
+        if file.filename == '':
+            return 'ファイルが選択されていません'
+        
+        # 許可されたファイルかどうか確認
+        if allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            print(filename)
+            file_extension = filename.rsplit('.', 1)[1].lower()
+            
+            # 新しいファイル名を作成
+            new_filename = f"user_icon_{len(os.listdir(app.config['UPLOAD_ICON_FOLDER'])) + 1}.{file_extension}"
+            file_path = os.path.join(app.config['UPLOAD_ICON_FOLDER'], new_filename).replace('\\', '/')
+
+            # ディレクトリが存在しない場合、作成する
+            os.makedirs(app.config['UPLOAD_ICON_FOLDER'], exist_ok=True)
+            
+            # ファイル保存
+            try:
+                file.save(file_path)
+                print(f"ファイルが保存されました: {file_path}")
+            except Exception as e:
+                print(f"ファイルの保存に失敗しました: {e}")
+            
+            # データベースに保存
+            try:
+                user = User.query.filter_by(userId=userId).first()
+                if user:
+                    user.iconFilePath = f"upload_icon/{new_filename}"
+                    user.displayName = displayName
+                    user.userName = userName
+                    user.mailAddress = mailAddress
+                    db.session.commit()
+                    print(f'ファイル {new_filename} がアップロードされ、データベースに保存されました！')
+                else:
+                    print('ユーザーが見つかりませんでした。')
+            except Exception as e:
+                db.session.rollback()
+                print(f"データベース保存エラー: {e}")
+
+    return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, revenue=revenue)
 
 
 # MARK: 落札商品詳細ページ

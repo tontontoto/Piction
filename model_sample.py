@@ -37,7 +37,9 @@ class User(UserMixin, db.Model):
     mailAddress = db.Column(db.String(254))
     password = db.Column(db.String(254))
     registrationDate = db.Column(db.Date, default=date.today())
+    iconFilePath = db.Column(db.String(254), nullable=False, default="img/icon_user_light.png")
 
+    # usericon = db.relationship("UserIcon", back_populates="user", uselist=False)
     sales= db.relationship("Sale", back_populates="user")
     bids = db.relationship("Bid", back_populates="user") 
     likes = db.relationship("Like", back_populates="user")
@@ -48,6 +50,15 @@ class User(UserMixin, db.Model):
 
     def get_id(self):
         return str(self.userId)
+
+# # MARK:userIcon
+# class UserIcon(db.Model):
+#     __tablename__ = "userIcon"
+#     iconId = db.Column(db.Integer, primary_key=True)
+#     userId = db.Column(db.Integer, ForeignKey('user.userId'))  # UNIQUE 制約を削除
+#     iconFilePath = db.Column(db.String(254), nullable=False)
+
+#     user = db.relationship("User", back_populates="usericon")
 
 # MARK:Category
 class Category(db.Model):
