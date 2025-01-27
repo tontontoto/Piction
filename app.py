@@ -1,6 +1,6 @@
 # MARK:インポート
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session
-from model_sample import db, User, Sale, Category, Bid, Like, DB_URL, Inquiry, WinningBid, PaymentWay, Payment
+from model_sample import db, User, Sale, Category, Bid, Like, Inquiry, WinningBid, PaymentWay, Payment
 from flask_login import LoginManager, login_user, logout_user, login_required
 from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
@@ -13,78 +13,54 @@ import random
 import string
 import os
 import base64
+from dotenv import load_dotenv
 
-S_URL = os.environ.get("S_URL")
-S_KEY = os.environ.get("S_KEY")
-S_CNT = os.environ.get("S_CNT")
-SAS = os.environ.get("SAS")
+# 環境変数の読み込み
+load_dotenv()
+
+# 環境設定の取得
+ENVIRONMENT = os.getenv('ENVIRONMENT', 'local')
+
+# データベースURLの設定
+if ENVIRONMENT == 'local':
+    DB_URL = os.getenv('LOCAL_DB_URL')
+else:
+    DB_URL = os.getenv('AZURE_DB_URL')
+
+# Azure Blob Storage設定
+AZURE_STORAGE_CONNECTION_STRING = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
+AZURE_STORAGE_CONTAINER = os.getenv('AZURE_STORAGE_CONTAINER')
+AZURE_STORAGE_SAS = os.getenv('AZURE_STORAGE_SAS')
+
+# アプリケーション設定
+UPLOAD_FOLDER = os.getenv('UPLOAD_FOLDER', './static/upload_images')
 
 # MARK:インスタンス化
 app = Flask(__name__)
-#データベースのURLを設定
 app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.urandom(24) # 複数ユーザーが各々のページにアクセスできる
+app.config['SECRET_KEY'] = os.urandom(24)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# # MARK: Azure Blob Storage設定
-AZURE_CONNECTION_STRING = S_URL
-AZURE_CONTAINER_NAME = S_CNT
-blob_service_client = BlobServiceClient.from_connection_string(AZURE_CONNECTION_STRING)
-container_client = blob_service_client.get_container_client(AZURE_CONTAINER_NAME)
+# Azure Blob Storage クライアントの設定（ローカル環境では無効化）
+if ENVIRONMENT == 'azure' and AZURE_STORAGE_CONNECTION_STRING:
+    try:
+        blob_service_client = BlobServiceClient.from_connection_string(AZURE_STORAGE_CONNECTION_STRING)
+        container_client = blob_service_client.get_container_client(AZURE_STORAGE_CONTAINER)
+        print("Azure Blob Storage connected successfully")
+    except Exception as e:
+        print(f"Azure Blob Storage connection failed: {e}")
+        blob_service_client = None
+        container_client = None
+else:
+    blob_service_client = None
+    container_client = None
 
-print("データベースURL=" + DB_URL)
-print("BLOB接続文字列=" + S_URL)
+print(f"現在の環境: {ENVIRONMENT}")
+print(f"データベースURL: {DB_URL}")
 
-# ローカル画像保存先フォルダ
-app.config['UPLOAD_FOLDER'] = './static/upload_images'
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-
-
-# アップロードフォルダの設定
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-app.config['UPLOAD_ICON_FOLDER'] = './static/upload_icon'
-os.makedirs(app.config['UPLOAD_ICON_FOLDER'], exist_ok=True)
-
-# ファイルの拡張子を確認するヘルパー関数
-def allowed_file(filename):
-    # ファイル名に拡張子が含まれているかを確認
-    if '.' in filename:
-        # ファイル名を拡張子で分割して、拡張子が許可されたものかを確認
-        file_extension = filename.rsplit('.', 1)[1].lower()
-        return file_extension in ALLOWED_EXTENSIONS
-    return False
-
-
-
-
-# @app.route('/myPage', methods=['GET', 'POST'])
-# def upload_file():
-#     if request.method == 'POST':
-#         if 'file' not in request.files:
-#             return 'ファイルが送信されていません'
-#         file = request.files['file']
-        
-#         if file.filename == '':
-#             return 'ファイルが選択されていません'
-        
-#         if file and allowed_file(file.filename):
-#             # ファイル名を安全な名前に変更
-#             filename = secure_filename(file.filename)
-            
-#             # 保存先のファイルパスを決定
-#             iconFilePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            
-#             # ファイルを保存    
-#             file.save(iconFilePath)
-            
-#             # データベースにファイルパスを保存
-#             new_image = userIcon(iconFilePath=iconFilePath)
-#             db.session.add(new_image)
-#             db.session.commit()
-
-#             return f'ファイル {filename} がアップロードされ、データベースに保存されました！'
-    
-#     return render_template('myPage.html')
+# ローカル画像保存先フォルダの作成
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 try:
     db.init_app(app)
@@ -366,7 +342,7 @@ def top():
                          liked_sale_ids=liked_sale_ids, 
                          saleRankings=saleRankings,
                          topPriceSales=topPriceSales,
-                         SAS=SAS)
+                         SAS=AZURE_STORAGE_SAS)
 
 # MARK: 作品一覧ページ
 @app.route('/lineup')
@@ -390,7 +366,7 @@ def lineup():
                          sales=sales, 
                          userId=userId, 
                          liked_sale_ids=liked_sale_ids, 
-                         SAS=SAS)
+                         SAS=AZURE_STORAGE_SAS)
 
 # MARK: いいね情報受け取りroute
 @app.route('/like', methods=['POST'])
@@ -487,7 +463,7 @@ def myLikeList():
         bidCount = []
         
     print(myLikeList)
-    return render_template('myLikeList.html', sales=sales, user=user, myLikeList=myLikeList, bidCount=bidCount, SAS=SAS)
+    return render_template('myLikeList.html', sales=sales, user=user, myLikeList=myLikeList, bidCount=bidCount, SAS=AZURE_STORAGE_SAS)
 
 # MARK: 並び順を渡すurl
 @app.route('/sort_products')
@@ -569,11 +545,10 @@ def sort_products():
     return jsonify(product_list)
 
 # MARK: マイページ
-@app.route('/myPage', methods=['GET', 'POST'])
+@app.route('/myPage')
 @login_required
 def myPage():
     userId = session.get('userId')
-    
     try:
         user = User.query.get(userId)
         # session(ログイン状態のuserId)のsaleの行を取り出し、
@@ -592,6 +567,7 @@ def myPage():
     
     # ユーザーの出品数の取得
     try:
+
         listingCount = db.session.query(Sale).filter(Sale.userId == userId).count()
     except Exception as e:
         print(f"Error 出品数のカウントに失敗: {e}")
@@ -616,63 +592,14 @@ def myPage():
     print("落札した商品の一覧", myBidSales)
     
     # 売上情報の取得
+    # 出品した商品からsaleStatusが0のものを取得
+    # 落札した商品のpaymentのamountを取得
+    # 売上情報の取得処理の改善
     saleStatus = db.session.query(Sale).filter(Sale.userId == userId, Sale.saleStatus == 0).all()
-    sale_ids = [sale.saleId for sale in saleStatus]  # saleIdを正しく取得
+    sale_ids = [sale.saleId for sale in saleStatus]  
     revenue = db.session.query(func.sum(Payment.amount)).filter(Payment.saleId.in_(sale_ids)).scalar() or 0
-
-
-    if request.method == 'POST':
-        displayName = request.form.get('displayName')
-        userName = request.form.get('userName')
-        mailAddress = request.form.get('mailAddress')
-
-        # 'file'がフォームから送信されているか確認
-        if 'file' not in request.files:
-            return 'ファイルが送信されていません'
-
-        file = request.files['file']
-        
-        # ファイル名が空かどうか確認
-        if file.filename == '':
-            return 'ファイルが選択されていません'
-        
-        # 許可されたファイルかどうか確認
-        if allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            print(filename)
-            file_extension = filename.rsplit('.', 1)[1].lower()
-            
-            # 新しいファイル名を作成
-            new_filename = f"user_icon_{len(os.listdir(app.config['UPLOAD_ICON_FOLDER'])) + 1}.{file_extension}"
-            file_path = os.path.join(app.config['UPLOAD_ICON_FOLDER'], new_filename).replace('\\', '/')
-
-            # ディレクトリが存在しない場合、作成する
-            os.makedirs(app.config['UPLOAD_ICON_FOLDER'], exist_ok=True)
-            
-            # ファイル保存
-            try:
-                file.save(file_path)
-                print(f"ファイルが保存されました: {file_path}")
-            except Exception as e:
-                print(f"ファイルの保存に失敗しました: {e}")
-            
-            # データベースに保存
-            try:
-                user = User.query.filter_by(userId=userId).first()
-                if user:
-                    user.iconFilePath = f"upload_icon/{new_filename}"
-                    user.displayName = displayName
-                    user.userName = userName
-                    user.mailAddress = mailAddress
-                    db.session.commit()
-                    print(f'ファイル {new_filename} がアップロードされ、データベースに保存されました！')
-                else:
-                    print('ユーザーが見つかりませんでした。')
-            except Exception as e:
-                db.session.rollback()
-                print(f"データベース保存エラー: {e}")
-
-    return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, revenue=revenue)
+    
+    return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, SAS=AZURE_STORAGE_SAS, revenue=revenue)
 
 
 # MARK: 落札商品詳細ページ
