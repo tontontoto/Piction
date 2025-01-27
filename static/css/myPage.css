@@ -1,6 +1,6 @@
 * {
-    margin: 0;
-    padding: 0;
+    margin: 0; 
+    padding: 0; 
 }
 html, body{
     min-height: 100vh;
@@ -64,8 +64,11 @@ body{
     margin-left: 8%;
     width: 40%;
 }
+.userInfo p {
+    margin: 0;
+}
 .displayName {
-    font-size: 32px;
+    font-size: 32px !important;
     font-weight: bold;
     padding: 2% 2% 0 0;
 }
@@ -92,9 +95,11 @@ body{
     display: inline-block;
     white-space: nowrap;
     width: 100%;
+    font-size: medium;
 }
 .userWantSale p {
     font-size: 30px;
+    margin: 0 !important;
 }
 .listingNumber, .thumbsUpSaleNumber {
     display: block;
@@ -103,15 +108,29 @@ body{
     width: 50%;
 }
 
+
 /* プロフィールの変更 */
 .profileChange {
-    position: absolute;
-    bottom: 5%;
-    right: 5%;
+    margin: 0 auto;
 }
 .profileChangeButton {
     background: #fff;
     border: none;
+}
+.profileChange .btn {
+    background: #ffffff;
+    color: #000;
+    padding: 0;
+    border: none;
+}
+.profileChange .btn:focus {
+    box-shadow: none;
+}
+
+/* modalの中 */
+.modalInput {
+    padding: 12px 8px 8px;
+    margin: 16px 0 0;
 }
 
 /* 売上金エリア */
@@ -160,6 +179,7 @@ body{
     font-size: 20px;
     padding: 2%;
     text-align: center;
+    margin: 0;
 }
 .thumbsUpSaleList a {
     position: absolute;
