@@ -1,32 +1,49 @@
 console.log("hello!");
 
+var xhr = new XMLHttpRequest();
+xhr.open('POST', '/like', true);
+xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+xhr.send('saleId=' + saleId + '&userId=' + userId);
+xhr.onload = function() {
+    if (xhr.status === 200 && xhr.readyState === 4) {
+        console.log(xhr.responseText);
+    }
+};
+
 function likeSale(saleId, userId, event) {
     event.preventDefault();
     event.stopPropagation();
-    fetch('/like', {
-        method: 'POST',
-        body: new URLSearchParams({
+    
+    // jQueryのAjax実装
+    //参考URL　https://job-support.ne.jp/blog/javascript/howto-ajax
+    $.ajax({
+        url: '/like',
+        type: 'POST',
+        data: {
             'saleId': saleId,
             'userId': userId
-        })
-    })
-        .then(response => response.json())
-        .then(data => {
-            // 「いいね」数を更新
-            const likeCountElement = document.getElementById(`like-count-${saleId}`);
-            likeCountElement.textContent = data.likeCount;
+        },
+        success: function(data) {
+            // すべてのいいね数表示要素を更新
+            const likeCountElements = document.querySelectorAll(`.like-count-${saleId}`);
+            likeCountElements.forEach(element => {
+                element.textContent = data.likeCount;
+            });
 
-            // ハートアイコンの色を変更（いいね状態に応じて）
-            const heartIconPath = document.getElementById(`heart-path-${saleId}`);
-            if (heartIconPath) {
+            // すべてのハートアイコンを更新
+            const heartIconPaths = document.querySelectorAll(`#heart-path-${saleId}`);
+            heartIconPaths.forEach(path => {
                 if (data.action === 'added') {
-                    heartIconPath.setAttribute('fill', '#f03eb5');
-                    heartIconPath.setAttribute('stroke', '#f03eb5');
+                    path.setAttribute('fill', '#f03eb5');
+                    path.setAttribute('stroke', '#f03eb5');
                 } else {
-                    heartIconPath.setAttribute('fill', '#fff');
-                    heartIconPath.setAttribute('stroke', '#000');
+                    path.setAttribute('fill', '#fff');
+                    path.setAttribute('stroke', '#000');
                 }
-            }
-        })
-        .catch(error => console.error('Error:', error));
+            });
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error('Error:', textStatus, errorThrown);
+        }
+    });
 }
