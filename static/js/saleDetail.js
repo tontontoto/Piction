@@ -73,10 +73,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // 残り時間を更新
-    const remainingTime = document.getElementById("remainingTime");
-    remainingTime.textContent = timeDifference;
-
     fetch("/bid", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
