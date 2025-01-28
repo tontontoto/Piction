@@ -75,11 +75,11 @@
                 <p id="minBidPrice">{{ currentPrice + 1 }}円</p>
                 
                 <!-- 残り時間 -->
-                <p>残り時間</p>
-                <p>{{ timeDifference }}</p>
-                <!-- 終了時間 -->
-                <p>終了日時</p>
-                <p id="remainingHour">{{ sale.finishTime }}</p>
+                <div class="finishTime">
+                    <p>終了時間</p>
+                    <p id="finishTime" data-finish-time="{{ sale.finishTime }}">{{ sale.finishTime }}</p>
+                    <p>残り時間: <span id="remainingTime"></span></p>
+                </div>
             </div>
         </div>
         <br><br>

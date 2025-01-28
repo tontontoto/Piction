@@ -173,18 +173,9 @@ def saleDetail(sale_id):
         if sale is None:
             flash('Sale not found', 'error')
             return redirect(url_for('top'))
-        
-        #現在時刻取得
-        dt = datetime.now()
-        datetimeStr = datetime.strptime(dt.strftime('%Y/%m/%d %H:%M:%S'), '%Y/%m/%d %H:%M:%S')
-        #終了時刻取得
-        finishTime = datetime.strptime(sale.finishTime, '%Y/%m/%d %H:%M:%S')
-        # 計算（差分）
-        timeDifference = finishTime - datetimeStr
-        print(timeDifference, type(timeDifference))
-        
+
         # 商品情報をテンプレートに渡す
-        return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, timeDifference=timeDifference)
+        return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories)
 
     except Exception as e:
         print(f"Error 商品情報取得失敗: {e}")
