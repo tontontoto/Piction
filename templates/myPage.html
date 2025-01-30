@@ -21,6 +21,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
         crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/myPage.js') }}" defer></script>
 </head>
 
 <body>
@@ -62,54 +63,48 @@
                         aria-hidden="true">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">プロフィールを編集</h5>
-                                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button> -->
-                                </div>
-
                                 <div class="modal-body">
-                                    <!-- <p class="displayName">{{ user.displayName }}</p>
-                                    <p class="userName">@{{ user.userName }}</p>
-                                    <p class="mailAddress">{{ user.mailAddress }}</p>  -->
                                     <form method="post" enctype="multipart/form-data">
-                                        <div>
-                                            <img src="{{ url_for('static', filename=user.iconFilePath) }}" class="icon" alt="userIcon" width="200px" height="200px">
-                                            <input type="file" name="file" id="file" accept="image/*" required>
+                                        <!-- Modal header -->
+                                        <div class="modal-header">
+                                            <div class="modal-header-left">
+                                                <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">✕</button>
+                                            <h5 class="modal-title" id="exampleModalLabel">プロフィールを編集</h5>
+                                            </div>
+                                            <div class="modal-header-right">
+                                                <input type="submit" value="変更" class="profileSubmitbtn">
+                                            </div>
                                         </div>
-                                        <div>
-                                            <label for="displayName">
-                                                <div>
-                                                    <span>表示名</span>
+                                        <!-- Modal main -->
+                                        <div class="modalMain">
+                                            <div class="fileContainer">
+                                                <!-- 現在の表示アイコン -->
+                                                <img src="{{ url_for('static', filename=user.iconFilePath) }}" id="icon"
+                                                    alt="userIcon" width="200px" height="200px">
+                                                <!-- カメラのSVGアイコン -->
+                                                <div class="cameraIconBox">
+                                                    <img src="{{ url_for('static', filename='parts/camera-plus.svg') }}"
+                                                        alt="" class="cameraIcon">
                                                 </div>
-                                                <input type="text" name="displayName" class="modalInput" value={{ user.displayName }}>
-                                            </label>
+                                                <input type="file" name="file" id="fileInput" accept="image/*">
+                                            </div>
+
+                                            <div class="modalInputBox">
+                                                <label for="displayName" class="inputLabel">表示名</label>
+                                                <input type="text" name="displayName" class="modalInput" value="{{ user.displayName }}">
+                                            </div>
+                                            <div class="modalInputBox">
+                                                <label for="userName" class="inputLabel">ユーザー名</label>
+                                                <input type="text" name="userName" class="modalInput" value="{{ user.userName }}">
+                                            </div>
+                                            <div class="modalInputBox">
+                                                <label for="mailAddress" class="inputLabel">Email</label>
+                                                <input type="text" name="mailAddress" class="modalInput" value="{{ user.mailAddress }}">
+                                            </div>
+                                            
                                         </div>
-                                        <div>
-                                            <label for="userName">
-                                                <div>
-                                                    <span>ユーザー名</span>
-                                                </div>
-                                                <input type="text" name="userName" class="modalInput" value={{ user.userName }}>
-                                            </label>
-                                        </div>
-                                        <div>
-                                            <label for="mailAddress">
-                                                <div>
-                                                    <span>email</span>
-                                                </div>
-                                                <input type="text" name="mailAddress" class="modalInput" value={{ user.mailAddress }}>
-                                            </label>
-                                        </div>
-                                        <input type="submit" value="変更">
                                     </form>
-
-                                </div>
-
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Close</button>
-                                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
                                 </div>
                             </div>
                         </div>

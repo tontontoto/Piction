@@ -716,45 +716,51 @@ def myPage():
 
         file = request.files['file']
         
-        # ファイル名が空かどうか確認
-        if file.filename == '':
-            return 'ファイルが選択されていません'
-        
-        # 許可されたファイルかどうか確認
-        if allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            print(filename)
-            file_extension = filename.rsplit('.', 1)[1].lower()
-            
-            # 新しいファイル名を作成
-            new_filename = f"user_icon_{len(os.listdir(app.config['UPLOAD_ICON_FOLDER'])) + 1}.{file_extension}"
-            file_path = os.path.join(app.config['UPLOAD_ICON_FOLDER'], new_filename).replace('\\', '/')
+        # ファイルが空でないか確認
+        if file and file.filename != '':
+            # 許可されたファイルかどうか確認
+            if allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                print(filename)
+                file_extension = filename.rsplit('.', 1)[1].lower()
 
-            # ディレクトリが存在しない場合、作成する
-            os.makedirs(app.config['UPLOAD_ICON_FOLDER'], exist_ok=True)
-            
-            # ファイル保存
-            try:
-                file.save(file_path)
-                print(f"ファイルが保存されました: {file_path}")
-            except Exception as e:
-                print(f"ファイルの保存に失敗しました: {e}")
-            
-            # データベースに保存
-            try:
-                user = User.query.filter_by(userId=userId).first()
-                if user:
-                    user.iconFilePath = f"upload_icon/{new_filename}"
-                    user.displayName = displayName
-                    user.userName = userName
-                    user.mailAddress = mailAddress
-                    db.session.commit()
-                    print(f'ファイル {new_filename} がアップロードされ、データベースに保存されました！')
-                else:
-                    print('ユーザーが見つかりませんでした。')
-            except Exception as e:
-                db.session.rollback()
-                print(f"データベース保存エラー: {e}")
+                # 新しいファイル名を作成
+                new_filename = f"user_icon_{len(os.listdir(app.config['UPLOAD_ICON_FOLDER'])) + 1}.{file_extension}"
+                file_path = os.path.join(app.config['UPLOAD_ICON_FOLDER'], new_filename).replace('\\', '/')
+
+                # ディレクトリが存在しない場合、作成する
+                os.makedirs(app.config['UPLOAD_ICON_FOLDER'], exist_ok=True)
+
+                # ファイル保存
+                try:
+                    file.save(file_path)
+                    print(f"ファイルが保存されました: {file_path}")
+                except Exception as e:
+                    print(f"ファイルの保存に失敗しました: {e}")
+                
+                iconFilePath = f"upload_icon/{new_filename}"
+            else:
+                iconFilePath = None
+        else:
+            print('画像ファイルが空です')
+            iconFilePath = None  # ファイルが無い場合の処理
+        # データベースに保存
+        try:
+            user = User.query.filter_by(userId=userId).first()
+            if user:
+                if iconFilePath:
+                    user.iconFilePath = iconFilePath
+                user.displayName = displayName
+                user.userName = userName
+                user.mailAddress = mailAddress
+                db.session.commit()
+                print(f'ファイル {new_filename} がアップロードされ、データベースに保存されました！')
+            else:
+                print('ユーザーが見つかりませんでした。')
+        except Exception as e:
+            db.session.rollback()
+            print(f"データベース保存エラー: {e}")
+        
 
     return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, revenue=revenue)
 
