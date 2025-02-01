@@ -831,34 +831,35 @@ def decode_image(image_data):
         return None
 
 # MARK: 画像保存
-# ローカルフォルダに保存
-def save_image_to_file(image_bytes, upload_folder):
-    try:
-        file_name = f"image_{len(os.listdir(upload_folder)) + 1}.png"
-        file_path = os.path.join(upload_folder, file_name).replace('\\', '/')
-        with open(file_path, 'wb') as f:
-            f.write(image_bytes)
-        return file_path
-    except Exception as e:
-        print(f"Error 画像保存失敗: {e}")
-        return None
-    
-# Azure Blob Storageに保存
-# def save_image_to_azure(image_bytes):
-#     try:
-#         # ランダムなファイル名を生成
-#         file_name = f"image_{''.join(random.choices(string.ascii_letters + string.digits, k=8))}.png"
+if ENVIRONMENT == 'local':
+    # ローカルフォルダに保存
+    def save_image_to_file(image_bytes, upload_folder):
+        try:
+            file_name = f"image_{len(os.listdir(upload_folder)) + 1}.png"
+            file_path = os.path.join(upload_folder, file_name).replace('\\', '/')
+            with open(file_path, 'wb') as f:
+                f.write(image_bytes)
+            return file_path
+        except Exception as e:
+            print(f"Error 画像保存失敗: {e}")
+            return None
+else:
+    # Azure Blob Storageに保存
+    def save_image_to_azure(image_bytes):
+        try:
+            # ランダムなファイル名を生成
+            file_name = f"image_{''.join(random.choices(string.ascii_letters + string.digits, k=8))}.png"
 
-#         # Azure Blob Storageに画像をアップロード
-#         blob_client = container_client.get_blob_client(file_name)
-#         blob_client.upload_blob(image_bytes, overwrite=True)
+            # Azure Blob Storageに画像をアップロード
+            blob_client = container_client.get_blob_client(file_name)
+            blob_client.upload_blob(image_bytes, overwrite=True)
 
-#         # アップロードされた画像のURLを取得
-#         blob_url = f"https://{blob_service_client.account_name}.blob.core.windows.net/{AZURE_CONTAINER_NAME}/{file_name}"
-#         return blob_url
-#     except Exception as e:
-#         print(f"Error 画像保存失敗: {e}")
-#         return None
+            # アップロードされた画像のURLを取得
+            blob_url = f"https://{blob_service_client.account_name}.blob.core.windows.net/{AZURE_CONTAINER_NAME}/{file_name}"
+            return blob_url
+        except Exception as e:
+            print(f"Error 画像保存失敗: {e}")
+            return None
 
 # MARK:　出品ページ
 @app.route('/add_sale', methods=['POST'])
