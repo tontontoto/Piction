@@ -764,6 +764,15 @@ def myPage():
 
     return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, revenue=revenue)
 
+@app.route('/salesPerformance', methods=['GET', 'POST'])
+@login_required
+def salesPerformance():
+    userId = session.get('userId')
+    
+    # ユーザーの出品物を取得
+    sales = Sale.query.filter_by(userId=userId).all()
+    
+    return render_template('salesPerformance.html', sales=sales)
 
 # MARK: 落札商品詳細ページ
 @app.route('/bidSaleDetail/<int:sale_id>', methods=['GET', 'POST'])
@@ -1210,3 +1219,4 @@ if __name__ == '__main__':
             db.session.close()
             exit()
     app.run(host='0.0.0.0', port=80, debug=True)
+

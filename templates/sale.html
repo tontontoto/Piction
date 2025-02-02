@@ -13,7 +13,7 @@
                 <div>
                     <h3>{{ sale.title }}</h3>
                     <p>{{ sale.user.displayName }}</p>
-                    <p>￥{{ sale.currentPrice }}</p>
+                    <p>￥{{ '{:,}'.format(sale.currentPrice) }}</p>
                     
                     <div class="likeContainer">
                         <span class="like-count-{{ sale.saleId }}">{{ sale.like_count }}</span>

@@ -44,7 +44,7 @@
                     <div class="card-content">
                         <h2>{{ sale.title }}</h2>
                         <div class="card-info">
-                            <div class="price">¥{{ sale.currentPrice }}</div>
+                            <div class="price">¥{{ '{:,}'.format(sale.currentPrice) }}</div>
                             <div class="bid-count">
                                 入札 {% for sale_id, bid in bidCount %}
                                     {% if sale_id == sale.saleId %}

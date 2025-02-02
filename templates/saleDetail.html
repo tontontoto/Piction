@@ -39,7 +39,7 @@
                             </div>
                             <div class="info-item">
                                 <span class="label">落札価格</span>
-                                <span class="value price">¥{{ currentPrice }}</span>
+                                <span class="value price">¥{{ '{:,}'.format(currentPrice) }}</span>
                             </div>
                         </div>
                     </div>
@@ -51,7 +51,7 @@
                         </div>
                         <div class="info-item">
                             <span class="label">開始価格</span>
-                            <span class="value">¥{{ sale.startingPrice }}</span>
+                            <span class="value">¥{{ '{:,}'.format(sale.startingPrice) }}</span>
                         </div>
                     </div>
                 </div>
@@ -70,9 +70,9 @@
                 <hr>
                 <p>制作時間:{{ sale.creationTime }}秒</p>
                 <p>現在の入札価格</p>
-                <p id="currentPrice">{{ currentPrice }}円</p>
+                <p id="currentPrice">{{ '{:,}'.format(currentPrice) }}円</p>
                 <p>最低入札価格</p>
-                <p id="minBidPrice">{{ currentPrice + 1 }}円</p>
+                <p id="minBidPrice">{{ '{:,}'.format(currentPrice + 1) }}円</p>
                 
                 <!-- 残り時間 -->
                 <div class="finishTime">
@@ -85,7 +85,7 @@
         <br><br>
         <div class="button-contents">
             <div class="botan">
-                <div class="addAmountBtn" name="amount">入札額：<span id="addAmount">{{ currentPrice }}</span>円</div>
+                <div class="addAmountBtn" name="amount">入札額：<span id="addAmount">{{ '{:,}'.format(currentPrice) }}</span>円</div>
             </div>
             <br>
             <div class="botan2">
@@ -119,7 +119,7 @@
                         {% for bid in bids %}
                             <tr>
                                 <td>{{ bid.userId }}</td>
-                                <td>¥{{ bid.bidPrice }}</td>
+                                <td>¥{{ '{:,}'.format(bid.bidPrice) }}</td>
                                 <td>{{ bid.bidTime.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                             </tr>
                         {% endfor %}

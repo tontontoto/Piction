@@ -6,7 +6,7 @@
         <div>
             <h3>{{ saleRanking.title }}</h3>
             <p>{{ saleRanking.displayName }}</p>
-            <p>￥{{ saleRanking.currentPrice }}</p>
+            <p>￥{{ '{:,}'.format(saleRanking.currentPrice) }}</p>
 
             <div class="likeContainer">
                 <span class="like-count-{{ saleRanking.saleId }}">{{ saleRanking.like_count }}</span>
