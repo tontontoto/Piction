@@ -705,6 +705,7 @@ def myPage():
     sale_ids = [sale.saleId for sale in saleStatus]  
     revenue = db.session.query(func.sum(Payment.amount)).filter(Payment.saleId.in_(sale_ids)).scalar() or 0
     
+    # POSTメソッドでフォームが送信されたとき
     if request.method == 'POST':
         displayName = request.form.get('displayName')
         userName = request.form.get('userName')
@@ -715,13 +716,12 @@ def myPage():
             return 'ファイルが送信されていません'
 
         file = request.files['file']
-        
-        # ファイルが空でないか確認
+        iconFilePath = user.iconFilePath  # 既存のアイコンパスを保持
+
+        # 新しいアイコンが送信されている場合
         if file and file.filename != '':
-            # 許可されたファイルかどうか確認
             if allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                print(filename)
                 file_extension = filename.rsplit('.', 1)[1].lower()
 
                 # 新しいファイル名を作成
@@ -731,35 +731,44 @@ def myPage():
                 # ディレクトリが存在しない場合、作成する
                 os.makedirs(app.config['UPLOAD_ICON_FOLDER'], exist_ok=True)
 
-                # ファイル保存
+                # 既存のアイコンがあれば削除（オプション）
+                if iconFilePath and os.path.exists(os.path.join(app.config['UPLOAD_ICON_FOLDER'], iconFilePath.split('/')[-1])):
+                    try:
+                        os.remove(os.path.join(app.config['UPLOAD_ICON_FOLDER'], iconFilePath.split('/')[-1]))
+                        print(f"既存のアイコンファイル({iconFilePath})を削除しました。")
+                    except Exception as e:
+                        print(f"既存のアイコン削除に失敗しました: {e}")
+
+                # 新しい画像ファイルを保存
                 try:
                     file.save(file_path)
-                    print(f"ファイルが保存されました: {file_path}")
+                    print(f"新しいアイコンが保存されました: {file_path}")
+                    iconFilePath = f"upload_icon/{new_filename}"  # 新しいアイコンファイルパス
                 except Exception as e:
                     print(f"ファイルの保存に失敗しました: {e}")
-                
-                iconFilePath = f"upload_icon/{new_filename}"
-            else:
-                iconFilePath = None
-        else:
-            print('画像ファイルが空です')
-            iconFilePath = None  # ファイルが無い場合の処理
-        # データベースに保存
+                    iconFilePath = None
+
+        # ユーザー情報をデータベースに保存
         try:
-            user = User.query.filter_by(userId=userId).first()
             if user:
+                # アイコンの更新があった場合のみ新しいアイコンパスを保存
                 if iconFilePath:
                     user.iconFilePath = iconFilePath
+
+                # 表示名やユーザー名、メールアドレスも更新する場合があれば
                 user.displayName = displayName
                 user.userName = userName
                 user.mailAddress = mailAddress
                 db.session.commit()
-                print(f'ファイル {new_filename} がアップロードされ、データベースに保存されました！')
+                print('ユーザー情報が保存されました！')
             else:
                 print('ユーザーが見つかりませんでした。')
         except Exception as e:
             db.session.rollback()
             print(f"データベース保存エラー: {e}")
+
+        # リダイレクトでフォーム送信後の再送信を防ぐ
+        return redirect(url_for('myPage'))
         
 
     return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, revenue=revenue)

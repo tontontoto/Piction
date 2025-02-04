@@ -149,6 +149,12 @@ body {
     box-shadow: none;
 }
 
+/* Modal content  */
+/* Modal1 Modal2　共通 */
+.modal-content {
+    min-height: 600px;
+}
+/* Modal1 */
 /* Modal header */
 .modal-header {
     padding: 8px;
@@ -194,10 +200,11 @@ body {
 }
 
 /* 画像アイコン */
-#icon {
-    width: 150px;
-    /* 画像のサイズ */
-    height: 150px;
+#icon, #trimed{
+    max-width: 150px;
+    max-height: 150px;
+    min-width: 150px;
+    min-height: 150px;
     border: 1px solid #ccc;
     border-radius: 50%;
     filter: brightness(80%);
@@ -230,7 +237,7 @@ body {
     padding: 1px;
 }
 
-#fileInput {
+#triming_image {
     display: none;
 }
 
@@ -258,6 +265,26 @@ body {
     width: 100%;
 }
 
+
+/* btn_profile */
+.btn_profile {
+    background: none;
+    border: none;
+    color: #000;
+}
+/* Modal2 */
+.modal-header-left .back_btn {
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+.back_btn {
+    background: #fff;
+    color: #000;
+}
+/* --------------------- */
 /* 売上金エリア */
 .salesMoney {
     background: #ffffff;
