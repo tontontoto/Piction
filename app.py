@@ -1,5 +1,5 @@
 # MARK:インポート
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session, send_file
 from model_sample import db, User, Sale, Category, Bid, Like, Inquiry, WinningBid, PaymentWay, Payment
 from flask_login import LoginManager, login_user, logout_user, login_required
 from flask_bcrypt import Bcrypt
@@ -864,7 +864,7 @@ else:
             blob_client.upload_blob(image_bytes, overwrite=True)
 
             # アップロードされた画像のURLを取得
-            blob_url = f"https://{blob_service_client.account_name}.blob.core.windows.net/{AZURE_CONTAINER_NAME}/{file_name}"
+            blob_url = f"https://{blob_service_client.account_name}.blob.core.windows.net/{AZURE_STORAGE_CONTAINER}/{file_name}"
             return blob_url
         except Exception as e:
             print(f"Error 画像保存失敗: {e}")
@@ -1049,6 +1049,65 @@ def search():
         return render_template('lineup.html', sales=[], bidCount={}, query=query)
 
 
+@app.route('/my_winning_bids')
+@login_required
+def my_winning_bids():
+    try:
+        userId = session.get('userId')
+        
+        # ユーザーが落札した作品を取得
+        winning_bids_query = db.session.query(
+            WinningBid, Sale, User
+        ).join(
+            Sale, WinningBid.saleId == Sale.saleId
+        ).join(
+            User, Sale.userId == User.userId
+        ).filter(
+            WinningBid.buyerId == userId
+        ).all()
+        
+        # クエリ結果をデバッグ出力
+        print("クエリ結果:", winning_bids_query)
+        
+        # タプルからディクショナリに変換
+        formatted_bids = []
+        for winning_bid, sale, user in winning_bids_query:
+            bid_info = {
+                'winningBid': winning_bid,
+                'sale': sale,
+                'user': user
+            }
+            formatted_bids.append(bid_info)
+            
+            # デバッグ出力
+            print(f"落札ID: {winning_bid.winningBidId}")
+            print(f"作品タイトル: {sale.title}")
+            print(f"出品者: {user.displayName}")
+        
+        return render_template('my_winning_bids.html', winning_bids=formatted_bids)
+    
+    except Exception as e:
+        print(f"Error 落札した商品の取得失敗: {e}")
+        return "エラーが発生しました", 500
+
+@app.route('/download_artwork/<int:sale_id>', methods=['GET', 'POST'])
+@login_required
+def download_artwork(sale_id):
+    sale = Sale.query.get(sale_id)
+    file_path = os.path.join(app.root_path, "static", sale.filePath) 
+    
+    print(f"ファイルパス: {sale.filePath}")
+
+    try:
+        f = open(file_path, 'rb') 
+        print(f"ファイルダウンロード成功: {file_path}")
+        return send_file(f, as_attachment=True, download_name=f"{sale.title}.png")
+        
+    except Exception as e:
+        print(f"Error: {e}")
+        print('ダウンロードに失敗しました', 'error')
+        return redirect(url_for('myPage'))
+
 # ---- ユーザーデータの仮挿入 ----
 def add_users():
     dummy_users = [
@@ -1219,4 +1278,3 @@ if __name__ == '__main__':
             db.session.close()
             exit()
     app.run(host='0.0.0.0', port=80, debug=True)
-

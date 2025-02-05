@@ -121,17 +121,17 @@
             </div>
             <div class="flex2">
                 <div class="thumbsUpSaleList">
-                    <img src="{{ url_for('static', filename='../static/parts/heart.svg') }}" alt="heart">
+                    <img src="{{ url_for('static', filename='../static/parts/heart.svg') }}" class="saleListIcon" alt="heart">
                     <p>いいね一覧</p>
                     <img src="{{ url_for('static', filename='../static/parts/chevron-right.svg')}}"
                         class="chevron-right" alt="chevron-right">
                     <a href="/myLikeList"></a>
                 </div>
                 <div class="thumbsUpSaleList">
-                    <img src="{{ url_for('static', filename='../static/parts/chart-line.svg') }}" alt="chart-line">
-                    <p><a href='/salesPerformance'>販売状況</a></p>
-                    <img src="{{ url_for('static', filename='../static/parts/chevron-right.svg')}}"
-                        class="chevron-right" alt="chevron-right">
+                    <img src="{{ url_for('static', filename='../static/parts/auction.svg') }}" class="saleListIcon" alt="chart-line">
+                    <p>落札した商品</p>
+                    <img src="{{ url_for('static', filename='../static/parts/chevron-right.svg')}}" class="chevron-right" alt="chevron-right">
+                    <a href='/my_winning_bids'></a>
                 </div>
             </div>
         </div>

@@ -16,10 +16,10 @@ load_dotenv(verbose=True)
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
-DB_URL = os.environ.get("DB_URL")
+DB_URL = os.environ.get("LOCAL_DB_URL")
 
 Base = declarative_base()
-engine = create_engine(DB_URL)
+engine = create_engine(DB_URL, echo=True)
 db = SQLAlchemy()
 	
 saleCategoryAssociation = Table(
