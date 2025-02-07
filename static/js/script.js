@@ -34,42 +34,59 @@ stage.update();
 // 初期の太さ
 let lineWidth = parseInt(lineWidthInput.value);
 let lineOpacity = parseFloat(lineOpacityInput.value);
-// 線の太さ更新
+
+// スライダーの値表示を更新する関数
+function updateSliderValue(slider, valueDisplay, isOpacity = false) {
+    const value = slider.value;
+    if (isOpacity) {
+        valueDisplay.textContent = `${Math.round(value * 100)}%`;
+    } else {
+        valueDisplay.textContent = value;
+    }
+}
+
+// 線の太さスライダー
+const lineWidthValue = document.getElementById("lineWidth-value");
 lineWidthInput.addEventListener("input", () => {
-  lineWidth = parseInt(lineWidthInput.value);
+    lineWidth = parseInt(lineWidthInput.value);
+    updateSliderValue(lineWidthInput, lineWidthValue);
 });
+
+// 透明度スライダー
+const lineOpacityValue = document.getElementById("lineOpacity-value");
 lineOpacityInput.addEventListener("input", () => {
-  lineOpacity = parseFloat(lineOpacityInput.value);
+    lineOpacity = parseFloat(lineOpacityInput.value);
+    updateSliderValue(lineOpacityInput, lineOpacityValue, true);
 });
+
+// 初期値を設定
+updateSliderValue(lineWidthInput, lineWidthValue);
+updateSliderValue(lineOpacityInput, lineOpacityValue, true);
 
 let isDrawing = false;
 let isEraserActive = false;
 
+// ペンボタンの初期状態をactiveに
 const penButton = document.getElementById("pen");
-penButton.addEventListener("click", () => {
-  isEraserActive = false; // ペンに切り替え
-  if (!isEraserActive) {
-    penButton.style.backgroundColor = "#ededed";
-    penButton.style.transform = "translateX(5px)";
-    penButton.style.zIndex = "0";
+penButton.classList.add("active");
 
-    eraserButton.style.backgroundColor = "";
-    eraserButton.style.transform = "";
-  }
+// ペンボタンのクリックイベント
+penButton.addEventListener("click", () => {
+    if (isEraserActive) {
+        isEraserActive = false;
+        eraserButton.classList.remove("active");
+        penButton.classList.add("active");
+    }
 });
 
 // 消しゴムボタンのクリックイベント
 const eraserButton = document.getElementById("eraser");
 eraserButton.addEventListener("click", () => {
-  isEraserActive = true; // 消しゴム切り替え
-  if (isEraserActive) {
-    eraserButton.style.backgroundColor = "#ededed";
-    eraserButton.style.transform = "translateX(5px)";
-    eraserButton.style.zIndex = "0";
-
-    penButton.style.backgroundColor = "";
-    penButton.style.transform = "";
-  }
+    if (!isEraserActive) {
+        isEraserActive = true;
+        penButton.classList.remove("active");
+        eraserButton.classList.add("active");
+    }
 });
 
 // クリアボタンのクリックイベント

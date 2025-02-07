@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>購入手続き | Piction</title>
+    <link rel="icon" href="../static/icon/favicon.png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bidSaleDetail.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+</head>
+
+<body>
+    {% include 'header.html' %}
+
+    <main class="bid-container">
+        <div class="bid-card">
+            <div class="artwork-section">
+                <div class="artwork-image">
+                    <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">
+                </div>
+                <div class="artwork-info">
+                    <h1>{{ sale.title }}</h1>
+                    <div class="price-info">
+                        <span class="label">落札金額</span>
+                        <span class="price">¥{{ sale.currentPrice }}</span>
+                    </div>
+                    <div class="user-info">
+                        <div class="info-row">
+                            <span class="label">落札者</span>
+                            <span class="value">{{ buyer_display_name }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">出品者</span>
+                            <span class="value">{{ name }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form method="post">
+                <div class="payment-section">
+                    <h2>お支払い方法</h2>
+                    <div class="payment-options">
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="現金" checked>
+                            <span class="radio-custom"></span>
+                            <span class="label-text">現金</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="クレジットカード">
+                            <span class="radio-custom"></span>
+                            <span class="label-text">クレジットカード</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="コンビニ">
+                            <span class="radio-custom"></span>
+                            <span class="label-text">コンビニ決済</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="PayPay">
+                            <span class="radio-custom"></span>
+                            <span class="label-text">PayPay</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="comment-section">
+                    <h2>その他希望</h2>
+                    <div class="comment-area">
+                        <label for="comment" class="visually-hidden">その他の要望やメッセージ</label>
+                        <textarea id="comment" name="comment" placeholder="その他の要望やメッセージがありましたら、こちらにご記入ください"
+                            rows="4"></textarea>
+                    </div>
+                </div>
+
+                <div class="action-section">
+                    <button type="submit" class="confirm-button">
+                        お支払いを確定する
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+</body>
+
+</html>

@@ -1,10 +1,49 @@
-<div id="lineup">
-    <h2>作品一覧</h2>
-    {% with sales = sales, user=user%}
-    <div class="lineupArea">
-        {% for sale in sales %}
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../static/icon/favicon.png">
+    <!------ css link ------>
+    <!-- header -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <!-- footer -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <!-- sale -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sale.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/lineup.css') }}">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
+    
+    <script src="{{ url_for('static', filename='js/top.js') }}" defer></script>
+    <title>作品一覧 | Piction</title>
+</head>
+
+<body>
+    <!-- ヘッダーエリア -->
+    {% include 'header.html' %}
+
+    <main>
+        {% if query %}
+        <div class="search-result-header">
+            <h1>"{{ query }}" の検索結果</h1>
+            <p>{{ sales|length }}件の作品が見つかりました</p>
+        </div>
+        {% endif %}
+
+        {% if sales %}
             {% include 'sale.html' %}
-        {% endfor %}
-    </div>
-    {% endwith %}
-</div>
+        {% else %}
+            <div class="empty-result">
+                <p>検索結果が見つかりませんでした</p>
+                <a href="/lineup" class="browse-all">すべての作品を見る</a>
+            </div>
+        {% endif %}
+    </main>
+
+    <!-- フッターエリア -->
+    {% include 'footer.html' %}
+</body>
+
+</html>

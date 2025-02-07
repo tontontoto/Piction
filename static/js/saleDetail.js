@@ -21,6 +21,45 @@ document.addEventListener("DOMContentLoaded", function () {
   addTenButton.addEventListener("click", () => updateAmount(10));
   addHundredButton.addEventListener("click", () => updateAmount(100));
 
+  // 終了時刻を取得
+  const finishTimeElement = document.getElementById('finishTime');
+  const finishTimeStr = finishTimeElement.dataset.finishTime;
+  const finishTime = new Date(finishTimeStr.replace(/\//g, '-'));
+
+  // カウントダウンを更新する関数
+  function updateCountdown() {
+    const now = new Date();
+    const timeDiff = finishTime - now;
+
+    if (timeDiff <= 0) {
+      // オークション終了時の処理
+      document.getElementById('remainingTime').textContent = 'オークション終了';
+      location.reload(); // ページをリロード
+      return;
+    }
+
+    // 残り時間を計算
+    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+    // 表示をフォーマット
+    let timeStr = '';
+    if (days > 0) timeStr += `${days}日 `;
+    if (hours > 0) timeStr += `${hours}時間 `;
+    if (minutes > 0) timeStr += `${minutes}分 `;
+    timeStr += `${seconds}秒`;
+
+    document.getElementById('remainingTime').textContent = timeStr;
+  }
+
+  // 初回実行
+  updateCountdown();
+
+  // 1秒ごとに更新
+  setInterval(updateCountdown, 1000);
+
   // 入札ボタンのイベントリスナー
   bidButton.addEventListener("click", function () {
     const specifiedAmount = parseInt(specifyInput.value, 10) || 0;

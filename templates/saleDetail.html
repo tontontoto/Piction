@@ -1,17 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/saleDetail.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="icon" href="../static/icon/favicon.png">
     <script src="{{ url_for('static', filename='js/saleDetail.js') }}"></script>
-    <title>Document</title>
+    <title>{{ sale.title }} | Piction</title>
 </head>
 <body>
     {% include 'header.html' %}
 
+<<<<<<< HEAD
     {% if finished %}
     <div class="finishedContent">
         <p>{{ finished }}</p>
@@ -85,12 +87,124 @@
                         </tr>
                     {% endfor %}
                 </table>
+=======
+    <main class="sale-detail">
+        {% if finished %}
+        <div class="auction-ended">
+            <div class="status-banner">
+                <div class="status-icon">🏆</div>
+                <h2>オークション終了</h2>
+                <p class="end-time">終了日時：{{ sale.finishTime }}</p>
+            </div>
+
+            <div class="finished-flex-container">
+                <div class="main">
+                    <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">
+                </div>
+                <div class="auction-result">
+                    <h1>{{ sale.title }}</h1>
+                    <p class="artist">作者：{{ sale.displayName }}</p>
+                    <p class="category">カテゴリ：{{ categories }}</p>
+                    <div class="winning-bid">
+                        <h3>落札情報</h3>
+                        <div class="bid-info">
+                            <div class="info-item">
+                                <span class="label">落札者</span>
+                                <span class="value">{{ bidUserId }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">落札価格</span>
+                                <span class="value price">¥{{ '{:,}'.format(currentPrice) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="artwork-info">
+                        <h3>作品情報</h3>
+                        <div class="info-item">
+                            <span class="label">制作時間</span>
+                            <span class="value">{{ sale.creationTime }}秒</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">開始価格</span>
+                            <span class="value">¥{{ '{:,}'.format(sale.startingPrice) }}</span>
+                        </div>
+                    </div>
+                </div>
+>>>>>>> main
             </div>
         </div>
-    </div>
-    {% endif %}
+        {% else %}
+        <div class="flex-container">
+            <div class="main">
+                <img src="{{ url_for('static', filename=sale.filePath) }}" alt="">
+            </div>
+            <div class="text">
+                <h1>{{ sale.title }}</h1>
+                <p id="saleId" data-sale-id="{{ sale.saleId }}">{{ sale.saleId }}</p>
+                <p>{{ sale.displayName }}</p>
+                <p>カテゴリ:{{ categories }}</p>
+                <hr>
+                <p>制作時間:{{ sale.creationTime }}秒</p>
+                <p>現在の入札価格</p>
+                <p id="currentPrice">{{ '{:,}'.format(currentPrice) }}円</p>
+                <p>最低入札価格</p>
+                <p id="minBidPrice">{{ '{:,}'.format(currentPrice + 1) }}円</p>
+                
+                <!-- 残り時間 -->
+                <div class="finishTime">
+                    <p>終了時間</p>
+                    <p id="finishTime" data-finish-time="{{ sale.finishTime }}">{{ sale.finishTime }}</p>
+                    <p>残り時間: <span id="remainingTime"></span></p>
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <div class="button-contents">
+            <div class="botan">
+                <div class="addAmountBtn" name="amount">入札額：<span id="addAmount">{{ '{:,}'.format(currentPrice) }}</span>円</div>
+            </div>
+            <br>
+            <div class="botan2">
+                <button class="btn" id="addTen">+10</button>
+                <button class="btn" id="addHundred">+100</button>
+            </div>
+            <br>
+            <div class="botan">
+                <input class="btn" id="specify" type="number" placeholder="金額を指定">
+            </div>
+            <br>
+            <br>
+            <div class="botan">
+                <input type="submit" class="btn2" id="bid" value="入札"></input>
+            </div>
+        </div>
+        <br>
+        {% endif %}
 
-    
+        <!-- 入札履歴は共通で表示 -->
+        <div class="bidHistory">
+            <h2>入札履歴</h2>
+            <div class="contents">
+                <div class="scroll-contents">
+                    <table>
+                        <tr>
+                            <th>入札者</th>
+                            <th>入札額</th>
+                            <th>日時</th>
+                        </tr>
+                        {% for bid in bids %}
+                            <tr>
+                                <td>{{ bid.userId }}</td>
+                                <td>¥{{ '{:,}'.format(bid.bidPrice) }}</td>
+                                <td>{{ bid.bidTime.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
     {% include 'footer.html' %}
 </body>
 </html>
