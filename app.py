@@ -904,18 +904,19 @@ def add_sale():
     if not image_bytes:
         return jsonify({'error': 'Invalid image data'}), 400
 
-    # 画像をローカルフォルダに保存
-    file_path = save_image_to_file(image_bytes, app.config['UPLOAD_FOLDER'])
-    file_path = file_path.replace(app.config['UPLOAD_FOLDER'], 'upload_images')
-    
-    # try:
-    #     # 画像をAzure Blob Storageに保存
-    #     blob_url = save_image_to_azure(image_bytes)
-    #     if not blob_url:
-    #         return jsonify({"error": "Failed to save image"}), 500
-    # except Exception as e:
-    #     # 保存成功時に画像のURLを返す
-    #     return jsonify({"message": "Image uploaded successfully", "image_url": blob_url}), 201
+    if ENVIRONMENT == 'local':
+        # 画像をローカルフォルダに保存
+        file_path = save_image_to_file(image_bytes, app.config['UPLOAD_FOLDER'])
+        file_path = file_path.replace(app.config['UPLOAD_FOLDER'], 'upload_images')
+    else:
+        try:
+            # 画像をAzure Blob Storageに保存
+            blob_url = save_image_to_azure(image_bytes)
+            if not blob_url:
+                return jsonify({"error": "Failed to save image"}), 500
+        except Exception as e:
+            # 保存成功時に画像のURLを返す
+            return jsonify({"message": "Image uploaded successfully", "image_url": blob_url}), 201
 
 
     userId = session.get('userId') # 今使っているユーザーのuserIdの取得
