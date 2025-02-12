@@ -692,6 +692,34 @@ def myPage():
 
     print("落札した商品の一覧", myBidSales)
     
+    # 自分が入札した作品を取得
+    # 最新のBidを取得するためのサブクエリ
+    latest_bid_subquery = (
+        db.session.query(
+            func.max(Bid.bidId).label("latest_bid_id")
+        )
+        .join(Sale, Bid.saleId == Sale.saleId)
+        .filter(Bid.userId == userId)
+        .group_by(Sale.saleId)
+        .subquery()
+    )
+
+    # 最新のBidを持つSale情報を取得
+    my_bids_query = (
+        db.session.query(Bid, Sale, User)
+        .join(Sale, Bid.saleId == Sale.saleId)
+        .join(User, Sale.userId == User.userId)
+        .filter(Bid.bidId.in_(latest_bid_subquery))
+        .order_by(Bid.bidId.desc())  # 最新のBid順に並べる
+        .all()
+    )
+    
+    my_bids = []
+    for bid in my_bids_query:
+        sale = Sale.query.get(bid.Sale.saleId)
+        my_bids.append(sale)
+        
+    
     # 売上情報の取得
     saleStatus = db.session.query(Sale).filter(Sale.userId == userId, Sale.saleStatus == 0).all()
     sale_ids = [sale.saleId for sale in saleStatus]  
@@ -763,17 +791,7 @@ def myPage():
         return redirect(url_for('myPage'))
         
 
-    return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, revenue=revenue)
-
-@app.route('/salesPerformance', methods=['GET', 'POST'])
-@login_required
-def salesPerformance():
-    userId = session.get('userId')
-    
-    # ユーザーの出品物を取得
-    sales = Sale.query.filter_by(userId=userId).all()
-    
-    return render_template('salesPerformance.html', sales=sales)
+    return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, my_bids=my_bids, revenue=revenue)
 
 # MARK: 落札商品詳細ページ
 @app.route('/bidSaleDetail/<int:sale_id>', methods=['GET', 'POST'])
@@ -895,6 +913,7 @@ def add_sale():
     if not image_bytes:
         return jsonify({'error': 'Invalid image data'}), 400
 
+<<<<<<< HEAD
     # 画像をローカルフォルダに保存
     file_path = save_image_to_file(image_bytes, app.config['UPLOAD_FOLDER'])
     file_path = file_path.replace(app.config['UPLOAD_FOLDER'], 'upload_images')
@@ -907,6 +926,21 @@ def add_sale():
     # except Exception as e:
     #     # 保存成功時に画像のURLを返す
     #     return jsonify({"message": "Image uploaded successfully", "image_url": blob_url}), 201
+=======
+    if ENVIRONMENT == 'local':
+        # 画像をローカルフォルダに保存
+        file_path = save_image_to_file(image_bytes, app.config['UPLOAD_FOLDER'])
+        file_path = file_path.replace(app.config['UPLOAD_FOLDER'], 'upload_images')
+    else:
+        try:
+            # 画像をAzure Blob Storageに保存
+            blob_url = save_image_to_azure(image_bytes)
+            if not blob_url:
+                return jsonify({"error": "Failed to save image"}), 500
+        except Exception as e:
+            # 保存成功時に画像のURLを返す
+            return jsonify({"message": "Image uploaded successfully", "image_url": blob_url}), 201
+>>>>>>> main
 
 
     userId = session.get('userId') # 今使っているユーザーのuserIdの取得

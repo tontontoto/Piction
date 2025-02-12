@@ -1,11 +1,11 @@
 <div class="user-sales-container">
     <div class="section-header">
-        <h2>落札した商品</h2>
+        <h2>入札した商品</h2>
     </div>
 
-    {% if sales %}
+    {% if my_bids %}
     <div class="sales-grid">
-        {% for sale in myBidSales %}
+        {% for sale in my_bids %}
         <a href="{{ url_for('bidSaleDetail', sale_id=sale.saleId) }}" class="sale-card">
             <div class="sale-image">
                 <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">
@@ -34,7 +34,7 @@
     </div>
     {% else %}
     <div class="empty-state">
-        <p>出品した作品はありません</p>
+        <p>入札した作品はありません</p>
     </div>
     {% endif %}
 </div>

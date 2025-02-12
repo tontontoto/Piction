@@ -46,7 +46,7 @@
                 <img src="{{ url_for('static', filename=user.iconFilePath) }}" class="icon" alt="userIcon">
             </div>
             <div class="userInfo">
-                <p class="displayName">{{ user.displayName }}</p>
+                <p class="profileDisplayName">{{ user.displayName }}</p>
                 <p class="userName">@{{ user.userName }}</p>
                 <p class="mailAddress">
                     <!-- <span><img src="{{ url_for('static', filename='parts/mail.svg') }}"></span> -->
@@ -185,20 +185,38 @@
         </div>
     </main>
 
-    <hr class="separatorLine">
-
-    <!-- 自分の出品物表示エリア -->
-    <div>
-        {% with sales = sales %}
-        {% include 'userSales.html' %}
-        {% endwith %}
-    </div>
-
-    <!-- 落札完了出品物表示エリア -->
-    <div>
-        {% with myBidSales = myBidSales %}
-        {% include 'successfulBid.html' %}
-        {% endwith %}
+    <div class="tab-1">
+        <label>
+            <input type="radio" name="tab-1" checked>
+            自分の出品物
+        </label>
+        <!-- 自分の出品物表示エリア -->
+        <div>
+            {% with sales = sales %}
+            {% include 'userSales.html' %}
+            {% endwith %}
+        </div>
+    
+        <label>
+            <input type="radio" name="tab-1">
+            落札した商品
+        </label>
+        <!-- 落札完了出品物表示エリア -->
+        <div>
+            {% with myBidSales = myBidSales %}
+            {% include 'successfulBid.html' %}
+            {% endwith %}
+        </div>
+    
+        <label>
+            <input type="radio" name="tab-1">
+            入札した商品
+        </label>
+        <div>
+            {% with myBidSales = myBidSales %}
+            {% include 'myBid.html' %}
+            {% endwith %}
+        </div> 
     </div>
 
 
