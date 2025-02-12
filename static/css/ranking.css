@@ -1,0 +1,56 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* ranking */
+.ranking{
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    align-items: center;
+}
+.saleRanking{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0 auto;
+    align-items: center;
+    gap: 10%;
+}
+.saleRankingBox {
+    padding: 3% 2%;
+    align-items: center;
+    background: rgb(255, 255, 255);
+    box-shadow: 4px 4px 9px -3px #c2c2c2;
+    border-radius: 2px;
+    padding: 10px;
+    text-decoration: none;
+    color: #070707;
+}
+.saleRankingBox {
+    width: 20%;
+    position: relative;
+}
+.saleRankingBox::before {
+    content: attr(data-rank);
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 4px;
+    font-size: 14px;
+}
+.saleRankingBox[data-rank="No.1"]::before {
+    background-color: gold;
+}
+.saleRankingBox[data-rank="No.2"]::before {
+    background-color: silver;
+}
+.saleRankingBox[data-rank="No.3"]::before {
+    background-color: #cd7f32;
+}
+
+
+
+

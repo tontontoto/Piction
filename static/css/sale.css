@@ -3,17 +3,12 @@
     padding: 0;
 }
 
-.lineup, .ranking{
+.lineup {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    margin: 0 auto;
+    margin: 10% auto;
     align-items: center;
-}
-.ranking{
-    width: 70%
-}
-.lineup{
-    width: 100%
 }
 
 .saleTitle {
@@ -23,87 +18,93 @@
     margin: 4vh auto;
     align-items: center;
 }
-.saleTitle h2 {
-    margin-right: 30px;
+
+.showMore_responsive {
+    display: none;
 }
 
 /* sale box */
-.sale, .saleRanking{
+.sale {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    margin: 0 auto;
+    justify-content: left;
+    margin: 0 10%;
     align-items: center;
+    column-gap: 4px;
+    row-gap: 10px;
 }
-.sale{
-    gap: 40px;
-}
-.saleRanking{
-    gap: 10%;
-}
-.saleBox, .saleRankingBox {
-    padding: 3% 2%;
-    align-items: center;
+
+.saleBox {
     background: rgb(255, 255, 255);
     box-shadow: 4px 4px 9px -3px #c2c2c2;
     border-radius: 2px;
-    padding: 10px;
     text-decoration: none;
     color: #070707;
+    margin: 0; /* 上下16px、左右16pxにすることで間隔を調整 */
+    width: calc(14.2857% - 4px); /* 横6個並べるため、幅を計算 */
 }
-.saleBox{
-    width: 15%;
-}
-.saleRankingBox {
-    width: 20%;
-    position: relative;
-}
-.saleBoxImg {
-    width: 200px;
-    height: 200px;
-    border: #e0e0e0 1px solid;
-}
+
 .saleHeart {
     position: absolute;
     top: 0;
     right: 7%;
 }
-.saleRankingBox::before {
-    content: attr(data-rank);
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 4px;
-    font-size: 14px;
-}
-.saleRankingBox[data-rank="No.1"]::before {
-    background-color: gold;
-}
-.saleRankingBox[data-rank="No.2"]::before {
-    background-color: silver;
-}
-.saleRankingBox[data-rank="No.3"]::before {
-    background-color: #cd7f32;
-}
+
 #uploadImg {
+    position: relative;
+}
+
+#uploadImg img {
     width: 100%;
     margin: 0 auto;
     padding: 10px;
     text-align: center;
     border: 1px solid #acacac;
+    border-radius: 7px 7px 0 0;
+    vertical-align: top;
+    pointer-events: none; /* 右クリックの無効化 */
 }
+
+.currentPrice {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.625);
+    border-radius: 0 15px 15px 0;
+    padding: 0 10px 0 5px;
+    font-size: 0.9em;
+}
+
+.saleBoxTitle {
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0 3px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* 表示する行数 */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5; /* 行間を設定 */
+    min-height: calc(1.5em * 2); /* 2行分の高さを確保 */
+}
+
 .likeContainer{
-    width: 20%;
-    align-items: start;
     display: flex;
-    justify-content: center;
+    justify-content: left;
+    align-items: center;
 }
-.heartlogo {
-    width: 30px;
-    height: 30px;
+.likeContainer svg {
+    width: 28px;
+    height: 28px;
     cursor: pointer;
     z-index: 10;
 }
+.likeContainer span {
+    margin-left: 3px;
+}
+
+/* もっと見る　showMore */
 .showMore {
     font-size: large;
     background-color: #eeeeee;
@@ -116,4 +117,70 @@
 .showMore a {
     color: #333333;
     text-decoration: none;
-} 
+}
+
+
+/* mobile responsive */
+@media (max-width: 960px) {
+    .saleBoxTitle, .likeContainer {
+        display: none;
+    }
+    .saleTitle {
+        width: 80%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        margin: 0 10%;
+    }
+
+    .saleTitle * {
+        width: 100%;
+        padding: 0 3% 0 ;
+    }
+
+    .showMore_responsive {
+        display: block;
+        text-align: right;
+    }
+
+    .showMore_responsive a {
+        color: #333333;
+        text-decoration: none;
+    }
+
+    /* saleBox  */
+    .sale {
+        justify-content: left;
+        margin: 0 5%;
+        column-gap: 4px;
+        row-gap: 10px;
+    }
+    
+    .saleBox {
+        border-radius: none;
+        width: calc(25% - 4px);
+        margin: 0;
+    }
+
+    #uploadImg img {
+        border: none;
+        border-radius: none;
+    }
+
+    .currentPrice {
+        font-size: 3.5vw;
+    }
+
+    /* showmore */
+    .showMore {
+        display: none;
+    }
+}
+
+/* responsive[~570px] */
+@media (max-width:570px) {
+    .saleBox {
+        width: calc(33% - 4px);
+    }
+}

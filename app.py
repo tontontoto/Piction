@@ -23,9 +23,9 @@ ENVIRONMENT = os.getenv('ENVIRONMENT', 'local')
 
 # データベースURLの設定
 if ENVIRONMENT == 'local':
-    DB_URL = os.getenv('LOCAL_DB_URL')
+    DB_URL = os.getenv('DB_URL')
 else:
-    DB_URL = os.getenv('AZURE_DB_URL')
+    DB_URL = os.getenv('DB_URL')
 
 # Azure Blob Storage設定
 AZURE_STORAGE_CONNECTION_STRING = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
