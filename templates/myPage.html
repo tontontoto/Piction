@@ -46,7 +46,7 @@
                 <img src="{{ url_for('static', filename=user.iconFilePath) }}" class="icon" alt="userIcon">
             </div>
             <div class="userInfo">
-                <p class="displayName">{{ user.displayName }}</p>
+                <p class="profileDisplayName">{{ user.displayName }}</p>
                 <p class="userName">@{{ user.userName }}</p>
                 <p class="mailAddress">
                     <!-- <span><img src="{{ url_for('static', filename='parts/mail.svg') }}"></span> -->
@@ -210,9 +210,13 @@
     
         <label>
             <input type="radio" name="tab-1">
-            タブ3
+            入札した商品
         </label>
-        <div>もう一個なんか追加します。</div>
+        <div>
+            {% with myBidSales = myBidSales %}
+            {% include 'myBid.html' %}
+            {% endwith %}
+        </div> 
     </div>
 
 
