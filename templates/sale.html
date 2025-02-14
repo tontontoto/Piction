@@ -7,7 +7,7 @@
         {% for sale in sales %}
         <a class="saleBox" href="{{ url_for('saleDetail', sale_id=sale.saleId) }}">
             <div>
-                <div id="uploadImg">
+                <div class="uploadImg">
                     <img src="{{ url_for('static', filename=sale.filePath) }}" alt="saleImage">
                     <!-- <img src="{{ sale.filePath }}" alt="saleImage" id="uploadImg"> -->
                     <p class="currentPrice">￥{{ '{:,}'.format(sale.currentPrice) }}</p>
@@ -26,7 +26,7 @@
                             {% if sale.saleId in liked_sale_ids %} fill="#f03eb5" stroke="#f03eb5" {% else %}
                             fill="#fff" stroke="#000" {% endif %} />
                     </svg>
-                    <span class="like-count-{{ sale.saleId }}">{{ sale.like_count }}</span>
+                    <span class="like-count-{{ sale.saleId }} likeCount">{{ sale.like_count }}</span>
                 </div>
 
             </div>
