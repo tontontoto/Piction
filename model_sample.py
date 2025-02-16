@@ -1,15 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Table, String, Integer, Date, DATETIME, text, Boolean, ForeignKey, create_engine, func
-from sqlalchemy.orm import relationship, sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
-from datetime import date, datetime
-from flask_sqlalchemy import SQLAlchemy
-from flask import Flask
-from flask_login import UserMixin
-from werkzeug.security import generate_password_hash, check_password_hash
-from dotenv import load_dotenv
-from os.path import join, dirname
-import pymysql
-import os
+from imports import *
 
 load_dotenv(verbose=True)
 

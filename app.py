@@ -1,19 +1,4 @@
-# MARK:インポート
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session, send_file
-from model_sample import db, User, Sale, Category, Bid, Like, Inquiry, WinningBid, PaymentWay, Payment
-from flask_login import LoginManager, login_user, logout_user, login_required
-from flask_bcrypt import Bcrypt
-from datetime import datetime, timedelta
-from sqlalchemy import func
-from azure.storage.blob import BlobServiceClient
-from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
-from werkzeug.utils import secure_filename
-import random
-import string
-import os
-import base64
-from dotenv import load_dotenv
+from imports import *
 
 # 環境変数の読み込み
 load_dotenv()
@@ -129,35 +114,6 @@ def allowed_file(filename):
         file_extension = filename.rsplit('.', 1)[1].lower()
         return file_extension in ALLOWED_EXTENSIONS
     return False
-
-# @app.route('/myPage', methods=['GET', 'POST'])
-# def upload_file():
-#     if request.method == 'POST':
-#         if 'file' not in request.files:
-#             return 'ファイルが送信されていません'
-#         file = request.files['file']
-        
-#         if file.filename == '':
-#             return 'ファイルが選択されていません'
-        
-#         if file and allowed_file(file.filename):
-#             # ファイル名を安全な名前に変更
-#             filename = secure_filename(file.filename)
-            
-#             # 保存先のファイルパスを決定
-#             iconFilePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            
-#             # ファイルを保存    
-#             file.save(iconFilePath)
-            
-#             # データベースにファイルパスを保存
-#             new_image = userIcon(iconFilePath=iconFilePath)
-#             db.session.add(new_image)
-#             db.session.commit()
-
-#             return f'ファイル {filename} がアップロードされ、データベースに保存されました！'
-    
-#     return render_template('myPage.html')
 
 # MARK:ログイン情報保持
 #現在のログインユーザーの情報を保持し、必要なときに参照できるようになる。
