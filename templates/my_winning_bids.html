@@ -19,7 +19,7 @@
             <div class="winning-bids-grid">
                 {% for bid_info in winning_bids %}
                 <div class="winning-bid-card">
-                    <a href="{{ url_for('saleDetail', sale_id=bid_info['sale'].saleId) }}">
+                    <a href="{{ url_for('saleDetail_view', sale_id=bid_info['sale'].saleId) }}">
                         <img src="{{ url_for('static', filename=bid_info['sale'].filePath) }}" alt="{{ bid_info['sale'].title }}">
                         <h3>{{ bid_info['sale'].title }}</h3>
                         <p>落札者: {{ bid_info['user'].displayName }}</p>

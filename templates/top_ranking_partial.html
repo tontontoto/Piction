@@ -1,5 +1,5 @@
 {% for saleRanking in saleRankings %}
-<a class="saleRankingBox" href="{{ url_for('saleDetail', sale_id=saleRanking.saleId) }}"
+<a class="saleRankingBox" href="{{ url_for('saleDetail_view', sale_id=saleRanking.saleId) }}"
     data-rank="No.{{ loop.index }}">
     <div>
         <img src="{{ url_for('static', filename=saleRanking.filePath) }}" alt="saleImage" id="uploadImg">

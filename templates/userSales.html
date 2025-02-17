@@ -21,7 +21,7 @@
         {% if sales %}
         <div class="sales-grid">
             {% for sale in sales %}
-            <a href="{{ url_for('saleDetail', sale_id=sale.saleId) }}" class="sale-card">
+            <a href="{{ url_for('saleDetail_view', sale_id=sale.saleId) }}" class="sale-card">
                 <div class="sale-image">
                     <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">
                     {% if not sale.saleStatus %}

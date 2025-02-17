@@ -3,7 +3,7 @@
         {% for sale in topPriceSales %}
         <div class="slide">
             <!-- <div class="slide-rank">{{ loop.index }}</div> -->
-            <a href="{{ url_for('saleDetail', sale_id=sale.saleId) }}" class="slide-link">
+            <a href="{{ url_for('saleDetail_view', sale_id=sale.saleId) }}" class="slide-link">
                 <div class="slide-content">
                     <div class="image-container">
                         <img src="{{ url_for('static', filename=sale.filePath) }}?{{ SAS }}" alt="{{ sale.title }}">
