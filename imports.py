@@ -1,6 +1,6 @@
 # 重複しているインポートをまとめた部分
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session, send_file
-from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin
+from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin, current_user
 from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta, date
 from sqlalchemy import Column, ForeignKey, Table, String, Integer, Date, DATETIME, func, create_engine
@@ -8,6 +8,8 @@ from sqlalchemy.orm import relationship, sessionmaker
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
+from functools import wraps
+import logging
 import os
 
 # 個別に異なるインポート
