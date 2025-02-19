@@ -1,11 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Table, Integer, ForeignKey, create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from datetime import date, datetime
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin
-from dotenv import load_dotenv
-from os.path import join, dirname
-import os
+from imports import *
 
 
 ENVIRONMENT = os.getenv('ENVIRONMENT')
