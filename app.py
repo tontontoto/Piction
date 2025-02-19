@@ -24,14 +24,11 @@ UPLOAD_FOLDER = os.getenv('UPLOAD_FOLDER', './static/upload_images')
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.urandom(24)
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['IS_LOCAL'] = True if ENVIRONMENT == 'local' else False
-# Secureなセッション管理
-SESSION_COOKIE_HTTPONLY = True  # JavaScriptからアクセス不可
-SESSION_COOKIE_SECURE = True    # HTTPSでのみ送信（
-SESSION_COOKIE_SAMESITE = 'Lax'  # クロスサイトリクエストを制限
+
 
 # Azure Blob Storage クライアントの設定（ローカル環境では無効化）
 if ENVIRONMENT == 'azure' and AZURE_STORAGE_CONNECTION_STRING:
@@ -147,10 +144,10 @@ def logout_required(f):
     return decorated_function
 
 # MARK: Pageエラー
-# @app.errorhandler(401) # 401: 認証エラー
-# @app.errorhandler(404) # 404: Not Found エラー
-# def error_401(error):
-#     return render_template('error.html'),401 if error.code == 401 else 404
+@app.errorhandler(401) # 401: 認証エラー
+@app.errorhandler(404) # 404: Not Found エラー
+def error_401(error):
+    return render_template('error.html'),401 if error.code == 401 else 404
 
 #　MARK: Welcomeページ 
 @app.route('/', methods=['GET', 'POST'])
@@ -866,8 +863,8 @@ else:
             blob_client.upload_blob(image_bytes, overwrite=True)
 
             # アップロードされた画像のURLを取得
-            blob_url = f"https://{blob_service_client.account_name}.blob.core.windows.net/{AZURE_STORAGE_CONTAINER}/{file_name}{AZURE_STORAGE_SAS}"
-            return blob_url
+            file_path = f"https://{blob_service_client.account_name}.blob.core.windows.net/{AZURE_STORAGE_CONTAINER}/{file_name}{AZURE_STORAGE_SAS}"
+            return file_path
         except Exception as e:
             print(f"Error 画像保存失敗: {e}")
             return None
@@ -904,12 +901,12 @@ def add_sale():
     else:
         try:
             # 画像をAzure Blob Storageに保存
-            blob_url = save_image_to_azure(image_bytes)
-            if not blob_url:
+            file_path = save_image_to_azure(image_bytes)
+            if not file_path:
                 return jsonify({"error": "Failed to save image"}), 500
         except Exception as e:
             # 保存成功時に画像のURLを返す
-            return jsonify({"message": "Image uploaded successfully", "image_url": blob_url}), 201
+            return jsonify({"message": "Image uploaded successfully", "image_url": file_path}), 201
 
 
     userId = session.get('userId') # 今使っているユーザーのuserIdの取得
@@ -1269,12 +1266,12 @@ def add_payment_methods():
 
 with app.app_context():
     try:
-        db.drop_all()  # テーブルの全削除
+        # db.drop_all()  # テーブルの全削除
         db.create_all()
-        dummy_users = add_users()
-        dummy_categories = add_categories()
-        add_sales(dummy_categories)
-        add_payment_methods()
+        # dummy_users = add_users()
+        # dummy_categories = add_categories()
+        # add_sales(dummy_categories)
+        # add_payment_methods()
     except Exception as e:
         print(f"Error テーブル作成失敗: {e}")
         db.session.rollback()

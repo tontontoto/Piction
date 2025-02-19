@@ -25,7 +25,7 @@
             <div class="finished-flex-container">
                 <div class="main">
                     {% if config.IS_LOCAL %}
-                    <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">
+                        <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">
                     {% else %}
                         <img src="{{ sale.filePath }}" alt="{{ sale.title }}">
                     {% endif %}
