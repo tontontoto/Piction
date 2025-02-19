@@ -1,26 +1,33 @@
-from sqlalchemy import Column, ForeignKey, Table, String, Integer, Date, DATETIME, text, Boolean, ForeignKey, create_engine, func
-from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy import Column, ForeignKey, Table, Integer, ForeignKey, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import date, datetime
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask
 from flask_login import UserMixin
-from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 from os.path import join, dirname
-import pymysql
 import os
 
-load_dotenv(verbose=True)
 
-dotenv_path = join(dirname(__file__), '.env')
-load_dotenv(dotenv_path)
+ENVIRONMENT = os.getenv('ENVIRONMENT')
+if not ENVIRONMENT:
+    raise ValueError("model 環境変数 ENVIRONMENT が設定されていません")
 
-DB_URL = os.environ.get("LOCAL_DB_URL")
-
-Base = declarative_base()
-engine = create_engine(DB_URL, echo=True)
-db = SQLAlchemy()
+print(ENVIRONMENT)
+if ENVIRONMENT == 'local':
+    dotenv_path = join(dirname(__file__), '.env')
+    load_dotenv(dotenv_path, verbose=True)
+    print("if文の中")
+DB_URL = os.getenv("DB_URL")
+print("model",DB_URL)
+try:
+    Base = declarative_base()
+    engine = create_engine(DB_URL, echo=True)
+    db = SQLAlchemy()
+    connection = engine.connect()
+    print("✅ SQLAlchemy で接続成功！")
+    connection.close()
+except Exception as e:
+    print(f"❌ 接続エラー: {e}")
 	
 saleCategoryAssociation = Table(
     'saleCategoryAssociation', db.metadata,
@@ -32,9 +39,9 @@ saleCategoryAssociation = Table(
 class User(UserMixin, db.Model):
     __tablename__ = "user"
     userId = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    userName = db.Column(db.String(15))
+    userName = db.Column(db.String(15), unique=True)
     displayName = db.Column(db.String(10))
-    mailAddress = db.Column(db.String(254))
+    mailAddress = db.Column(db.String(254), unique=True)
     password = db.Column(db.String(254))
     registrationDate = db.Column(db.Date, default=date.today())
     iconFilePath = db.Column(db.String(254), nullable=False, default="img/icon_user_light.png")

@@ -19,7 +19,11 @@
         <div class="bid-card">
             <div class="artwork-section">
                 <div class="artwork-image">
+                    {% if config.IS_LOCAL %}
                     <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">
+                    {% else %}
+                        <img src="{{ sale.filePath }}" alt="{{ sale.title }}">
+                    {% endif %}
                 </div>
                 <div class="artwork-info">
                     <h1>{{ sale.title }}</h1>

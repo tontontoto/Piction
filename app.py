@@ -1,7 +1,7 @@
 # MARK:インポート
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session, send_file
 from model_sample import db, User, Sale, Category, Bid, Like, Inquiry, WinningBid, PaymentWay, Payment
-from flask_login import LoginManager, login_user, logout_user, login_required
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
 from sqlalchemy import func
@@ -9,23 +9,26 @@ from azure.storage.blob import BlobServiceClient
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from werkzeug.utils import secure_filename
+from functools import wraps
+import logging
+
 import random
 import string
 import os
 import base64
 from dotenv import load_dotenv
 
-# 環境変数の読み込み
-load_dotenv()
-
 # 環境設定の取得
-ENVIRONMENT = os.getenv('ENVIRONMENT', 'local')
+ENVIRONMENT = os.getenv('ENVIRONMENT')
+if not ENVIRONMENT:
+    raise ValueError("app.py 環境変数 ENVIRONMENT が設定されていません")
 
 # データベースURLの設定
 if ENVIRONMENT == 'local':
-    DB_URL = os.getenv('LOCAL_DB_URL')
-else:
-    DB_URL = os.getenv('AZURE_DB_URL')
+    # 環境変数の読み込み
+    load_dotenv()
+
+DB_URL = os.getenv('DB_URL')
 
 # Azure Blob Storage設定
 AZURE_STORAGE_CONNECTION_STRING = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
@@ -41,6 +44,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['IS_LOCAL'] = True if ENVIRONMENT == 'local' else False
+# Secureなセッション管理
+SESSION_COOKIE_HTTPONLY = True  # JavaScriptからアクセス不可
+SESSION_COOKIE_SECURE = True    # HTTPSでのみ送信（
+SESSION_COOKIE_SAMESITE = 'Lax'  # クロスサイトリクエストを制限
 
 # Azure Blob Storage クライアントの設定（ローカル環境では無効化）
 if ENVIRONMENT == 'azure' and AZURE_STORAGE_CONNECTION_STRING:
@@ -161,29 +170,54 @@ def allowed_file(filename):
 
 # MARK:ログイン情報保持
 #現在のログインユーザーの情報を保持し、必要なときに参照できるようになる。
+# @login_manager.user_loader
+# def load_user(userId):
+#     try:
+#         return db.session.get(User, userId)
+#     except Exception as e:
+#         print(f"Error ログイン情報保持処理失敗: {e}")
+#         return None
+
+# # ログインしているユーザに対してのアクセス制限をかけるデコレータ
+# def logout_required(f):
+#     def decorated_function(*args, **kwargs):
+#         # セッションにユーザーIDがある場合、リダイレクト
+#         if 'userId' in session:
+#             # ログイン後にアクセス可能ページにリダイレクト
+#             return redirect(url_for('top'))  
+#         return f(*args, **kwargs)
+#     return decorated_function
+
+
+# ログの設定
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# ユーザーローダー
 @login_manager.user_loader
-def load_user(userId):
+def load_user(user_id: int):
+    """ ユーザーIDをもとにユーザーをロードする """
     try:
-        return User.query.get(userId)
+        return db.session.get(User, user_id)
     except Exception as e:
-        print(f"Error ログイン情報保持処理失敗: {e}")
+        logger.error(f"Error ログイン情報保持処理失敗: {e}")
         return None
 
-# ログインしているユーザに対してのアクセス制限をかけるデコレータ
+# ログインしているユーザーのアクセスを制限するデコレーター
 def logout_required(f):
+    """ ログインユーザーのアクセスを制限し、未ログイン時のみ許可 """
+    @wraps(f)
     def decorated_function(*args, **kwargs):
-        # セッションにユーザーIDがある場合、リダイレクト
-        if 'userId' in session:
-            # ログイン後にアクセス可能ページにリダイレクト
-            return redirect(url_for('top'))  
+        if session.get('userId'):  # KeyError を回避
+            return redirect(url_for('top'))
         return f(*args, **kwargs)
     return decorated_function
 
 # MARK: Pageエラー
-@app.errorhandler(401) # 401: 認証エラー
-@app.errorhandler(404) # 404: Not Found エラー
-def error_401(error):
-    return render_template('error.html'),401 if error.code == 401 else 404
+# @app.errorhandler(401) # 401: 認証エラー
+# @app.errorhandler(404) # 404: Not Found エラー
+# def error_401(error):
+#     return render_template('error.html'),401 if error.code == 401 else 404
 
 #　MARK: Welcomeページ 
 @app.route('/', methods=['GET', 'POST'])
@@ -203,7 +237,7 @@ def index():
 def saleDetail(sale_id):
     try:
         # 商品情報をデータベースから取得
-        sale = Sale.query.get(sale_id)
+        sale = db.session.query(Sale).get(sale_id)
         bids = Bid.query.filter_by(saleId=sale_id).all()
         currentPrice = db.session.query(Bid.bidPrice).filter_by(saleId=sale_id).order_by(Bid.bidPrice.desc()).first()
         currentPrice = currentPrice[0] if currentPrice else sale.startingPrice
@@ -244,7 +278,7 @@ def saleDetail(sale_id):
             db.session.commit()
             print("最大金額（落札金額）:",lastAmount)
             finished = "この作品のオークションは終了しています"
-            return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, finished=finished, bidUserId=bidUserId ,lastAmount=lastAmount)
+            return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, finished=finished, bidUserId=bidUserId ,lastAmount=lastAmount, config=app.config)
         
         # 商品なかった時のerror処理
         if sale is None:
@@ -252,7 +286,7 @@ def saleDetail(sale_id):
             return redirect(url_for('top'))
 
         # 商品情報をテンプレートに渡す
-        return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories)
+        return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, config=app.config)
 
     except Exception as e:
         print(f"Error 商品情報取得失敗: {e}")
@@ -303,15 +337,19 @@ def signup():
         except Exception as e:
             print(f"Error サインアップ処理失敗: {e}")
             return "エラーが発生しました", 500
-    
-        # ユーザーIDをセッションに保存　-> 後からIDから参照できるようになる
-        session['userId'] = new_user.userId
-        print(f'{userName}さんの登録が完了しました！')
-        # sessionに保存 / 新規登録時ログインページ介さずTOPに遷移
-        session['userId'] = new_user.userId
-        login_user(new_user)
-        print(session['userId'])
-        return redirect('/top')
+        try:
+            # ユーザーIDをセッションに保存　-> 後からIDから参照できるようになる
+            session['userId'] = new_user.userId
+            print(f'{userName}さんの登録が完了しました！')
+            print(f'認証状態: {new_user.is_authenticated}')
+            # sessionに保存 / 新規登録時ログインページ介さずTOPに遷移
+            session['userId'] = new_user.userId
+            login_user(new_user)
+            print(session['userId'])
+            return redirect('/top')
+        except Exception as e:
+            print(f"Error ログイン処理失敗: {e}")
+            return "エラーが発生しました", 500
     else:
         return render_template('signup.html')
 
@@ -335,6 +373,7 @@ def login():
                 # sessionに保存
                 session['userId'] = user.userId
                 login_user(user)
+                print(f'認証状態: {current_user.is_authenticated}')
                 resp = redirect('/top')
                 return resp
             else:
@@ -358,6 +397,8 @@ def logout():
             # ログアウト処理
             logout_user()
             flash('ログアウトしました', 'success')
+            print("ログアウトしました")
+            print(f'認証状態: {current_user.is_authenticated}')
             return render_template('index.html')
         
         # GETリクエストの場合は確認画面を表示
@@ -374,43 +415,43 @@ def logout():
 def top():
     userId = session.get('userId')
     print("userIdです！", userId)
+    print(f'認証状態: {current_user.is_authenticated}')
     
-    try:
-        # 新着順に10件取得
-        sales = Sale.query.order_by(Sale.saleId.desc()).limit(10).all()
-        
-        # 高額商品TOP5を取得（現在価格の高い順）
-        topPriceSales = Sale.query.order_by(Sale.currentPrice.desc()).limit(5).all()
-        
-        # いいね情報の取得
-        liked_sales = db.session.query(Like.saleId).filter_by(userId=userId).all()
-        liked_sale_ids = [sale[0] for sale in liked_sales]
-        
-        # いいねランキングの取得
-        likeRankings = db.session.query(
-            Like.saleId, 
-            db.func.count(Like.saleId)
-        ).group_by(Like.saleId).order_by(
-            db.func.count(Like.saleId).desc()
-        ).limit(3).all()
-        
-        saleIds = [sale[0] for sale in likeRankings]
-        saleRankings = Sale.query.filter(Sale.saleId.in_(saleIds)).all()
-        
-    except Exception as e:
-        print(f"Error 商品情報取得失敗: {e}")
-        sales = []
-        topPriceSales = []
-        liked_sale_ids = []
-        saleRankings = []
+    # 新着順に10件取得
+    sales = Sale.query.order_by(Sale.saleId.desc()).limit(10).all()
     
+    # 高額商品TOP5を取得（現在価格の高い順）
+    topPriceSales = Sale.query.order_by(Sale.currentPrice.desc()).limit(5).all()
+    
+    # いいね情報の取得
+    liked_sales = db.session.query(Like.saleId).filter_by(userId=userId).all()
+    liked_sale_ids = [sale[0] for sale in liked_sales]
+    
+    # いいねランキングの取得
+    likeRankings = db.session.query(
+        Like.saleId, 
+        db.func.count(Like.saleId)
+    ).group_by(Like.saleId).order_by(
+        db.func.count(Like.saleId).desc()
+    ).limit(3).all()
+    
+    saleIds = [sale[0] for sale in likeRankings]
+    saleRankings = Sale.query.filter(Sale.saleId.in_(saleIds)).all()
+    
+# except Exception as e:
+#     print(f"Error 商品情報取得失敗: {e}")
+#     sales = []
+#     topPriceSales = []
+#     liked_sale_ids = []
+#     saleRankings = []
+
     return render_template('top.html', 
-                         sales=sales, 
-                         userId=userId, 
-                         liked_sale_ids=liked_sale_ids, 
-                         saleRankings=saleRankings,
-                         topPriceSales=topPriceSales,
-                         SAS=AZURE_STORAGE_SAS)
+                        sales=sales, 
+                        userId=userId, 
+                        liked_sale_ids=liked_sale_ids, 
+                        saleRankings=saleRankings,
+                        topPriceSales=topPriceSales,
+                        config=app.config,)
     
 @app.route('/update_ranking')
 def update_ranking():
@@ -476,7 +517,7 @@ def lineup():
                          sales=sales, 
                          userId=userId, 
                          liked_sale_ids=liked_sale_ids, 
-                         SAS=AZURE_STORAGE_SAS)
+                         config=app.config)
 
 # MARK: いいね情報受け取りroute
 @app.route('/like', methods=['POST'])
@@ -530,7 +571,7 @@ def myLikeList():
         # いいねした商品の情報を取得
         sales = db.session.query(Sale).all()
         # userIdからそのユーザー情報を取得
-        user = User.query.get(userId)
+        user = db.session.query(User).get(userId)
         # 自分がいいねした商品の情報を取得
         myLikeList = db.session.query(Sale).join(Like).filter(Like.userId == userId).order_by(Like.likeId.desc()).all()
         # 入札数の取得
@@ -573,7 +614,7 @@ def myLikeList():
         bidCount = []
         
     print(myLikeList)
-    return render_template('myLikeList.html', sales=sales, user=user, myLikeList=myLikeList, bidCount=bidCount, SAS=AZURE_STORAGE_SAS)
+    return render_template('myLikeList.html', sales=sales, user=user, myLikeList=myLikeList, bidCount=bidCount, config=app.config)
 
 # MARK: 並び順を渡すurl
 @app.route('/sort_products')
@@ -659,8 +700,9 @@ def sort_products():
 @login_required
 def myPage():
     userId = session.get('userId')
+    print(f'認証状態: {current_user.is_authenticated}')
     try:
-        user = User.query.get(userId)
+        user = db.session.query(User).get(userId)
         # session(ログイン状態のuserId)のsaleの行を取り出し、
         # 外部キーのuserIdよりUserテーブルの中のデータを参照できる。
         sales = db.session.query(Sale).join(User).filter_by(userId=userId).all()
@@ -695,7 +737,7 @@ def myPage():
     # 落札した商品の情報を取得
     myBidSales = []
     for bid in myBidList:
-        sale = Sale.query.get(bid.saleId)
+        sale = db.session.query(Sale).get(bid.saleId)
         myBidSales.append(sale)
 
     print("落札した商品の一覧", myBidSales)
@@ -724,7 +766,7 @@ def myPage():
     
     my_bids = []
     for bid in my_bids_query:
-        sale = Sale.query.get(bid.Sale.saleId)
+        sale = db.session.query(Sale).get(bid.Sale.saleId)
         my_bids.append(sale)
         
     
@@ -799,7 +841,7 @@ def myPage():
         return redirect(url_for('myPage'))
         
 
-    return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, my_bids=my_bids, revenue=revenue)
+    return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, my_bids=my_bids, revenue=revenue, config=app.config)
 
 # MARK: 落札商品詳細ページ
 @app.route('/bidSaleDetail/<int:sale_id>', methods=['GET', 'POST'])
@@ -807,7 +849,7 @@ def bidSaleDetail(sale_id):
     print(sale_id)
 
     if request.method == 'POST':
-        sale = Sale.query.get(sale_id)
+        sale = db.session.query(Sale).get(sale_id)
         saleId = sale.saleId # 商品ID
         winningBidId = WinningBid.query.filter_by(saleId=saleId).first().winningBidId # 落札ID
         PaymentMethod = request.form.get('paymentMethod') # 支払い方法
@@ -819,17 +861,17 @@ def bidSaleDetail(sale_id):
         db.session.add(new_payment)
         db.session.commit()
         print(saleId, winningBidId, paymentWayId, comment, amount)
-        return render_template('bidConfirmation.html', sale=sale)
+        return render_template('bidConfirmation.html', sale=sale, config=app.config)
 
     else:
         # Sale の情報を取得
-        sale = Sale.query.get(sale_id)
+        sale = db.session.query(Sale).get(sale_id)
         # 出品者の displayName を取得
         name = db.session.query(User.displayName).filter(User.userId == sale.userId).scalar()    
         # WinningBid を使って buyerId を取得し、購入者の displayName を取得
         buyer_display_name = get_buyer_display_name(sale_id)
         # テンプレートに必要な情報を渡してレンダリング
-        return render_template('bidSaleDetail.html', sale=sale, name=name, buyer_display_name=buyer_display_name)
+        return render_template('bidSaleDetail.html', sale=sale, name=name, buyer_display_name=buyer_display_name, config=app.config)
 
 # 特定の saleId に対して、buyerId を持つ User の displayName を取得
 def get_buyer_display_name(sale_id):
@@ -839,7 +881,7 @@ def get_buyer_display_name(sale_id):
         # WinningBid が存在し、buyerId が取得できた場合
         if winning_bid and winning_bid.buyerId:
             # buyerId を使って User を取得
-            buyer = User.query.get(winning_bid.buyerId)
+            buyer = db.session.query(User).get(winning_bid.buyerId)
             # buyer が存在すれば、その displayName を返す
             if buyer:
                 return buyer.displayName
@@ -855,8 +897,8 @@ def get_buyer_display_name(sale_id):
 @app.route('/bidConfirmation/<int:sale_id>')
 @login_required
 def bidConfirmation(sale_id):
-    sale = Sale.query.get(sale_id)
-    return render_template('bidConfirmation.html', sale=sale)
+    sale = db.session.query(Sale).get(sale_id)
+    return render_template('bidConfirmation.html', sale=sale, config=app.config)
 
 # MARK: canvas→画像変換
 def decode_image(image_data):
@@ -891,7 +933,7 @@ else:
             blob_client.upload_blob(image_bytes, overwrite=True)
 
             # アップロードされた画像のURLを取得
-            blob_url = f"https://{blob_service_client.account_name}.blob.core.windows.net/{AZURE_STORAGE_CONTAINER}/{file_name}"
+            blob_url = f"https://{blob_service_client.account_name}.blob.core.windows.net/{AZURE_STORAGE_CONTAINER}/{file_name}{AZURE_STORAGE_SAS}"
             return blob_url
         except Exception as e:
             print(f"Error 画像保存失敗: {e}")
@@ -939,7 +981,7 @@ def add_sale():
 
     userId = session.get('userId') # 今使っているユーザーのuserIdの取得
     try:
-        user = User.query.get(userId) # userIdからuser情報受け取り
+        user = db.session.query(User).get(userId) # userIdからuser情報受け取り
     except Exception as e:
         print(f"Error ユーザー情報取得失敗: {e}")
         return jsonify({'error': 'Failed to query user'}), 500
@@ -1070,11 +1112,11 @@ def search():
         for sale in sales:
             bid_counts[sale.saleId] = Bid.query.filter_by(saleId=sale.saleId).count()
         
-        return render_template('lineup.html', sales=sales, bidCount=bid_counts, query=query)
+        return render_template('lineup.html', sales=sales, bidCount=bid_counts, query=query, config=app.config)
         
     except Exception as e:
         print(f"Error 検索処理失敗: {e}")
-        return render_template('lineup.html', sales=[], bidCount={}, query=query)
+        return render_template('lineup.html', sales=[], bidCount={}, query=query, config=app.config)
 
 
 @app.route('/my_winning_bids')
@@ -1112,7 +1154,7 @@ def my_winning_bids():
             print(f"作品タイトル: {sale.title}")
             print(f"出品者: {user.displayName}")
         
-        return render_template('my_winning_bids.html', winning_bids=formatted_bids)
+        return render_template('my_winning_bids.html', winning_bids=formatted_bids, config=app.config)
     
     except Exception as e:
         print(f"Error 落札した商品の取得失敗: {e}")
@@ -1121,7 +1163,7 @@ def my_winning_bids():
 @app.route('/download_artwork/<int:sale_id>', methods=['GET', 'POST'])
 @login_required
 def download_artwork(sale_id):
-    sale = Sale.query.get(sale_id)
+    sale = db.session.query(Sale).get(sale_id)
     file_path = os.path.join(app.root_path, "static", sale.filePath) 
     
     print(f"ファイルパス: {sale.filePath}")
@@ -1291,18 +1333,21 @@ def add_payment_methods():
     db.session.commit()
 
 # MARK: テーブルの作成
-if __name__ == '__main__': 
-    with app.app_context():
-        try:
-            # db.drop_all()  # テーブルの全削除
-            db.create_all()
-            # dummy_users = add_users()
-            # dummy_categories = add_categories()
-            # add_sales(dummy_categories)
-            # add_payment_methods()
-        except Exception as e:
-            print(f"Error テーブル作成失敗: {e}")
-            db.session.rollback()
-            db.session.close()
-            exit()
-    app.run(host='0.0.0.0', port=80, debug=True)
+
+with app.app_context():
+    try:
+        db.drop_all()  # テーブルの全削除
+        db.create_all()
+        dummy_users = add_users()
+        dummy_categories = add_categories()
+        add_sales(dummy_categories)
+        add_payment_methods()
+    except Exception as e:
+        print(f"Error テーブル作成失敗: {e}")
+        db.session.rollback()
+        db.session.close()
+        exit()
+        
+if __name__ == '__main__':
+    PORT = int(os.getenv('PORT', 5000))
+    app.run(host='0.0.0.0', port=PORT, debug=True)

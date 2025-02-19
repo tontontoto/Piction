@@ -8,7 +8,12 @@
         {% for sale in my_bids %}
         <a href="{{ url_for('bidSaleDetail', sale_id=sale.saleId) }}" class="sale-card">
             <div class="sale-image">
-                <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">
+                {% if config.IS_LOCAL %}
+                    <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">
+                {% else %}
+                    <img src="{{ sale.filePath }}" alt="{{ sale.title }}">
+                {% endif %}
+                
                 {% if not sale.saleStatus %}
                     <div class="status-badge ended">終了</div>
                 {% else %}

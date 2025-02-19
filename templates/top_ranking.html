@@ -7,7 +7,12 @@
         <a class="saleRankingBox" href="{{ url_for('saleDetail', sale_id=saleRanking.saleId) }}"
             data-rank="No.{{ loop.index }}">
             <div>
-                <img src="{{ url_for('static', filename=saleRanking.filePath) }}" alt="saleImage" id="uploadImg">
+                {% if config.IS_LOCAL %}
+                    <img src="{{ url_for('static', filename=saleRanking.filePath) }}" alt="saleImage" id="uploadImg">
+                {% else %}
+                    <img src="{{ sale.filePath }}" alt="{{ sale.title }}">
+                {% endif %}
+                
                 <div>
                     <h3>{{ saleRanking.title }}</h3>
                     <p>{{ saleRanking.displayName }}</p>
