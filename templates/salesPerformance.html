@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../static/icon/favicon.png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/salesPerformance.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <title>販売状況 | Piction</title>
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <main>
+        <div class="sales-status-container">
+            <h2>販売状況</h2>
+            {% if sales %}
+            <div class="sales-grid">
+                {% for sale in sales %}
+                <div class="sale-card">
+                    <a href="{{ url_for('saleDetail', sale_id=sale.saleId) }}">
+                        <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">
+                        <h3>{{ sale.title }}</h3>
+                        <p>出品者: {{ sale.displayName }}</p>
+                        <p>現在の価格: ¥{{ sale.currentPrice }}</p>
+                        <p>終了時間: {{ sale.finishTime }}</p>
+                        <p>ステータス: {{ '出品中' if sale.saleStatus else '終了' }}</p>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>出品した作品はありません。</p>
+            {% endif %}
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+</body>
+</html> 

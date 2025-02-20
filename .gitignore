@@ -21,6 +21,7 @@ __pycache__/
 instance/
 .webassets-cache
 static/upload_images/
+static/upload_icon/
 dummy_data.txt
 
 # IDE設定
