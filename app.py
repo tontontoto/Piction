@@ -29,6 +29,11 @@ from routes.contact import contact
 # MARK:== database ==
 from database.insert_data import add_payment_methods
 from database.insert_fake_data import *
+# データベースURLの設定
+if ENVIRONMENT == 'local':
+    DB_URL = os.getenv('DB_URL')
+else:
+    DB_URL = os.getenv('DB_URL')
 
 # MARK:== error ==
 from errors.error_handlers import *

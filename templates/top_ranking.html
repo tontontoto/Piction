@@ -1,25 +1,30 @@
+<!-- css: ranking.css -->
+
 <div class="ranking">
-    <div class="saleTitle">
+    <div class="saleTitle rankingTitle">
         <h2>人気の作品｜ランキング</h2>
+        <p class="showMore_responsive"><a href="/lineup">もっとみる</a></p>
     </div>
     <div class="saleRanking">
         {% for saleRanking in saleRankings %}
         <a class="saleRankingBox" href="{{ url_for('saleDetail_view', sale_id=saleRanking.saleId) }}"
             data-rank="No.{{ loop.index }}">
-            <div>
-                {% if config.IS_LOCAL %}
+            <div id="saleRankingBox">
+                <div class="uploadImg uploadImgRanking">
+                    {% if config.IS_LOCAL %}
                     <img src="{{ url_for('static', filename=saleRanking.filePath) }}" alt="saleImage" id="uploadImg">
-                {% else %}
+                    {% else %}
                     <img src="{{ sale.filePath }}" alt="{{ sale.title }}">
-                {% endif %}
-                
-                <div>
-                    <h3>{{ saleRanking.title }}</h3>
-                    <p>{{ saleRanking.displayName }}</p>
-                    <p>￥{{ '{:,}'.format(saleRanking.currentPrice) }}</p>
-
+                    {% endif %}
+                </div>
+                <div class="saleRankingBox_content">
+                    <div class="saleRankingBoxDetail">
+                        <h3>{{ saleRanking.title }}</h3>
+                        <p>{{ saleRanking.displayName }}</p>
+                        <p>￥{{ '{:,}'.format(saleRanking.currentPrice) }}</p>
+                    </div>
                     <div class="likeContainer">
-                        <span  class="like-count-{{ saleRanking.saleId }}">{{ saleRanking.like_count }}</span>
+                        <span class="like-count-{{ saleRanking.saleId }}">{{ saleRanking.like_count }}</span>
                         <svg class="heart-icon-{{ saleRanking.saleId }}" width="32" height="32" viewBox="0 0 32 32"
                             fill="none" xmlns="http://www.w3.org/2000/svg"
                             onclick="likeSale({{ saleRanking.saleId }}, '{{ userId }}', event)">
