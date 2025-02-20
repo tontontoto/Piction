@@ -20,3 +20,25 @@ def create_user(userName, displayName, mailAddress, password):
 def login_user_session(user):
     session['userId'] = user.userId
     login_user(user)
+
+
+def get_recent_sales(count):
+    return Sale.query.order_by(Sale.saleId.desc()).limit(count).all()
+
+def get_top_price_sales(count):
+    return Sale.query.order_by(Sale.currentPrice.desc()).limit(count).all()
+
+def get_liked_sales(userId):
+    liked_sales = db.session.query(Like.saleId).filter_by(userId=userId).all()
+    return [sale[0] for sale in liked_sales]
+
+def get_like_rankings():
+    likeRankings = db.session.query(
+        Like.saleId, 
+        db.func.count(Like.saleId)
+    ).group_by(Like.saleId).order_by(
+        db.func.count(Like.saleId).desc()
+    ).limit(3).all()
+    
+    saleIds = [sale[0] for sale in likeRankings]
+    return Sale.query.filter(Sale.saleId.in_(saleIds)).all()

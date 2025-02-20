@@ -26,7 +26,7 @@
                         <p>落札価格: ¥{{ '{:,}'.format(bid_info['sale'].currentPrice) }}</p>
                         <p>落札日時: {{ bid_info['winningBid'].bidTime }}</p>
                     </a>
-                    <a href="{{ url_for('download_artwork', sale_id=bid_info['sale'].saleId) }}" class="download-button">ダウンロード</a>
+                    <a href="{{ url_for('download_artwork_view', sale_id=bid_info['sale'].saleId) }}" class="download-button">ダウンロード</a>
                 </div>
                 {% endfor %}
             </div>
