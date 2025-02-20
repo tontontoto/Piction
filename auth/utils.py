@@ -21,7 +21,7 @@ def login_user_session(user):
     session['userId'] = user.userId
     login_user(user)
 
-
+# topページの最新商品情報取得関数
 def get_recent_sales(count):
     return Sale.query.order_by(Sale.saleId.desc()).limit(count).all()
 

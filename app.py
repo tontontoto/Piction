@@ -1,4 +1,4 @@
-# == auth ==
+# MARK:== auth ==
 from imports import *
 from auth.config import *
 from auth.azure_blob import connect_to_azure_blob
@@ -8,7 +8,7 @@ from auth.user_loader import load_user
 from auth.like import like
 from auth.update_ranking import update_ranking
 
-# == routes ==
+# MARK:== routes ==
 from routes.welcome import welcome
 from routes.login_signup_logout import login, signup, logout
 from routes.top import top
@@ -26,14 +26,14 @@ from routes.download_artwork import download_artwork
 
 from routes.contact import contact
 
-# database
+# MARK:== database ==
 from database.insert_data import add_payment_methods
 from database.insert_fake_data import *
 
-# error 
+# MARK:== error ==
 from errors.error_handlers import *
 
-# MARK:インスタンス作成
+# == インスタンス作成 ==
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -41,7 +41,7 @@ app.config['SECRET_KEY'] = os.urandom(24)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['UPLOAD_ICON_FOLDER'] = UPLOAD_ICON_FOLDER
 
-# ローカル画像保存先フォルダの作成
+# == ローカル画像保存先フォルダの作成 ==
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(app.config['UPLOAD_ICON_FOLDER'], exist_ok=True)
 
@@ -67,15 +67,13 @@ like(app)
 # ランキングアップデート機能
 update_ranking(app)
 
-
 # ログイン機能設定
 login_manager = LoginManager(app)
 login_manager.login_view = '/'
 #現在のログインユーザーの情報を保持
 login_manager.user_loader(load_user)
 
-
-# MARK: =====ROUTES======
+# MARK:==ROUTES==
 #welcome
 welcome(app)
 # login
@@ -120,7 +118,7 @@ contact(app)
 error_handler(app)
 
 
-# MARK: テーブルの作成
+# MARK:テーブルの作成
 if __name__ == '__main__': 
     with app.app_context():
         try:
