@@ -40,6 +40,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['UPLOAD_ICON_FOLDER'] = UPLOAD_ICON_FOLDER
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['IS_LOCAL'] = True if ENVIRONMENT == 'local' else False
+# Secureなセッション管理
+SESSION_COOKIE_HTTPONLY = True  # JavaScriptからアクセス不可
+SESSION_COOKIE_SECURE = True    # HTTPSでのみ送信（
+SESSION_COOKIE_SAMESITE = 'Lax'  # クロスサイトリクエストを制限
 
 # == ローカル画像保存先フォルダの作成 ==
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)

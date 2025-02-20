@@ -6,7 +6,11 @@
             <a href="{{ url_for('saleDetail_view', sale_id=sale.saleId) }}" class="slide-link">
                 <div class="slide-content">
                     <div class="image-container">
-                        <img src="{{ url_for('static', filename=sale.filePath) }}?{{ SAS }}" alt="{{ sale.title }}">
+                        {% if config.IS_LOCAL %}
+                            <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">
+                        {% else %}
+                            <img src="{{ sale.filePath }}" alt="{{ sale.title }}">
+                        {% endif %}
                     </div>
                     <div class="slide-info">
                         <h3>{{ sale.title }}</h3>
@@ -22,7 +26,7 @@
                             </div>
                             <div class="stat">
                                 <span class="icon">¥</span>
-                                <span>￥{{ '{:,}'.format(sale.currentPrice) }}</span>
+                                <span>{{ '{:,}'.format(sale.currentPrice) }}</span>
                             </div>
                         </div>
                     </div>
