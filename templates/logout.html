@@ -25,10 +25,10 @@
             </div>
 
             <div class="action-buttons">
-                <form action="{{ url_for('logout') }}" method="post">
+                <form action="{{ url_for('logout_view') }}" method="post">
                     <button type="submit" class="logout-button">ログアウト</button>
                 </form>
-                <a href="{{ url_for('top') }}" class="cancel-button">キャンセル</a>
+                <a href="{{ url_for('top_view') }}" class="cancel-button">キャンセル</a>
             </div>
         </div>
     </main>

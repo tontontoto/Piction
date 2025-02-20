@@ -1,4 +1,6 @@
 from imports import *
+from os.path import join, dirname
+from sqlalchemy.ext.declarative import declarative_base
 
 
 ENVIRONMENT = os.getenv('ENVIRONMENT')

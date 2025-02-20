@@ -19,14 +19,14 @@
             <div class="winning-bids-grid">
                 {% for bid_info in winning_bids %}
                 <div class="winning-bid-card">
-                    <a href="{{ url_for('saleDetail', sale_id=bid_info['sale'].saleId) }}">
+                    <a href="{{ url_for('saleDetail_view', sale_id=bid_info['sale'].saleId) }}">
                         <img src="{{ url_for('static', filename=bid_info['sale'].filePath) }}" alt="{{ bid_info['sale'].title }}">
                         <h3>{{ bid_info['sale'].title }}</h3>
                         <p>落札者: {{ bid_info['user'].displayName }}</p>
                         <p>落札価格: ¥{{ '{:,}'.format(bid_info['sale'].currentPrice) }}</p>
                         <p>落札日時: {{ bid_info['winningBid'].bidTime }}</p>
                     </a>
-                    <a href="{{ url_for('download_artwork', sale_id=bid_info['sale'].saleId) }}" class="download-button">ダウンロード</a>
+                    <a href="{{ url_for('download_artwork_view', sale_id=bid_info['sale'].saleId) }}" class="download-button">ダウンロード</a>
                 </div>
                 {% endfor %}
             </div>
