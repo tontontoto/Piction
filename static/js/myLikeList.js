@@ -6,6 +6,7 @@ function submitSortOrder() {
     fetch(`/sort_products?order=${sortOrder}`)
         .then(response => response.json())
         .then(data => {
+            console.log('並び替え結果:', data);
             // 既存のコンテンツをクリア
             container.innerHTML = '';
             

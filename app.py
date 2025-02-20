@@ -15,11 +15,11 @@ from routes.top import top
 from routes.search import search
 from routes.mypage import mypage
 from routes.my_winning_bids import myWinningBids
-from routes.draw import draw
+from routes.draw import draw, result
 from routes.add_sale import add_sale
 from routes.sale_detail import saleDetail
 from routes.bid import bid
-from routes.myLikeList import myLikeList
+from routes.myLikeList import myLikeList, sort_products
 from routes.lineup import lineup
 from routes.bid_sale_detail import *
 from routes.download_artwork import download_artwork
@@ -94,6 +94,8 @@ mypage(app)
 myWinningBids(app)
 # draw
 draw(app)
+# result
+result(app)
 # add_sale
 add_sale(app)
 # sale_detail
@@ -102,6 +104,8 @@ saleDetail(app)
 bid(app)
 # myLikeList
 myLikeList(app)
+# sort_products
+sort_products(app)
 # lineup
 lineup(app)
 # bidSaleDetail

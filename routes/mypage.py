@@ -144,7 +144,7 @@ def mypage(app):
                 print(f"データベース保存エラー: {e}")
 
             # リダイレクトでフォーム送信後の再送信を防ぐ
-            return redirect(url_for('myPage'))
+            return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, my_bids=my_bids, revenue=revenue)
             
 
         return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, my_bids=my_bids, revenue=revenue)

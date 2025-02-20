@@ -134,4 +134,5 @@ def sort_products(app):
 
         
         # 結果をJSON形式で返す
+        print("並び替え後のmyLikeList:", myLikeList)
         return jsonify(product_list)
