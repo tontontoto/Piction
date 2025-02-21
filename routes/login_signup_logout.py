@@ -17,9 +17,9 @@ def login(app):
 
                 if user and bcrypt.check_password_hash(user.password, password):  # userがNoneでないかも確認
                     print("成功")
-                    print(f'認証状態: {current_user.is_authenticated}')
                     # sessionに保存
                     login_user_session(user)
+                    print(f'認証状態: {current_user.is_authenticated}')
                     return redirect('/top')
                 else:
                     # ユーザーネームまたはパスワードが違う時の処理

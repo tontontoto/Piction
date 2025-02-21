@@ -79,12 +79,7 @@ update_ranking(app)
 login_manager = LoginManager(app)
 login_manager.login_view = '/'
 #現在のログインユーザーの情報を保持
-login_manager.user_loader(load_user)
-
-# MARK:ログイン情報保持
-# ログの設定
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__) 
+login_manager.user_loader(load_user) 
 
 # MARK:==ROUTES==
 #welcome
