@@ -4,7 +4,7 @@
     </div>
     <div class="sale">
         {% for sale in sales %}
-        <a class="saleBox" href="{{ url_for('saleDetail', sale_id=sale.saleId) }}">
+        <a class="saleBox" href="{{ url_for('saleDetail_view', sale_id=sale.saleId) }}">
             <div>
                 <div>
                     {% if config.IS_LOCAL %}

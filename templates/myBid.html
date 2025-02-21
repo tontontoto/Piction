@@ -1,12 +1,12 @@
 <div class="user-sales-container">
     <div class="section-header">
-        <h2>入札した商品</h2>
+        <h2>入札した商品</h2>   
     </div>
 
     {% if my_bids %}
     <div class="sales-grid">
         {% for sale in my_bids %}
-        <a href="{{ url_for('bidSaleDetail', sale_id=sale.saleId) }}" class="sale-card">
+        <a href="{{ url_for('bidSaleDetail_view', sale_id=sale.saleId) }}" class="sale-card">
             <div class="sale-image">
                 {% if config.IS_LOCAL %}
                     <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">

@@ -37,7 +37,7 @@
         <div class="likes-container">
             <div class="likes-grid">
                 {% for sale in myLikeList %}
-                <a href="{{ url_for('saleDetail', sale_id=sale.saleId) }}" class="like-card">
+                <a href="{{ url_for('saleDetail_view', sale_id=sale.saleId) }}" class="like-card">
                     <div class="card-image">
                         {% if config.IS_LOCAL %}
                         <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">

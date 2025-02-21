@@ -7,10 +7,12 @@ from sqlalchemy import Column, ForeignKey, Table, String, Integer, Date, DATETIM
 from sqlalchemy.orm import relationship, sessionmaker
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
+from werkzeug.security import check_password_hash
 from dotenv import load_dotenv
 from functools import wraps
 import logging
 import os
+bcrypt = Bcrypt()
 
 # 個別に異なるインポート
 from model_sample import db, User, Sale, Category, Bid, Like, Inquiry, WinningBid, PaymentWay, Payment
@@ -21,5 +23,5 @@ from flask_admin.contrib.sqla import ModelView
 import random
 import string
 import base64
-from os.path import join, dirname
+
 import pymysql
