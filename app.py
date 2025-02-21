@@ -1,4 +1,28 @@
-from imports import *
+# 重複しているインポートをまとめた部分
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session, send_file
+from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin, current_user
+from flask_bcrypt import Bcrypt
+from datetime import datetime, timedelta, date
+from sqlalchemy import Column, ForeignKey, Table, String, Integer, Date, DATETIME, func, create_engine
+from sqlalchemy.orm import relationship, sessionmaker
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.utils import secure_filename
+from dotenv import load_dotenv
+from functools import wraps
+import logging
+import os
+
+# 個別に異なるインポート
+from model_sample import db, User, Sale, Category, Bid, Like, Inquiry, WinningBid, PaymentWay, Payment
+from sqlalchemy.ext.declarative import declarative_base
+from azure.storage.blob import BlobServiceClient
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+import random
+import string
+import base64
+from os.path import join, dirname
+import pymysql
 
 # 環境設定の取得
 ENVIRONMENT = os.getenv('ENVIRONMENT')
@@ -125,21 +149,20 @@ logger = logging.getLogger(__name__)
 
 # ユーザーローダー
 @login_manager.user_loader
-def load_user(user_id: int):
-    """ ユーザーIDをもとにユーザーをロードする """
+def load_user(userId):
     try:
-        return db.session.get(User, user_id)
+        return db.session.get(User, userId)
     except Exception as e:
-        logger.error(f"Error ログイン情報保持処理失敗: {e}")
+        print(f"Error ログイン情報保持処理失敗: {e}")
         return None
 
-# ログインしているユーザーのアクセスを制限するデコレーター
+# ログインしているユーザに対してのアクセス制限をかけるデコレータ
 def logout_required(f):
-    """ ログインユーザーのアクセスを制限し、未ログイン時のみ許可 """
-    @wraps(f)
     def decorated_function(*args, **kwargs):
-        if session.get('userId'):  # KeyError を回避
-            return redirect(url_for('top'))
+        # セッションにユーザーIDがある場合、リダイレクト
+        if 'userId' in session:
+            # ログイン後にアクセス可能ページにリダイレクト
+            return redirect(url_for('top'))  
         return f(*args, **kwargs)
     return decorated_function
 
@@ -343,45 +366,46 @@ def logout():
 @app.route('/top')
 @login_required
 def top():
-    userId = session.get('userId')
-    print("userIdです！", userId)
-    print(f'認証状態: {current_user.is_authenticated}')
-    
-    # 新着順に10件取得
-    sales = Sale.query.order_by(Sale.saleId.desc()).limit(10).all()
-    
-    # 高額商品TOP5を取得（現在価格の高い順）
-    topPriceSales = Sale.query.order_by(Sale.currentPrice.desc()).limit(5).all()
-    
-    # いいね情報の取得
-    liked_sales = db.session.query(Like.saleId).filter_by(userId=userId).all()
-    liked_sale_ids = [sale[0] for sale in liked_sales]
-    
-    # いいねランキングの取得
-    likeRankings = db.session.query(
-        Like.saleId, 
-        db.func.count(Like.saleId)
-    ).group_by(Like.saleId).order_by(
-        db.func.count(Like.saleId).desc()
-    ).limit(3).all()
-    
-    saleIds = [sale[0] for sale in likeRankings]
-    saleRankings = Sale.query.filter(Sale.saleId.in_(saleIds)).all()
-    
-# except Exception as e:
-#     print(f"Error 商品情報取得失敗: {e}")
-#     sales = []
-#     topPriceSales = []
-#     liked_sale_ids = []
-#     saleRankings = []
+    try:
+        userId = session.get('userId')
+        print("userIdです！", userId)
+        print(f'認証状態: {current_user.is_authenticated}')
+        
+        # 新着順に10件取得
+        sales = Sale.query.order_by(Sale.saleId.desc()).limit(10).all()
+        
+        # 高額商品TOP5を取得（現在価格の高い順）
+        topPriceSales = Sale.query.order_by(Sale.currentPrice.desc()).limit(5).all()
+        
+        # いいね情報の取得
+        liked_sales = db.session.query(Like.saleId).filter_by(userId=userId).all()
+        liked_sale_ids = [sale[0] for sale in liked_sales]
+        
+        # いいねランキングの取得
+        likeRankings = db.session.query(
+            Like.saleId, 
+            db.func.count(Like.saleId)
+        ).group_by(Like.saleId).order_by(
+            db.func.count(Like.saleId).desc()
+        ).limit(3).all()
+        
+        saleIds = [sale[0] for sale in likeRankings]
+        saleRankings = Sale.query.filter(Sale.saleId.in_(saleIds)).all()
+        
+    except Exception as e:
+        print(f"Error 商品情報取得失敗: {e}")
+        sales = []
+        topPriceSales = []
+        liked_sale_ids = []
+        saleRankings = []
 
     return render_template('top.html', 
-                        sales=sales, 
-                        userId=userId, 
-                        liked_sale_ids=liked_sale_ids, 
-                        saleRankings=saleRankings,
-                        topPriceSales=topPriceSales,
-                        config=app.config,)
+                            sales=sales, 
+                            userId=userId, 
+                            liked_sale_ids=liked_sale_ids, 
+                            saleRankings=saleRankings,
+                            topPriceSales=topPriceSales,
+                            config=app.config,)
     
 @app.route('/update_ranking')
 def update_ranking():
@@ -629,9 +653,9 @@ def sort_products():
 @app.route('/myPage', methods=['GET', 'POST'])
 @login_required
 def myPage():
-    userId = session.get('userId')
-    print(f'認証状態: {current_user.is_authenticated}')
     try:
+        userId = session.get('userId')
+        print(f'認証状態: {current_user.is_authenticated}')
         user = db.session.query(User).get(userId)
         # session(ログイン状態のuserId)のsaleの行を取り出し、
         # 外部キーのuserIdよりUserテーブルの中のデータを参照できる。
@@ -863,7 +887,7 @@ else:
             blob_client.upload_blob(image_bytes, overwrite=True)
 
             # アップロードされた画像のURLを取得
-            file_path = f"https://{blob_service_client.account_name}.blob.core.windows.net/{AZURE_STORAGE_CONTAINER}/{file_name}{AZURE_STORAGE_SAS}"
+            file_path = f"https://{blob_service_client.account_name}.blob.core.windows.net/{AZURE_STORAGE_CONTAINER}/{file_name}?{AZURE_STORAGE_SAS}"
             return file_path
         except Exception as e:
             print(f"Error 画像保存失敗: {e}")
@@ -1266,12 +1290,12 @@ def add_payment_methods():
 
 with app.app_context():
     try:
-        # db.drop_all()  # テーブルの全削除
+        db.drop_all()  # テーブルの全削除
         db.create_all()
-        # dummy_users = add_users()
-        # dummy_categories = add_categories()
-        # add_sales(dummy_categories)
-        # add_payment_methods()
+        dummy_users = add_users()
+        dummy_categories = add_categories()
+        add_sales(dummy_categories)
+        add_payment_methods()
     except Exception as e:
         print(f"Error テーブル作成失敗: {e}")
         db.session.rollback()
