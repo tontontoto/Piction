@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/myLikeList.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <script src="{{ url_for('static', filename='js/myLikeList.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/footer.js') }}" defer></script>
+
     <title>いいね一覧 | Piction</title>
 </head>
 
@@ -70,6 +72,8 @@
         </div>
         {% endif %}
     </main>
+
+    {% include 'footer.html' %}
 </body>
 
 </html>

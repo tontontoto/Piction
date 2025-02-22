@@ -67,6 +67,10 @@ footer {
     color: #000;
 }
 
+.chevron-down {
+    display: none;
+}
+
 .payment-icons {
     display: flex;
     gap: 8px;
@@ -122,7 +126,7 @@ footer {
 }
 
 /* モバイル対応 */
-@media (max-width: 768px) {
+@media (max-width: 960px) {
     footer {
         padding: 30px 0 15px;
     }
@@ -155,3 +159,63 @@ footer {
     }
 }
 
+@media (max-width: 570px) {
+    .footer-top {
+        flex-direction: row;
+        padding: 10px;
+        flex-wrap: wrap;
+    }
+    @media (max-width: 340px) {
+        .footer-top {
+            justify-content: center;
+        }
+    }
+    .footer-main {
+        margin-bottom: 10px;
+    }
+    .footer-links {
+        gap: 0px;
+    }
+    .footer-content {
+        padding: 0;
+    }
+    .footer-column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-top: #9a9a9a 1px solid;
+        padding: 10px;
+        cursor: pointer;
+    }
+    .media-570px-style {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        width: 100%;
+    } 
+    .footer-column:hover {
+        background-color: #ededed;
+    }
+    .footer-column h3 {
+        text-align: left;
+        margin-bottom: 0;
+    }
+    .footer-column ul {
+        display: none;
+    }
+    .chevron-down {
+        display: block;
+        font-size: 20px;
+        color: #000000;
+    }
+    .chevron-down img {
+        vertical-align:top;
+    }
+    .payment-icons {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: center;
+    }
+}
