@@ -2,10 +2,13 @@ from imports import *
 from auth.config import ENVIRONMENT
 from auth.azure_blob import connect_to_azure_blob
 from auth.img_helper import *
+import pytz
+import sys
 
 def add_sale(app):
     # MARK:　出品ページ
     @app.route('/add_sale', methods=['POST'])
+    @login_required
     def add_sale_view():
         try:
             data = request.get_json()
@@ -54,13 +57,13 @@ def add_sale(app):
         displayName = user.displayName # displayNameの取得
 
         #現在時刻取得
-        dt = datetime.now()
+        dt = datetime.now(pytz.timezone('Asia/Tokyo'))
         datetimeStr = dt.strftime('%Y/%m/%d %H:%M:%S')
         #掲載時間計算
         postingTimePlus = dt + timedelta(minutes=int(postingTime))
         postingTimeStr = postingTimePlus.strftime('%Y/%m/%d %H:%M:%S')
-        print("現在時刻：", datetimeStr)
-        print("掲載満了時刻：", postingTimeStr)
+        print("現在時刻：", datetimeStr, file=sys.stderr)
+        print("掲載満了時刻：", postingTimeStr, file=sys.stderr)
 
         try:
             new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=file_path, startingPrice=price,currentPrice=price, creationTime=time, startingTime=datetimeStr, finishTime=postingTimeStr)

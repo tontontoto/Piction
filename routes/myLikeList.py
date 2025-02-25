@@ -1,5 +1,6 @@
 from imports import *
 from auth.config import AZURE_STORAGE_SAS
+import pytz
 
 # MARK: いいね一覧ページ
 def myLikeList(app):
@@ -28,7 +29,7 @@ def myLikeList(app):
                 finish_time = datetime.strptime(finish_time_str, '%Y/%m/%d %H:%M:%S')  # 'YYYY/MM/DD HH:MM:SS' の形式
 
                 # 現在の時刻を取得
-                current_time = datetime.now()
+                current_time = datetime.now(pytz.timezone('Asia/Tokyo'))
 
                 # 残り時間を計算
                 remaining_time = finish_time - current_time  # 残り時間
@@ -105,7 +106,7 @@ def sort_products(app):
             finish_time = datetime.strptime(finish_time_str, '%Y/%m/%d %H:%M:%S')  # 'YYYY/MM/DD HH:MM:SS' の形式
 
             # 現在の時刻を取得
-            current_time = datetime.now()
+            current_time = datetime.now(pytz.timezone('Asia/Tokyo'))
 
             # 残り時間を計算
             remaining_time = finish_time - current_time  # 残り時間

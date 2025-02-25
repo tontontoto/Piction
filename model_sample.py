@@ -1,29 +1,18 @@
 from imports import *
 from os.path import join, dirname
-from sqlalchemy.ext.declarative import declarative_base
-
+from auth.config import ENVIRONMENT, DB_URL, load_dotenv
+import pytz
 
 ENVIRONMENT = os.getenv('ENVIRONMENT')
 if not ENVIRONMENT:
     raise ValueError("model 環境変数 ENVIRONMENT が設定されていません")
 
-print(ENVIRONMENT)
 if ENVIRONMENT == 'local':
     dotenv_path = join(dirname(__file__), '.env')
     load_dotenv(dotenv_path, verbose=True)
-    print("if文の中")
-DB_URL = os.getenv("DB_URL")
-print("model",DB_URL)
-try:
-    Base = declarative_base()
-    engine = create_engine(DB_URL, echo=True)
-    db = SQLAlchemy()
-    connection = engine.connect()
-    print("✅ SQLAlchemy で接続成功！")
-    connection.close()
-except Exception as e:
-    print(f"❌ 接続エラー: {e}")
-	
+
+db = SQLAlchemy()
+
 saleCategoryAssociation = Table(
     'saleCategoryAssociation', db.metadata,
     Column('saleId', Integer, ForeignKey('sale.saleId'), primary_key=True),
@@ -40,8 +29,6 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(254))
     registrationDate = db.Column(db.Date, default=date.today())
     iconFilePath = db.Column(db.String(254), nullable=False, default="img/icon_user_light.png")
-
-    # usericon = db.relationship("UserIcon", back_populates="user", uselist=False)
     sales= db.relationship("Sale", back_populates="user")
     bids = db.relationship("Bid", back_populates="user") 
     likes = db.relationship("Like", back_populates="user")
@@ -74,7 +61,7 @@ class Sale(db.Model):
     __tablename__ = "sale"
     saleId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userId = db.Column(db.Integer, ForeignKey('user.userId'))
-    displayName = db.Column(db.String(10), ForeignKey('user.displayName'))
+    # displayName = db.Column(db.String(10), ForeignKey('user.displayName'))
     title = db.Column(db.String(40), default="無題")
     displayName = db.Column(db.String(10))
     # categoryId = db.Column(db.Integer, ForeignKey('category.categoryId'))
@@ -104,7 +91,7 @@ class Bid(db.Model):
     userId = db.Column(db.Integer, ForeignKey('user.userId'))
 
     bidPrice = db.Column(db.Integer)
-    bidTime = db.Column(db.DATETIME, default=datetime.now, nullable=False)
+    bidTime = db.Column(db.DATETIME, default=datetime.now(pytz.timezone('Asia/Tokyo')), nullable=False)
 
     user = db.relationship("User", back_populates="bids")
     sale = db.relationship("Sale", back_populates="bids")
@@ -138,7 +125,7 @@ class Payment(db.Model):
     saleId = db.Column(db.Integer, ForeignKey('sale.saleId'))
     winningBidId = db.Column(db.Integer, ForeignKey('winningBid.winningBidId'))
     paymentWayId = db.Column(db.Integer, ForeignKey('paymentWay.paymentWayId'))
-    paymentDate = db.Column(db.DATETIME, default=datetime.now(), nullable=False)
+    paymentDate = db.Column(db.DATETIME, default=datetime.now(pytz.timezone('Asia/Tokyo')), nullable=False)
 
     sale = db.relationship("Sale", back_populates="payment")
     paymentWay = db.relationship("PaymentWay", back_populates="payments")

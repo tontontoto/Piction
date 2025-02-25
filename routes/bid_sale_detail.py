@@ -3,6 +3,7 @@ from imports import *
 # MARK: 落札商品詳細ページ
 def bidSaleDetail(app):
     @app.route('/bidSaleDetail/<int:sale_id>', methods=['GET', 'POST'])
+    @login_required
     def bidSaleDetail_view(sale_id):
         print(sale_id)
         if request.method == 'POST':

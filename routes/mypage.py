@@ -1,5 +1,6 @@
 from imports import *
 from auth.img_helper import allowed_file
+from sqlalchemy.sql import select
 
 # MARK: マイページ
 def mypage(app):
@@ -65,7 +66,7 @@ def mypage(app):
             db.session.query(Bid, Sale, User)
             .join(Sale, Bid.saleId == Sale.saleId)
             .join(User, Sale.userId == User.userId)
-            .filter(Bid.bidId.in_(latest_bid_subquery))
+            .filter(Bid.bidId.in_(select(latest_bid_subquery)))
             .order_by(Bid.bidId.desc())  # 最新のBid順に並べる
             .all()
         )

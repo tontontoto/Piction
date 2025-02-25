@@ -12,6 +12,3 @@ def connect_to_azure_blob():
             print(f"Azure Blob Storage connection failed: {e}")
             return None, None
     return None, None
-
-print(f"現在の環境: {ENVIRONMENT}")
-print(f"データベースURL: {DB_URL}")
