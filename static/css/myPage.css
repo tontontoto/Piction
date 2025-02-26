@@ -186,7 +186,7 @@ body {
 /* Modal content  */
 /* Modal1 Modal2　共通 */
 .modal-content {
-    min-height: 600px;
+    min-height: 100%;
 }
 /* Modal1 */
 /* Modal header */
@@ -219,6 +219,7 @@ body {
 
 /* Modal main */
 .modalMain {
+    position: relative;
     padding: 30px;
 }
 
@@ -291,6 +292,17 @@ body {
     pointer-events: none;
     transition: all 0.3s ease;
 }
+#modal_userId {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    text-align:right;
+    margin: 0;
+    margin-right: 10px;
+    padding: 2px;
+    color: #888;
+}
+
 
 /* modalの中 */
 .modalInput {

@@ -135,6 +135,10 @@ def mypage(app):
                     user.displayName = displayName
                     user.userName = userName
                     user.mailAddress = mailAddress
+
+                    for sale in sales:
+                        sale.displayName = displayName
+                    
                     db.session.commit()
                     print('ユーザー情報が保存されました！')
                 else:

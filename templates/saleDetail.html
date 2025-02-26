@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/saleDetail.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/saleDetail_finished.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
     <link rel="icon" href="../static/icon/favicon.png">
     <script src="{{ url_for('static', filename='js/saleDetail.js') }}"></script>
     <script src="{{ url_for('static', filename='js/footer.js') }}" defer></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <title>{{ sale.title }} | Piction</title>
 </head>
+
 <body>
     {% include 'header.html' %}
 
@@ -28,7 +33,7 @@
                     {% if config.IS_LOCAL %}
                     <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">
                     {% else %}
-                        <img src="{{ sale.filePath }}" alt="{{ sale.title }}">
+                    <img src="{{ sale.filePath }}" alt="{{ sale.title }}">
                     {% endif %}
                 </div>
                 <div class="auction-result">
@@ -69,45 +74,95 @@
             </div>
             <div class="text">
                 <h1>{{ sale.title }}</h1>
-                <p id="saleId" data-sale-id="{{ sale.saleId }}">{{ sale.saleId }}</p>
-                <p>{{ sale.displayName }}</p>
-                <p>カテゴリ:{{ categories }}</p>
-                <hr>
-                <p>制作時間:{{ sale.creationTime }}秒</p>
-                <p>現在の入札価格</p>
-                <p id="currentPrice">{{ '{:,}'.format(currentPrice) }}円</p>
-                <p>最低入札価格</p>
-                <p id="minBidPrice">{{ '{:,}'.format(currentPrice + 1) }}円</p>
-                
-                <!-- 残り時間 -->
-                <div class="finishTime">
-                    <p>終了時間</p>
-                    <p id="finishTime" data-finish-time="{{ sale.finishTime }}">{{ sale.finishTime }}</p>
-                    <p>残り時間: <span id="remainingTime"></span></p>
+                <p class="current_price">現在：<span id="currentPrice">{{ '{:,}'.format(currentPrice) }}</span><span
+                        class="current-price-enn">円</sapn>
+                </p>
+                <p class="make_time">制作時間：<span id="make_time">{{ sale.creationTime }}</span>秒</p>
+
+                <!-- 入札BOX -->
+                <div x-data="{open: false}"
+                    x-effect="open ? document.body.style.overflow = 'hidden' : document.body.style.overflow = ''"
+                    class="bidButton">
+                    <div x-on:click="open = true" class="nyuusatu_button_container">
+                        <button class="nyuusatu_button">入札</button>
+                    </div>
+                    <!-- 入札modal -->
+                    <div x-cloak x-show="open" class="modal-overlay" id="modal-overlay">
+                        <div x-on:click.away="open = false" class="button-contents">
+                            <div class="modal-header">
+                                <h2>入札
+                                    <div x-on:click="open = false" class="modal_batu">×</div>
+                                </h2>
+                            </div>
+                            <div class="modal_body">
+
+                                <div class="botan">
+                                    <p>入札額<span id="botan_mobile_css">：</span></p>
+                                    <div class="price_specification_container">
+                                        <input class="btn" id="specify" type="number" placeholder="金額を指定"
+                                            value="{{ currentPrice + 1 }}">
+                                        <p class="enn">円</p>
+                                    </div>
+                                </div>
+                                <div class="botan2">
+                                    <button class="btn" id="addTen">+10円</button>
+                                    <button class="btn" id="addHundred">+100円</button>
+                                </div>
+                                <div class="botan">
+                                    <input type="button" class="btn2" id="bid" value="入札"></input>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 出品者情報 -->
+                <div class="seller_box">
+                    <p>出品者</p>
+                    <div class="seller_icon_name">
+                        <img src="{{ url_for('static', filename=userIcon) }}" class="icon" alt="userIcon">
+                        <div>
+                            <p>{{ sale.displayName }}</p>
+                            <p>@{{ userName }}</p>
+                        </div>
+                    </div>
+                    <p id="piction_id">Piction ID:{{ sale.userId }}</p>
+                </div>
+
+                <!-- 商品情報 -->
+                <div class="sale-info">
+                    <h3>商品情報</h3>
+                    <hr>
+                    <table id="saleInfo_table">
+                        <tr>
+                            <th>カテゴリ</th>
+                            <td>{{ categories }}</td>
+                        </tr>
+                        <tr>
+                            <th>最小入札価格</th>
+                            <td id="minBidPrice">{{ '{:,}'.format(currentPrice + 1) }}</td>
+                        </tr>
+                        <tr>
+                            <th>開始価格</th>
+                            <td>¥{{ '{:,}'.format(sale.startingPrice) }}</td>
+                        </tr>
+                        <tr>
+                            <th>終了日時</th>
+                            <td id="finishTime" data-finish-time="{{sale.finishTime}}">{{ sale.finishTime }}</td>
+                        </tr>
+                        <tr>
+                            <th>残り時間</th>
+                            <td id="remainingTime"></td>
+                        </tr>
+                        <tr>
+                            <th>商品ID</th>
+                            <td>
+                                <p id="saleId" data-sale-id="{{ sale.saleId }}">{{ sale.saleId }}</p>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
-        <br><br>
-        <div class="button-contents">
-            <div class="botan">
-                <div class="addAmountBtn" name="amount">入札額：<span id="addAmount">{{ '{:,}'.format(currentPrice) }}</span>円</div>
-            </div>
-            <br>
-            <div class="botan2">
-                <button class="btn" id="addTen">+10</button>
-                <button class="btn" id="addHundred">+100</button>
-            </div>
-            <br>
-            <div class="botan">
-                <input class="btn" id="specify" type="number" placeholder="金額を指定">
-            </div>
-            <br>
-            <br>
-            <div class="botan">
-                <input type="submit" class="btn2" id="bid" value="入札"></input>
-            </div>
-        </div>
-        <br>
         {% endif %}
 
         <!-- 入札履歴は共通で表示 -->
@@ -122,11 +177,11 @@
                             <th>日時</th>
                         </tr>
                         {% for bid in bids %}
-                            <tr>
-                                <td>{{ bid.userId }}</td>
-                                <td>¥{{ '{:,}'.format(bid.bidPrice) }}</td>
-                                <td>{{ bid.bidTime.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-                            </tr>
+                        <tr>
+                            <td>{{ bid_userName[bid.userId] }}</td>
+                            <td>¥{{ '{:,}'.format(bid.bidPrice) }}</td>
+                            <td>{{ bid.bidTime.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        </tr>
                         {% endfor %}
                     </table>
                 </div>
@@ -136,4 +191,5 @@
 
     {% include 'footer.html' %}
 </body>
+
 </html>
