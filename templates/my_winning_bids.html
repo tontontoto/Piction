@@ -23,7 +23,7 @@
                         {% if config.IS_LOCAL %}
                             <img src="{{ url_for('static', filename=bid_info['sale'].filePath) }}" alt="{{ bid_info['sale'].title }}">
                         {% else %}
-                            <img src="{{ sale.filePath }}" alt="saleImage" id="uploadImg">
+                            <img src="{{ bid_info['sale'].filePath }}" alt="{{ bid_info['sale'].title }}">
                         {% endif %}
                         <h3>{{ bid_info['sale'].title }}</h3>
                         <p>落札者: {{ bid_info['user'].displayName }}</p>

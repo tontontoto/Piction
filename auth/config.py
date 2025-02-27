@@ -23,6 +23,7 @@ AZURE_STORAGE_CONTAINER = os.getenv('AZURE_STORAGE_CONTAINER')
 AZURE_STORAGE_SAS = os.getenv('AZURE_STORAGE_SAS')
 
 # アプリケーション設定
+UPLOAD_STORAGE = os.getenv('UPLOAD_STORAGE', 'blob')
 UPLOAD_FOLDER = os.getenv('UPLOAD_FOLDER', './static/upload_images')
 UPLOAD_ICON_FOLDER = './static/upload_icon'
 

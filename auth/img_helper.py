@@ -1,5 +1,5 @@
 from imports import *
-from auth.config import ENVIRONMENT, AZURE_STORAGE_CONTAINER, ALLOWED_EXTENSIONS, AZURE_STORAGE_SAS
+from auth.config import ENVIRONMENT, AZURE_STORAGE_CONTAINER, ALLOWED_EXTENSIONS, AZURE_STORAGE_SAS, UPLOAD_STORAGE
 from auth.azure_blob import connect_to_azure_blob
 
 # Azure Blob Storage接続
@@ -23,7 +23,7 @@ def decode_image(image_data):
         return None
 
 # MARK: 画像保存
-if ENVIRONMENT == 'local':
+if UPLOAD_STORAGE == 'local':
     # ローカルフォルダに保存
     def save_image_to_file(image_bytes, upload_folder):
         try:
@@ -33,7 +33,7 @@ if ENVIRONMENT == 'local':
                 f.write(image_bytes)
             return file_path
         except Exception as e:
-            print(f"Error 画像保存失敗: {e}")
+            print(f"Error ローカルへの画像保存失敗: {e}")
             return None
 else:
     # Azure Blob Storageに保存
@@ -50,5 +50,7 @@ else:
             file_path = f"https://{blob_service_client.account_name}.blob.core.windows.net/{AZURE_STORAGE_CONTAINER}/{file_name}?{AZURE_STORAGE_SAS}"
             return file_path
         except Exception as e:
-            print(f"Error 画像保存失敗: {e}")
+            print(f"Error blob storageへの保存失敗: {e}")
+            print(f"DEBUG: blob_service_client = {blob_service_client}")
+            print(f"DEBUG: container_client = {container_client}")
             return None

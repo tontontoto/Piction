@@ -43,7 +43,7 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['UPLOAD_ICON_FOLDER'] = UPLOAD_ICON_FOLDER
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
-app.config['IS_LOCAL'] = True if ENVIRONMENT == 'local' else False
+app.config['IS_LOCAL'] = UPLOAD_STORAGE == 'local'
 
 # == ローカル画像保存先フォルダの作成 ==
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -127,7 +127,7 @@ print(f"データベースURL: {DB_URL}")
 # MARK: テーブルの作成
 with app.app_context():
     try:
-        db.drop_all()  # テーブルの全削除
+        # db.drop_all()  # テーブルの全削除
         db.create_all()
     except Exception as e:
         print(f"Error テーブル作成失敗: {e}")

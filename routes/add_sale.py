@@ -1,5 +1,5 @@
 from imports import *
-from auth.config import ENVIRONMENT
+from auth.config import UPLOAD_STORAGE
 from auth.azure_blob import connect_to_azure_blob
 from auth.img_helper import *
 import pytz
@@ -32,7 +32,7 @@ def add_sale(app):
         if not image_bytes:
             return jsonify({'error': 'Invalid image data'}), 400
 
-        if ENVIRONMENT == 'local':
+        if UPLOAD_STORAGE == 'local':
             # 画像をローカルフォルダに保存
             file_path = save_image_to_file(image_bytes, app.config['UPLOAD_FOLDER'])
             file_path = file_path.replace(app.config['UPLOAD_FOLDER'], 'upload_images')
