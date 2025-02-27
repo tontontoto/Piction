@@ -4,20 +4,53 @@ from auth.azure_blob import connect_to_azure_blob
 from auth.img_helper import *
 
 def add_sale(app):
+    
+    @app.route('/get_category_name', methods=['POST'])
+    def get_category_name():
+        try:
+            # フロントエンドから送られてきたcategoryIdを取得
+            data = request.get_json()
+            category_id = data.get('categoryId')
+
+            # categoryIdを使ってカテゴリ名を取得
+            category = Category.query.filter_by(categoryId=category_id).first()
+
+            if category:
+                # カテゴリが見つかった場合、カテゴリ名を返す
+                return jsonify({'categoryName': category.categoryName})
+            else:
+                # カテゴリが見つからない場合
+                return jsonify({'error': 'Category not found'}), 404
+
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({'error': 'Failed to fetch category name'}), 500
+        
     # MARK:　出品ページ
     @app.route('/add_sale', methods=['POST'])
     def add_sale_view():
         try:
             data = request.get_json()
+            title = data.get('title')
+            postingTime = data.get('postingTime')
             image_data = data.get('image')
             time = data.get('time')
             price = data.get('price')
-            title = data.get('title')
-            postingTime = data.get('postingTime')
-            categories = data.get("categories")
+            kategori = data.get('kategori')
+
             print(title)
             print(postingTime)
-            print(categories)
+            print(kategori)
+
+            # カテゴリIDを使ってカテゴリ情報を取得
+            category = Category.query.filter_by(categoryId=kategori).first()
+
+            if not category:
+                return jsonify({'error': 'Category not found'}), 400
+
+            # カテゴリ名を表示（デバッグ用）
+            print(f"選択されたカテゴリ名: {category.categoryName}")
+
         except Exception as e:
             print(f"Error 出品情報取得失敗: {e}")
             return jsonify({'error': 'Failed to parse request data'}), 400
@@ -64,32 +97,30 @@ def add_sale(app):
 
         try:
             new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=file_path, startingPrice=price,currentPrice=price, creationTime=time, startingTime=datetimeStr, finishTime=postingTimeStr)
-            
-            # categories 変数の値に基づいて Category を一度に取得
-            category_objects = Category.query.filter(Category.categoryName.in_(categories)).all()
             db.session.add(new_sale)
             db.session.commit()
         except Exception as e:
             print(f"Error 出品処理失敗: {e}")
             return jsonify({'error': 'Failed to create sale'}), 500
-        
-    
-
-        # 存在しないカテゴリ名のチェック
-        found_category_names = {category.categoryName for category in category_objects}
-        missing_categories = set(categories) - found_category_names
-        if missing_categories:
-            # ログを出力するか、エラー処理を追加
-            print(f"Warning: The following categories were not found: {missing_categories}")
 
         try:
-            # 中間テーブルにカテゴリーを追加
-            new_sale.categories.extend(category_objects)
+            # 新しいビッドを作成
             new_bid = Bid(userId=userId, saleId=new_sale.saleId, bidPrice=price)
             db.session.add(new_sale, new_bid)
             db.session.commit()
         except Exception as e:
-            print(f"Error 中間テーブルへの追加失敗: {e}")
-            return jsonify({'error': 'Failed to add categories'}), 500
+            print(f"Error ビッド処理失敗: {e}")
+            return jsonify({'error': 'Failed to add bid'}), 500
 
-        return jsonify({'message': 'Sale added successfully'}), 201    
+        try:
+            # 中間テーブルにカテゴリ関連を追加
+            new_association = saleCategoryAssociation.insert().values(saleId=new_sale.saleId, categoryId=kategori)
+            db.session.execute(new_association)
+            db.session.commit()
+        except Exception as e:
+            print(f"Error 中間テーブルへの追加失敗: {e}")
+            return jsonify({'error': 'Failed to associate sale with category'}), 500
+
+        # 出品成功メッセージ
+        return jsonify({'message': 'Sale added successfully'}), 201  
+    

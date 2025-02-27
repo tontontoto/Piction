@@ -15,7 +15,7 @@ import os
 bcrypt = Bcrypt()
 
 # 個別に異なるインポート
-from model_sample import db, User, Sale, Category, Bid, Like, Inquiry, WinningBid, PaymentWay, Payment
+from model_sample import db, User, Sale, Category, Bid, Like, Inquiry, WinningBid, PaymentWay, Payment, saleCategoryAssociation
 from sqlalchemy.ext.declarative import declarative_base
 from azure.storage.blob import BlobServiceClient
 from flask_admin import Admin

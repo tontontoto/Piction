@@ -99,12 +99,12 @@ clearButton.addEventListener("click", () => {
   }
 });
 
-canvas.addEventListener("mousedown", (e) => {
+// マウスダウンおよびタッチスタートイベント
+function startDrawing(e) {
   isDrawing = true;
   const rect = canvas.getBoundingClientRect();
-  const mouseX = e.clientX - rect.left; 
-  const mouseY = e.clientY - rect.top;
-  
+  const mouseX = (e.clientX || e.touches[0].clientX) - rect.left;
+  const mouseY = (e.clientY || e.touches[0].clientY) - rect.top;
 
   if (isEraserActive) {
     // 消しゴムの設定
@@ -121,24 +121,33 @@ canvas.addEventListener("mousedown", (e) => {
     .moveTo(mouseX, mouseY)
     .lineTo(mouseX, mouseY);
   }
-});
+}
 
-canvas.addEventListener("mousemove", (e) => {
+// マウスムーブおよびタッチムーブイベント
+function moveDrawing(e) {
   if (!isDrawing) return;
   const rect = canvas.getBoundingClientRect();
-  const mouseX = e.clientX - rect.left;
-  const mouseY = e.clientY - rect.top;
+  const mouseX = (e.clientX || e.touches[0].clientX) - rect.left;
+  const mouseY = (e.clientY || e.touches[0].clientY) - rect.top;
   line.graphics.lineTo(mouseX, mouseY);
   stage.update();
-});
+}
 
-canvas.addEventListener("mouseup", () => {
+// マウスアップおよびタッチエンドイベント
+function endDrawing() {
   isDrawing = false;
   line.graphics.endStroke();
   stage.update();
-});
+}
 
+// イベントリスナーを追加
+canvas.addEventListener("mousedown", startDrawing);
+canvas.addEventListener("mousemove", moveDrawing);
+canvas.addEventListener("mouseup", endDrawing);
 
+canvas.addEventListener("touchstart", startDrawing);
+canvas.addEventListener("touchmove", moveDrawing);
+canvas.addEventListener("touchend", endDrawing);
 
 // タイマー
 function startTimer(duration, display) {
