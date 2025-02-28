@@ -31,7 +31,7 @@ class User(UserMixin, db.Model):
     mailAddress = db.Column(db.String(254), unique=True)
     password = db.Column(db.String(254))
     registrationDate = db.Column(db.Date, default=date.today())
-    iconFilePath = db.Column(db.String(254), nullable=False, default="img/icon_user_light.png")
+    iconFilePath = db.Column(db.String(254), nullable=False, default="static/img/icon_user_light.png")
     sales= db.relationship("Sale", back_populates="user")
     bids = db.relationship("Bid", back_populates="user") 
     likes = db.relationship("Like", back_populates="user")

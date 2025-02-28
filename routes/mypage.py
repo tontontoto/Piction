@@ -105,7 +105,7 @@ def mypage(app):
                     file_extension = filename.rsplit('.', 1)[1].lower()
 
                     # ユーザーごとの固有ファイル名を決定
-                    if iconFilePath == "icon_user_light.png":
+                    if iconFilePath == "static/img/icon_user_light.png":
                         print('アイコン 新規保存')
                         new_filename = f"user_icon_{user.userId}.{file_extension}"
                     else:
