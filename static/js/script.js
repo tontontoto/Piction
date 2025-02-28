@@ -37,26 +37,26 @@ let lineOpacity = parseFloat(lineOpacityInput.value);
 
 // スライダーの値表示を更新する関数
 function updateSliderValue(slider, valueDisplay, isOpacity = false) {
-    const value = slider.value;
-    if (isOpacity) {
-        valueDisplay.textContent = `${Math.round(value * 100)}%`;
-    } else {
-        valueDisplay.textContent = value;
-    }
+  const value = slider.value;
+  if (isOpacity) {
+    valueDisplay.textContent = `${Math.round(value * 100)}%`;
+  } else {
+    valueDisplay.textContent = value;
+  }
 }
 
 // 線の太さスライダー
 const lineWidthValue = document.getElementById("lineWidth-value");
 lineWidthInput.addEventListener("input", () => {
-    lineWidth = parseInt(lineWidthInput.value);
-    updateSliderValue(lineWidthInput, lineWidthValue);
+  lineWidth = parseInt(lineWidthInput.value);
+  updateSliderValue(lineWidthInput, lineWidthValue);
 });
 
 // 透明度スライダー
 const lineOpacityValue = document.getElementById("lineOpacity-value");
 lineOpacityInput.addEventListener("input", () => {
-    lineOpacity = parseFloat(lineOpacityInput.value);
-    updateSliderValue(lineOpacityInput, lineOpacityValue, true);
+  lineOpacity = parseFloat(lineOpacityInput.value);
+  updateSliderValue(lineOpacityInput, lineOpacityValue, true);
 });
 
 // 初期値を設定
@@ -72,21 +72,21 @@ penButton.classList.add("active");
 
 // ペンボタンのクリックイベント
 penButton.addEventListener("click", () => {
-    if (isEraserActive) {
-        isEraserActive = false;
-        eraserButton.classList.remove("active");
-        penButton.classList.add("active");
-    }
+  if (isEraserActive) {
+    isEraserActive = false;
+    eraserButton.classList.remove("active");
+    penButton.classList.add("active");
+  }
 });
 
 // 消しゴムボタンのクリックイベント
 const eraserButton = document.getElementById("eraser");
 eraserButton.addEventListener("click", () => {
-    if (!isEraserActive) {
-        isEraserActive = true;
-        penButton.classList.remove("active");
-        eraserButton.classList.add("active");
-    }
+  if (!isEraserActive) {
+    isEraserActive = true;
+    penButton.classList.remove("active");
+    eraserButton.classList.add("active");
+  }
 });
 
 // クリアボタンのクリックイベント
@@ -99,48 +99,66 @@ clearButton.addEventListener("click", () => {
   }
 });
 
-// マウスダウンおよびタッチスタートイベント
+// 描画開始時
 function startDrawing(e) {
   isDrawing = true;
   const rect = canvas.getBoundingClientRect();
-  const mouseX = (e.clientX || e.touches[0].clientX) - rect.left;
-  const mouseY = (e.clientY || e.touches[0].clientY) - rect.top;
+  const mouseX = (e.clientX || e.touches[0]?.clientX || e.pointerX) - rect.left;
+  const mouseY = (e.clientY || e.touches[0]?.clientY || e.pointerY) - rect.top;
+
+  // 入力の種類（マウス、ペン、タッチ）を判定
+  const isMouse = e.pointerType === 'mouse';
+  const isPen = e.pointerType === 'pen';
+
+  // マウス入力時は圧力感知を無効化
+  const pressure = isMouse ? 1 : (e.pressure || 1); // マウスの場合は圧力を1に、ペンの場合は圧力を使用
+
+  const adjustedLineWidth = lineWidth * pressure;
+  const adjustedOpacity = lineOpacity * pressure;
 
   if (isEraserActive) {
     // 消しゴムの設定
-    line.graphics.setStrokeStyle(lineWidth, 1, "round").beginStroke("white").moveTo(mouseX, mouseY);
+    line.graphics.setStrokeStyle(adjustedLineWidth, 1, "round").beginStroke("white").moveTo(mouseX, mouseY);
   } else {
     // 通常のペン設定
     const paintColorHex = document.querySelector("#inputColor").value;
+    const paintColorRGB = parseInt(paintColorHex.slice(1), 16); // 色を16進数からRGBに変換
 
-    // 色を16進数から10進数のRGBに変換
-    const paintColorRGB = parseInt(paintColorHex.slice(1), 16); // #を除去して数値に変換
     line.graphics
-    .setStrokeStyle(lineWidth, 1, "round")
-    .beginStroke(createjs.Graphics.getRGB(paintColorRGB, lineOpacity))
-    .moveTo(mouseX, mouseY)
-    .lineTo(mouseX, mouseY);
+      .setStrokeStyle(adjustedLineWidth, 1, "round")
+      .beginStroke(createjs.Graphics.getRGB(paintColorRGB, adjustedOpacity))
+      .moveTo(mouseX, mouseY)
+      .lineTo(mouseX, mouseY);
   }
 }
 
-// マウスムーブおよびタッチムーブイベント
+// 描画中
 function moveDrawing(e) {
   if (!isDrawing) return;
   const rect = canvas.getBoundingClientRect();
-  const mouseX = (e.clientX || e.touches[0].clientX) - rect.left;
-  const mouseY = (e.clientY || e.touches[0].clientY) - rect.top;
+  const mouseX = (e.clientX || e.touches[0]?.clientX || e.pointerX) - rect.left;
+  const mouseY = (e.clientY || e.touches[0]?.clientY || e.pointerY) - rect.top;
+
+  // 入力の種類（マウス、ペン、タッチ）を判定
+  const isMouse = e.pointerType === 'mouse';
+  const isPen = e.pointerType === 'pen';
+
+  // マウス入力時は圧力感知を無効化
+  const pressure = isMouse ? 1 : (e.pressure || 1); // マウスの場合は圧力を1に、ペンの場合は圧力を使用
+
+  const adjustedLineWidth = lineWidth * pressure;
+  const adjustedOpacity = lineOpacity * pressure;
+
+  line.graphics.setStrokeStyle(adjustedLineWidth, 1, "round");
   line.graphics.lineTo(mouseX, mouseY);
   stage.update();
 }
 
-// マウスアップおよびタッチエンドイベント
-function endDrawing() {
-  isDrawing = false;
-  line.graphics.endStroke();
-  stage.update();
-}
+// タッチイベントを修正
+canvas.addEventListener("pointerdown", startDrawing);
+canvas.addEventListener("pointermove", moveDrawing);
+canvas.addEventListener("pointerup", endDrawing);
 
-// イベントリスナーを追加
 canvas.addEventListener("mousedown", startDrawing);
 canvas.addEventListener("mousemove", moveDrawing);
 canvas.addEventListener("mouseup", endDrawing);
@@ -148,6 +166,13 @@ canvas.addEventListener("mouseup", endDrawing);
 canvas.addEventListener("touchstart", startDrawing);
 canvas.addEventListener("touchmove", moveDrawing);
 canvas.addEventListener("touchend", endDrawing);
+
+// マウスアップおよびタッチエンドイベント
+function endDrawing() {
+  isDrawing = false;
+  line.graphics.endStroke();
+  stage.update();
+}
 
 // タイマー
 function startTimer(duration, display) {
@@ -173,7 +198,6 @@ function startTimer(duration, display) {
         window.location.href = '/result';
       }
   }, 1000);
-    
 }
 
 // 値段の変化

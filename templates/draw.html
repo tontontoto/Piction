@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +9,26 @@
     <link rel="icon" href="../static/icon/favicon.png">
     <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
 </head>
+
 <body>
+    <header>
+        <div class="header-logo">
+            <img src="{{ url_for('static', filename='icon/logo.png') }}" alt="Piction">
+        </div>
+    </header>
     <main>
+        <div class="route_btns">
+            <a href="/top" class="back-button_sp">
+                <span class="icon">←</span>
+                トップに戻る
+            </a>
+            <form action="/result" class="btn_sp">
+                <button type="submit" class="submit-button" id="saveButton">
+                    完成、出品手続きへ
+                    <span class="icon">→</span>
+                </button>
+            </form>
+        </div>
         <div class="drawArea">
             <div class="selectTool">
                 <div class="tool-group">
@@ -30,13 +49,13 @@
                         <span>リセット</span>
                     </button>
                 </div>
-                <a href="/top" class="back-button">
+                <a href="/top" class="back-button_pc">
                     <span class="icon">←</span>
                     トップに戻る
                 </a>
             </div>
 
-            <canvas id="myCanvas"></canvas>  
+            <canvas id="myCanvas"></canvas>
 
             <div class="sliderContainer">
                 <div class="slider-group">
@@ -51,20 +70,20 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="side">
             <div class="sideTop">
-                <div class="info-card timer">
+                <div class="info-card timer sideContent">
                     <h3>残り時間</h3>
                     <p>00:00</p>
                 </div>
-                <div class="info-card money">
+                <div class="info-card money sideContent">
                     <h3>現在の価格</h3>
                     <p>0円</p>
                 </div>
             </div>
 
-            <form action="/result" class="btn">
+            <form action="/result" class="btn_pc">
                 <button type="submit" class="submit-button" id="saveButton">
                     完成、出品手続きへ
                     <span class="icon">→</span>
@@ -74,4 +93,5 @@
     </main>
     <script src="../static/js/script.js"></script>
 </body>
+
 </html>
