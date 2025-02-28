@@ -23,8 +23,8 @@ from routes.myLikeList import myLikeList, sort_products
 from routes.lineup import lineup
 from routes.bid_sale_detail import *
 from routes.download_artwork import download_artwork
-
 from routes.contact import contact
+from routes.termsOfUse import termsOfUse
 
 # MARK:== database ==
 from database.insert_data import add_payment_methods
@@ -125,6 +125,8 @@ bidConfirmation(app)
 download_artwork(app)
 # contact
 contact(app)
+# termOfUse
+termsOfUse(app)
 # error_handler
 error_handler(app)
 
