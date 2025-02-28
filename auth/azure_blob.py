@@ -1,8 +1,9 @@
 from imports import *
-from auth.config import ENVIRONMENT, DB_URL, UPLOAD_FOLDER
+from auth.config import ENVIRONMENT, DB_URL, UPLOAD_STORAGE, AZURE_STORAGE_CONNECTION_STRING, AZURE_STORAGE_CONTAINER
+from azure.storage.blob import BlobServiceClient
 
 def connect_to_azure_blob():
-    if os.getenv('ENVIRONMENT') == 'azure' and os.getenv('AZURE_STORAGE_CONNECTION_STRING'):
+    if os.getenv('UPLOAD_STORAGE') == 'blob' and os.getenv('AZURE_STORAGE_CONNECTION_STRING'):
         try:
             blob_service_client = BlobServiceClient.from_connection_string(os.getenv('AZURE_STORAGE_CONNECTION_STRING'))
             container_client = blob_service_client.get_container_client(os.getenv('AZURE_STORAGE_CONTAINER'))
@@ -10,8 +11,6 @@ def connect_to_azure_blob():
             return blob_service_client, container_client
         except Exception as e:
             print(f"Azure Blob Storage connection failed: {e}")
+            print(f"DEBUG: container_client = {container_client}")
             return None, None
     return None, None
-
-print(f"現在の環境: {ENVIRONMENT}")
-print(f"データベースURL: {DB_URL}")

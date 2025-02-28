@@ -1,7 +1,9 @@
 from imports import *
-from auth.config import ENVIRONMENT
+from auth.config import UPLOAD_STORAGE
 from auth.azure_blob import connect_to_azure_blob
 from auth.img_helper import *
+import pytz
+import sys
 
 def add_sale(app):
     
@@ -28,6 +30,7 @@ def add_sale(app):
         
     # MARK:　出品ページ
     @app.route('/add_sale', methods=['POST'])
+    @login_required
     def add_sale_view():
         try:
             data = request.get_json()
@@ -62,24 +65,24 @@ def add_sale(app):
         if not image_bytes:
             return jsonify({'error': 'Invalid image data'}), 400
 
-        if ENVIRONMENT == 'local':
+        if UPLOAD_STORAGE == 'local':
             # 画像をローカルフォルダに保存
             file_path = save_image_to_file(image_bytes, app.config['UPLOAD_FOLDER'])
             file_path = file_path.replace(app.config['UPLOAD_FOLDER'], 'upload_images')
         else:
             try:
                 # 画像をAzure Blob Storageに保存
-                blob_url = save_image_to_azure(image_bytes)
-                if not blob_url:
+                file_path = save_image_to_azure(image_bytes)
+                if not file_path:
                     return jsonify({"error": "Failed to save image"}), 500
             except Exception as e:
                 # 保存成功時に画像のURLを返す
-                return jsonify({"message": "Image uploaded successfully", "image_url": blob_url}), 201
+                return jsonify({"message": "Image uploaded successfully", "image_url": file_path}), 201
 
 
         userId = session.get('userId') # 今使っているユーザーのuserIdの取得
         try:
-            user = User.query.get(userId) # userIdからuser情報受け取り
+            user = db.session.query(User).get(userId)  # userIdからuser情報受け取り
         except Exception as e:
             print(f"Error ユーザー情報取得失敗: {e}")
             return jsonify({'error': 'Failed to query user'}), 500
@@ -87,13 +90,13 @@ def add_sale(app):
         displayName = user.displayName # displayNameの取得
 
         #現在時刻取得
-        dt = datetime.now()
+        dt = datetime.now(pytz.timezone('Asia/Tokyo'))
         datetimeStr = dt.strftime('%Y/%m/%d %H:%M:%S')
         #掲載時間計算
         postingTimePlus = dt + timedelta(minutes=int(postingTime))
         postingTimeStr = postingTimePlus.strftime('%Y/%m/%d %H:%M:%S')
-        print("現在時刻：", datetimeStr)
-        print("掲載満了時刻：", postingTimeStr)
+        print("現在時刻：", datetimeStr, file=sys.stderr)
+        print("掲載満了時刻：", postingTimeStr, file=sys.stderr)
 
         try:
             new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=file_path, startingPrice=price,currentPrice=price, creationTime=time, startingTime=datetimeStr, finishTime=postingTimeStr)

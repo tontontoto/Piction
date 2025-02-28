@@ -34,5 +34,5 @@ def top(app):
                             liked_sale_ids=liked_sale_ids, 
                             saleRankings=saleRankings,
                             topPriceSales=topPriceSales,
-                            SAS=AZURE_STORAGE_SAS
+                            config=app.config
                             )

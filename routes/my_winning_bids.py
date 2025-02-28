@@ -37,7 +37,7 @@ def myWinningBids(app):
                 print(f"作品タイトル: {sale.title}")
                 print(f"出品者: {user.displayName}")
             
-            return render_template('my_winning_bids.html', winning_bids=formatted_bids)
+            return render_template('my_winning_bids.html', winning_bids=formatted_bids, config=app.config)
         
         except Exception as e:
             print(f"Error 落札した商品の取得失敗: {e}")

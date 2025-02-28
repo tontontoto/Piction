@@ -24,4 +24,4 @@ def lineup(app):
                             sales=sales, 
                             userId=userId, 
                             liked_sale_ids=liked_sale_ids, 
-                            SAS=AZURE_STORAGE_SAS)
+                            config=app.config)
