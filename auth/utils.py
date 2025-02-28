@@ -10,8 +10,8 @@ def authenticate_user(userName):
 
 # ユーザーの作成処理
 def create_user(userName, displayName, mailAddress, password):
-    hashdPassword = bcrypt.generate_password_hash(password).decode('utf-8')
-    new_user = User(userName=userName, displayName=displayName, mailAddress=mailAddress, password=hashdPassword)
+    hashedPassword = bcrypt.generate_password_hash(password).decode('utf-8')
+    new_user = User(userName=userName, displayName=displayName, mailAddress=mailAddress, password=hashedPassword)
     db.session.add(new_user)
     db.session.commit()
     return new_user

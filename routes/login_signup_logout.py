@@ -19,6 +19,7 @@ def login(app):
                     print("成功")
                     # sessionに保存
                     login_user_session(user)
+                    print(f'認証状態: {current_user.is_authenticated}')
                     return redirect('/top')
                 else:
                     # ユーザーネームまたはパスワードが違う時の処理
@@ -68,6 +69,7 @@ def logout(app):
                 session.clear() # セッションからユーザー情報を削除
                 logout_user() # ログアウト処理
                 flash('ログアウトしました', 'success')
+                print(f'ログアウト成功。認証状態: {current_user.is_authenticated}')
                 return render_template('index.html')
             except Exception as e:
                 print(f"Error ログアウト処理失敗: {e}")

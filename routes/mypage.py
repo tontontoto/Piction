@@ -1,5 +1,6 @@
 from imports import *
 from auth.img_helper import allowed_file
+from sqlalchemy.sql import select
 
 # MARK: マイページ
 def mypage(app):
@@ -8,7 +9,7 @@ def mypage(app):
     def myPage_view():
         userId = session.get('userId')
         try:
-            user = User.query.get(userId)
+            user = db.session.query(User).get(userId)
             # session(ログイン状態のuserId)のsaleの行を取り出し、
             # 外部キーのuserIdよりUserテーブルの中のデータを参照できる。
             sales = db.session.query(Sale).join(User).filter_by(userId=userId).all()
@@ -65,7 +66,7 @@ def mypage(app):
             db.session.query(Bid, Sale, User)
             .join(Sale, Bid.saleId == Sale.saleId)
             .join(User, Sale.userId == User.userId)
-            .filter(Bid.bidId.in_(latest_bid_subquery))
+            .filter(Bid.bidId.in_(select(latest_bid_subquery)))
             .order_by(Bid.bidId.desc())  # 最新のBid順に並べる
             .all()
         )
@@ -148,7 +149,7 @@ def mypage(app):
                 print(f"データベース保存エラー: {e}")
 
             # リダイレクトでフォーム送信後の再送信を防ぐ
-            return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, my_bids=my_bids, revenue=revenue)
+            return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, my_bids=my_bids, revenue=revenue, config=app.config)
             
 
-        return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, my_bids=my_bids, revenue=revenue)
+        return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, my_bids=my_bids, revenue=revenue, config=app.config)

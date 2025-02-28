@@ -1,12 +1,14 @@
 from imports import *
+import pytz 
 
 def saleDetail(app):
     # MARK: saleDetail
     @app.route('/saleDetail/<int:sale_id>', methods=['GET', 'POST'], endpoint='saleDetail_view')
+    @login_required
     def saleDetail_view(sale_id):
         try:
             # 商品情報をデータベースから取得
-            sale = Sale.query.get(sale_id)
+            sale = db.session.query(Sale).get(sale_id)
             bids = Bid.query.filter_by(saleId=sale_id).all()
             currentPrice = db.session.query(Bid.bidPrice).filter_by(saleId=sale_id).order_by(Bid.bidPrice.desc()).first()
             currentPrice = currentPrice[0] if currentPrice else sale.startingPrice
@@ -31,7 +33,7 @@ def saleDetail(app):
         # 商品の入札終了日時が現在時刻の前であるかどうか
         # 終了していた時の処理↓
         try:
-            if sale.finishTime and datetime.now().strftime('%Y/%m/%d %H:%M:%S') > sale.finishTime:
+            if sale.finishTime and datetime.now(pytz.timezone('Asia/Tokyo')).strftime('%Y/%m/%d %H:%M:%S') > sale.finishTime:
                 # 落札者情報の取得
                 # 落札金額
                 lastAmount = db.session.query(func.max(Bid.bidPrice)).scalar()
@@ -52,7 +54,7 @@ def saleDetail(app):
                 db.session.commit()
                 print("最大金額（落札金額）:",lastAmount)
                 finished = "この作品のオークションは終了しています"
-                return render_template('saleDetail.html', sale=sale, currentPrice=currentPrice, categories=categories, finished=finished, bidUserId=bidUserId ,lastAmount=lastAmount)
+                return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, finished=finished, bidUserId=bidUserId ,lastAmount=lastAmount, config=app.config)
             
             # 商品なかった時のerror処理
             if sale is None:
@@ -60,7 +62,7 @@ def saleDetail(app):
                 return redirect(url_for('top'))
 
             # 商品情報をテンプレートに渡す
-            return render_template('saleDetail.html', userName=userName, userIcon=userIcon, sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, bid_userName=bid_userName)
+            return render_template('saleDetail.html', userName=userName, userIcon=userIcon, sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, bid_userName=bid_userName, config=app.config)
 
         except Exception as e:
             print(f"Error 商品情報取得失敗: {e}")

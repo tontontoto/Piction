@@ -11,3 +11,12 @@ def logout_required(f):
             return redirect(url_for('top_view'))  
         return f(*args, **kwargs)
     return decorated_function
+
+# def logout_required(f):
+#     """ ログインユーザーのアクセスを制限し、未ログイン時のみ許可 """
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         if session.get('userId'):  # KeyError を回避
+#             return redirect(url_for('top_view'))
+#         return f(*args, **kwargs)
+#     return decorated_function
