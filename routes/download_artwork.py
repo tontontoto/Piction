@@ -22,7 +22,7 @@ def download_artwork(app):
                     
             else:
                 # Azure Blob Storage接続
-                blob_service_client, container_client = connect_to_azure_blob()
+                blob_service_client, container_client = connect_to_azure_blob(AZURE_STORAGE_CONTAINER)
 
                 # URLからBlobの名前を適切に抽出
                 if 'http' in sale.filePath:

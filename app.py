@@ -49,9 +49,6 @@ app.config['IS_LOCAL'] = UPLOAD_STORAGE == 'local'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(app.config['UPLOAD_ICON_FOLDER'], exist_ok=True)
 
-# Azure Blob Storage接続
-blob_service_client, container_client = connect_to_azure_blob()
-
 # DB設定
 try:
     db.init_app(app)

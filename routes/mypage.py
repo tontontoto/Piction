@@ -1,6 +1,9 @@
 from imports import *
 from auth.img_helper import allowed_file
 from sqlalchemy.sql import select
+from azure.storage.blob import BlobServiceClient, ContentSettings
+from auth.azure_blob import connect_to_azure_blob
+from auth.config import AZURE_STORAGE_ACCOUNT, AZURE_STORAGE_CONNECTION_STRING, AZURE_STORAGE_CONTAINER, AZURE_STORAGE_ICON_SAS, AZURE_STORAGE_ICON_CONTAINER
 
 # MARK: マイページ
 def mypage(app):
@@ -101,29 +104,56 @@ def mypage(app):
                     filename = secure_filename(file.filename)
                     file_extension = filename.rsplit('.', 1)[1].lower()
 
-                    # 新しいファイル名を作成
-                    new_filename = f"user_icon_{len(os.listdir(app.config['UPLOAD_ICON_FOLDER'])) + 1}.{file_extension}"
-                    file_path = os.path.join(app.config['UPLOAD_ICON_FOLDER'], new_filename).replace('\\', '/')
+                    # ユーザーごとの固有ファイル名を決定
+                    if iconFilePath == "icon_user_light.png":
+                        print('アイコン 新規保存')
+                        new_filename = f"user_icon_{user.userId}.{file_extension}"
+                    else:
+                        print('アイコン 更新保存')
+                        # 既にアイコンアップロード済みの場合、既存のファイル名を利用（Azureの場合はSAS等のクエリ文字列を除外）
+                        new_filename = os.path.basename(iconFilePath.split('?')[0])
+                        base, ext = os.path.splitext(new_filename)
+                        if ext.lower() != f".{file_extension}":
+                            new_filename = f"user_icon_{user.userId}.{file_extension}"
+                    
+                    if app.config['IS_LOCAL']:
+                        print('アイコン ローカル保存')
+                        # ディレクトリが存在しない場合、作成する
+                        os.makedirs(app.config['UPLOAD_ICON_FOLDER'], exist_ok=True)
+                        file_path = os.path.join(app.config['UPLOAD_ICON_FOLDER'], new_filename).replace('\\', '/')
 
-                    # ディレクトリが存在しない場合、作成する
-                    os.makedirs(app.config['UPLOAD_ICON_FOLDER'], exist_ok=True)
+                        # 既存のアイコンがあれば削除（オプション）
+                        if iconFilePath and os.path.exists(os.path.join(app.config['UPLOAD_ICON_FOLDER'], iconFilePath.split('/')[-1])):
+                            try:
+                                os.remove(os.path.join(app.config['UPLOAD_ICON_FOLDER'], iconFilePath.split('/')[-1]))
+                                print(f"既存のアイコンファイル({iconFilePath})を削除しました。")
+                            except Exception as e:
+                                print(f"既存のアイコン削除に失敗しました: {e}")
 
-                    # 既存のアイコンがあれば削除（オプション）
-                    if iconFilePath and os.path.exists(os.path.join(app.config['UPLOAD_ICON_FOLDER'], iconFilePath.split('/')[-1])):
+                        # 新しい画像ファイルを保存
                         try:
-                            os.remove(os.path.join(app.config['UPLOAD_ICON_FOLDER'], iconFilePath.split('/')[-1]))
-                            print(f"既存のアイコンファイル({iconFilePath})を削除しました。")
+                            file.save(file_path)
+                            print(f"新しいアイコンが保存されました: {file_path}")
+                            iconFilePath = f"upload_icon/{new_filename}"  # 新しいアイコンファイルパス
                         except Exception as e:
-                            print(f"既存のアイコン削除に失敗しました: {e}")
-
-                    # 新しい画像ファイルを保存
-                    try:
-                        file.save(file_path)
-                        print(f"新しいアイコンが保存されました: {file_path}")
-                        iconFilePath = f"upload_icon/{new_filename}"  # 新しいアイコンファイルパス
-                    except Exception as e:
-                        print(f"ファイルの保存に失敗しました: {e}")
-                        iconFilePath = None
+                            print(f"ファイルの保存に失敗しました: {e}")
+                            iconFilePath = None
+                    else:
+                        print('アイコン Azure Blob Storage保存')
+                         # Azure Blob Storageにアップロードする場合
+                        try:
+                            # Azure Blob Storage接続
+                            blob_service_client, container_client = connect_to_azure_blob(AZURE_STORAGE_ICON_CONTAINER)
+                            content_settings = ContentSettings(content_type=file.content_type)
+                            # ファイルポインタを先頭に戻す
+                            file.seek(0)
+                            container_client.upload_blob(new_filename, file, overwrite=True, content_settings=content_settings)
+                            # BlobのURLをiconFilePathに設定
+                            iconFilePath = f"https://{AZURE_STORAGE_ACCOUNT}.blob.core.windows.net/{AZURE_STORAGE_ICON_CONTAINER}/{new_filename}?{AZURE_STORAGE_ICON_SAS}"
+                            print(f"新しいアイコンがBlob Storageに保存されました: {iconFilePath}")
+                        except Exception as e:
+                            print(f"Blob Storageへのアップロードに失敗しました: {e}")
+                            iconFilePath = None
 
             # ユーザー情報をデータベースに保存
             try:
@@ -136,6 +166,10 @@ def mypage(app):
                     user.displayName = displayName
                     user.userName = userName
                     user.mailAddress = mailAddress
+
+                    for sale in sales:
+                        sale.displayName = displayName
+                    
                     db.session.commit()
                     print('ユーザー情報が保存されました！')
                 else:

@@ -1,9 +1,10 @@
+from re import A
 from imports import *
 from auth.config import ENVIRONMENT, AZURE_STORAGE_CONTAINER, ALLOWED_EXTENSIONS, AZURE_STORAGE_SAS, UPLOAD_STORAGE
 from auth.azure_blob import connect_to_azure_blob
 
 # Azure Blob Storage接続
-blob_service_client, container_client = connect_to_azure_blob()
+blob_service_client, container_client = connect_to_azure_blob(AZURE_STORAGE_CONTAINER)
 
 # ファイルの拡張子を確認するヘルパー関数
 def allowed_file(filename):
