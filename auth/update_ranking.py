@@ -9,7 +9,7 @@ def update_ranking(app):
             sales_with_likes = db.session.query(
                 Sale,
                 func.count(Like.likeId).label('like_count')
-            ).join(Like).group_by(Sale).order_by(
+            ).join(Like).group_by(Sale.saleId).order_by(  # Sale -> Sale.saleId に変更
                 func.count(Like.likeId).desc()
             ).limit(3).all()
             
