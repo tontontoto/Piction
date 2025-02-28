@@ -1,0 +1,30 @@
+# 環境設定 (local または azure)
+ENVIRONMENT=local
+PORT = 80
+SECRET_KEY = secretkey
+UPLOAD_STORAGE = blob
+
+# データベース設定
+## ローカルデータベース（sqlite）
+DB_URL=sqlite:///example.db
+
+## Azureデータベース（mysql）
+# AZURE_DB_URL=mysql+pymysql://rqlvifkcgq:Dg$Bul$VTsv80yzr@pictionserver.mysql.database.azure.com:3306/pictiondatabase
+
+# Azure Blob Storage設定
+AZURE_STORAGE_ACCOUNT=pictionstr
+AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=https;AccountName=pictionstr;AccountKey=f3kLLSeSAD9hrxUM1FZwNu19QEOFQw95/Vok2kK5dE7Rya1Ygeb9h9ULz5DlI9B0vvRfM022khGZ+AStnuuRxQ==;EndpointSuffix=core.windows.net
+
+# sales-image-container
+AZURE_STORAGE_CONTAINER=sale-image-container
+AZURE_STORAGE_KEY=sp=racwd&st=2025-01-15T07:15:29Z&se=2025-01-22T15:15:29Z&sip=10.192.94.255&sv=2022-11-02&sr=c&sig=IHrdeTnWM3TlAwrbTogSb9OIKWOJW%2BBOKdiyOa0LZM8%3D
+AZURE_STORAGE_SAS=sp=racwd&st=2025-02-27T05:25:37Z&se=2025-03-08T13:25:37Z&sv=2022-11-02&sr=c&sig=ZZCZPUJSsuwjOgVIEfW%2B9EHllUrpwg1Od8QLmyzF9tA%3D
+AZURE_STORAGE_SAS_URL=https://pictionstr.blob.core.windows.net/sale-image-container?sp=racwd&st=2025-02-27T05:25:37Z&se=2025-03-08T13:25:37Z&sv=2022-11-02&sr=c&sig=ZZCZPUJSsuwjOgVIEfW%2B9EHllUrpwg1Od8QLmyzF9tA%3D
+
+# profile-icon-container
+AZURE_STORAGE_ICON_CONTAINER=profile-icon-container
+AZURE_STORAGE_ICON_SAS=sp=racwd&st=2025-02-28T02:19:07Z&se=2025-03-08T10:19:07Z&sv=2022-11-02&sr=c&sig=NTWL7%2FSi5tvEJ5SciqHjdX%2FnKyuigUV2qb%2BgyGSxiic%3D
+AZURE_STORAGE_ICON_SAS_URL=https://pictionstr.blob.core.windows.net/profile-icon-container?sp=racwd&st=2025-02-28T02:19:07Z&se=2025-03-08T10:19:07Z&sv=2022-11-02&sr=c&sig=NTWL7%2FSi5tvEJ5SciqHjdX%2FnKyuigUV2qb%2BgyGSxiic%3D
+
+# アプリケーション設定
+UPLOAD_FOLDER=./static/upload_images
