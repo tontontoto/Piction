@@ -29,7 +29,11 @@ def myLikeList(app):
                 finish_time = datetime.strptime(finish_time_str, '%Y/%m/%d %H:%M:%S')  # 'YYYY/MM/DD HH:MM:SS' の形式
 
                 # 現在の時刻を取得
-                current_time = datetime.now(pytz.timezone('Asia/Tokyo'))
+                japan_timezone = pytz.timezone('Asia/Tokyo')
+                finish_time = japan_timezone.localize(finish_time)
+                
+                # 現在の時刻を取得
+                current_time = datetime.now(japan_timezone)
 
                 # 残り時間を計算
                 remaining_time = finish_time - current_time  # 残り時間

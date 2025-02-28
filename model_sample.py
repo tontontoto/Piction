@@ -10,6 +10,9 @@ if not ENVIRONMENT:
 if ENVIRONMENT == 'local':
     dotenv_path = join(dirname(__file__), '.env')
     load_dotenv(dotenv_path, verbose=True)
+    
+def get_current_time_jst():
+    return datetime.now(pytz.timezone('Asia/Tokyo'))
 
 db = SQLAlchemy()
 
@@ -91,7 +94,7 @@ class Bid(db.Model):
     userId = db.Column(db.Integer, ForeignKey('user.userId'))
 
     bidPrice = db.Column(db.Integer)
-    bidTime = db.Column(db.DATETIME, default=datetime.now(pytz.timezone('Asia/Tokyo')), nullable=False)
+    bidTime = db.Column(db.DATETIME, default=get_current_time_jst, nullable=False)
 
     user = db.relationship("User", back_populates="bids")
     sale = db.relationship("Sale", back_populates="bids")
@@ -125,7 +128,7 @@ class Payment(db.Model):
     saleId = db.Column(db.Integer, ForeignKey('sale.saleId'))
     winningBidId = db.Column(db.Integer, ForeignKey('winningBid.winningBidId'))
     paymentWayId = db.Column(db.Integer, ForeignKey('paymentWay.paymentWayId'))
-    paymentDate = db.Column(db.DATETIME, default=datetime.now(pytz.timezone('Asia/Tokyo')), nullable=False)
+    paymentDate = db.Column(db.DATETIME, default=get_current_time_jst, nullable=False)
 
     sale = db.relationship("Sale", back_populates="payment")
     paymentWay = db.relationship("PaymentWay", back_populates="payments")
