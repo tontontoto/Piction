@@ -3,21 +3,21 @@
         <h2>落札した商品</h2>
     </div>
 
-    {% if sales %}
+    {% if myBidSales %}
     <div class="sales-grid">
         {% for sale in myBidSales %}
         <a href="{{ url_for('bidSaleDetail_view', sale_id=sale.saleId) }}" class="sale-card">
             <div class="sale-image">
                 {% if config.IS_LOCAL %}
-                    <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">
+                <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">
                 {% else %}
-                    <img src="{{ sale.filePath }}" alt="{{ sale.title }}">
+                <img src="{{ sale.filePath }}" alt="{{ sale.title }}">
                 {% endif %}
-                
+
                 {% if not sale.saleStatus %}
-                    <div class="status-badge ended">終了</div>
+                <div class="status-badge ended">終了</div>
                 {% else %}
-                    <div class="status-badge active">出品中</div>
+                <div class="status-badge active">出品中</div>
                 {% endif %}
             </div>
             <div class="sale-info">
@@ -25,8 +25,8 @@
                 <p class="displayName">作：{{ sale.user.displayName }}</p>
                 <div class="sale-details">
                     <div class="price-info">
-                        <span class="current-price">¥{{ sale.currentPrice }}</span>
-                        <span class="starting-price">開始価格 ¥{{ sale.startingPrice }}</span>
+                        <span class="current-price">¥{{ '{:,}'.format(sale.currentPrice) }}</span>
+                        <span class="starting-price">開始価格 ¥{{ '{:,}'.format(sale.startingPrice) }}</span>
                     </div>
                     <div class="time-info">
                         <span class="time-remaining">終了時間 {{ sale.finishTime }}</span>
@@ -39,7 +39,7 @@
     </div>
     {% else %}
     <div class="empty-state">
-        <p>出品した作品はありません</p>
+        <p>落札した作品はありません</p>
     </div>
     {% endif %}
 </div>

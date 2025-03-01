@@ -34,16 +34,6 @@ def saleDetail(app):
                 lastAmount = db.session.query(func.max(Bid.bidPrice)).scalar()
                 # 落札者userIdの取得
                 bidUserId = db.session.query(Bid.userId).filter(Bid.bidPrice == lastAmount).scalar()
-
-                # WinningBidテーブルの更新
-                buyerId = db.session.query(Sale).filter(Sale.saleStatus == False)
-
-                # 重複チェック
-                existing_winningBid = db.session.query(WinningBid).filter_by(buyerId=bidUserId, saleId=sale_id).first()
-                if not existing_winningBid:
-                    new_winningBid = WinningBid(buyerId=bidUserId, saleId=sale_id)
-                    db.session.add(new_winningBid)
-                    db.session.commit()
             
                 db.session.query(Sale).filter(Sale.saleId == sale_id).update({"saleStatus": False})
                 db.session.commit()

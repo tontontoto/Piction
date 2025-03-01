@@ -40,18 +40,7 @@ def mypage(app):
         except Exception as e:
             print(f"Error いいねした商品のカウントに失敗: {e}")
             likeCount = "---"
-        
-        # 自分が落札した商品の情報を取得
-        myBidList = db.session.query(WinningBid).join(Sale).filter(WinningBid.buyerId == userId).all()
-
-        # 落札した商品の情報を取得
-        myBidSales = []
-        for bid in myBidList:
-            sale = Sale.query.get(bid.saleId)
-            myBidSales.append(sale)
-
-        print("落札した商品の一覧", myBidSales)
-        
+            
         # 自分が入札した作品を取得
         # 最新のBidを取得するためのサブクエリ
         latest_bid_subquery = (
@@ -63,13 +52,35 @@ def mypage(app):
             .group_by(Sale.saleId)
             .subquery()
         )
+        
+        # 自分が落札した商品の情報を取得
+        myWinningBidList = db.session.query(WinningBid).join(Sale).filter(
+            WinningBid.buyerId == userId
+        ).all()
+        
+        myBidList= (
+            db.session.query(Bid, Sale, User)
+            .join(Sale, Bid.saleId == Sale.saleId)
+            .join(User, Sale.userId == User.userId)
+            .filter(Bid.bidId.in_(select(latest_bid_subquery)), Sale.saleStatus == 0)
+            .order_by(Bid.bidId.desc())  # 最新のBid順に並べる
+            .all()
+        )
+
+        # 落札した商品の情報を取得
+        myBidSales = []
+        for bid in myBidList:
+            sale = Sale.query.get(bid.Sale.saleId)
+            myBidSales.append(sale)
+
+        print("落札した商品の一覧", myBidSales)
 
         # 最新のBidを持つSale情報を取得
         my_bids_query = (
             db.session.query(Bid, Sale, User)
             .join(Sale, Bid.saleId == Sale.saleId)
             .join(User, Sale.userId == User.userId)
-            .filter(Bid.bidId.in_(select(latest_bid_subquery)))
+            .filter(Bid.bidId.in_(select(latest_bid_subquery)), Sale.saleStatus == 1)
             .order_by(Bid.bidId.desc())  # 最新のBid順に並べる
             .all()
         )
