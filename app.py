@@ -25,6 +25,7 @@ from routes.bid_sale_detail import *
 from routes.download_artwork import download_artwork
 from routes.contact import contact
 from routes.termsOfUse import termsOfUse
+from routes.privacyPolicy import privacyPolicy
 
 # MARK:== database ==
 from database.insert_data import add_payment_methods
@@ -127,6 +128,8 @@ download_artwork(app)
 contact(app)
 # termOfUse
 termsOfUse(app)
+# privacyPolicy
+privacyPolicy(app)
 # error_handler
 error_handler(app)
 

@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     footerColumns.forEach(function(footerColumn) {
         // footer-columnがクリックされたときの処理
         footerColumn.addEventListener('click', function(event) {
+            if (window.innerWidth <= 570) {
             const ul = footerColumn.querySelector('ul');
             if (event.target.closest('.footer-column')) {
                 if (ul.style.display === 'none' || ul.style.display === '') {
@@ -10,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     ul.style.display = 'none';
                 }
-            }
+            }}
         });
     });
 });
