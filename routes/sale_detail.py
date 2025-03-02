@@ -16,11 +16,11 @@ def saleDetail(app):
             userName = db.session.query(User.userName).filter(User.userId == sale.userId).scalar()
             userIcon = db.session.query(User.iconFilePath).filter(User.userId == sale.userId).scalar()
 
-            bid_userName = {}
-            for bid in bids:
-                bid_userName[bid.userId] = db.session.query(User.userName).filter(User.userId == bid.userId).scalar()
+            # bid_userName = {}
+            # for bid in bids:
+            #     bid_userName[bid.userId] = db.session.query(User.userName).filter(User.userId == bid.userId).scalar()
         except Exception as e:
-            print(f"Error 商品情報取得失敗: {e}")
+            print(f"Error 商品情報取得失敗1: {e}")
             return "エラーが発生しました", 500
 
         print(sale)
@@ -52,7 +52,7 @@ def saleDetail(app):
                 return redirect(url_for('top'))
 
             # 商品情報をテンプレートに渡す
-            return render_template('saleDetail.html', userName=userName, userIcon=userIcon, sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, bid_userName=bid_userName, config=app.config)
+            return render_template('saleDetail.html', userName=userName, userIcon=userIcon, sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, config=app.config)
 
         except Exception as e:
-            print(f"Error 商品情報取得失敗: {e}")
+            print(f"Error 商品情報取得失敗2: {e}")

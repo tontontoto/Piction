@@ -33,7 +33,7 @@
                     {% if config.IS_LOCAL %}
                         <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">
                     {% else %}
-                    <img src="{{ sale.filePath }}" alt="{{ sale.title }}">
+                        <img src="{{ sale.filePath }}" alt="{{ sale.title }}">
                     {% endif %}
                 </div>
                 <div class="auction-result">
@@ -78,9 +78,7 @@
             </div>
             <div class="text">
                 <h1>{{ sale.title }}</h1>
-                <p class="current_price">現在：<span id="currentPrice">{{ '{:,}'.format(currentPrice) }}</span><span
-                        class="current-price-enn">円</sapn>
-                </p>
+                <p class="current_price">現在：<span id="currentPrice">{{ '{:,}'.format(currentPrice) }}</span>円</p>
                 <p class="make_time">制作時間：<span id="make_time">{{ sale.creationTime }}</span>秒</p>
 
                 <!-- 入札BOX -->
@@ -182,7 +180,7 @@
                         </tr>
                         {% for bid in bids %}
                         <tr>
-                            <td>{{ bid_userName[bid.userId] }}</td>
+                            <td>{{ bid.userId }}</td>
                             <td>¥{{ '{:,}'.format(bid.bidPrice) }}</td>
                             <td>{{ bid.bidTime.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                         </tr>

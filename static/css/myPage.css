@@ -23,7 +23,7 @@ body {
 #main {
     width: 70%;
     margin: 5vh auto;
-    display: flex;
+    /* display: flex; */ /* ここでflex指定していると、PC版で左による */
     flex-direction: row;
     gap: 20px;
 }

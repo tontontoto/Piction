@@ -48,9 +48,9 @@
                 <div class="profile_media_570 box_shadow_each" id="profile_card">
                     <div class="userIcon">
                         {% if config.IS_LOCAL %}
-                            <img src="{{ url_for('static', filename=user.iconFilePath) }}" class="icon" alt="userIcon">
+                        <img src="{{ url_for('static', filename=user.iconFilePath) }}" class="icon" alt="userIcon">
                         {% else %}
-                            <img src="{{ user.iconFilePath }}" class="icon" alt="userIcon">
+                        <img src="{{ user.iconFilePath }}" class="icon" alt="userIcon">
                         {% endif %}
                     </div>
                     <div class="userInfo">
@@ -61,8 +61,9 @@
                             {{ user.mailAddress }}
                         </p>
                         <div>
-                            <button class="btn_profile" data-bs-target="#exampleModalToggle_sp"
-                                data-bs-toggle="modal">プロフィールの編集</button>
+                            <button class="btn_profile" data-bs-target="#exampleModalToggle_sp" data-bs-toggle="modal">
+                                プロフィールの編集
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -105,20 +106,18 @@
                                     <div class="fileContainer">
                                         <!-- 現在の表示アイコン -->
                                         <div id="result">
-                                                {% if config.IS_LOCAL %}
-                                                    <img src="{{ url_for('static', filename=user.iconFilePath) }}" id="icon"alt="userIcon">
-                                                {% else %}
-                                                    <img src="{{ user.iconFilePath }}" id="icon" alt="userIcon">
-                                                {% endif %}
+                                            {% if config.IS_LOCAL %}
+                                            <img src="{{ url_for('static', filename=user.iconFilePath) }}" id="icon" alt="userIcon">
+                                            {% else %}
+                                            <img src="{{ user.iconFilePath }}" id="icon" alt="userIcon">
+                                            {% endif %}
                                         </div>
                                         <!-- カメラのSVGアイコン -->
                                         <div class="cameraIconBox">
-                                            <img src="{{ url_for('static', filename='parts/camera-plus.svg') }}" alt=""
-                                                class="cameraIcon">
+                                            <img src="{{ url_for('static', filename='parts/camera-plus.svg') }}" alt="" class="cameraIcon">
                                         </div>
                                         <!-- アイコン選択input -->
-                                        <input type="file" id="triming_image" name="file" class="triming-image"
-                                            accept="image/*" />
+                                        <input type="file" id="triming_image" name="file" class="triming-image" accept="image/*" />
                                     </div>
 
                                     <div class="modalInputBox">
@@ -183,7 +182,11 @@
             <div id="profile_pc">
                 <div class="profile_media_pc">
                     <div class="userIcon">
+                        {% if config.IS_LOCAL %}
                         <img src="{{ url_for('static', filename=user.iconFilePath) }}" class="icon" alt="userIcon">
+                        {% else %}
+                        <img src="{{ user.iconFilePath }}" class="icon" alt="userIcon">
+                        {% endif %}
                     </div>
                     <div class="userInfo">
                         <p class="profileDisplayName">{{ user.displayName }}</p>
@@ -235,8 +238,11 @@
                                     <div class="fileContainer">
                                         <!-- 現在の表示アイコン -->
                                         <div id="result">
-                                            <img src="{{ url_for('static', filename=user.iconFilePath) }}" id="icon"
-                                                alt="userIcon">
+                                            {% if config.IS_LOCAL %}
+                                            <img src="{{ url_for('static', filename=user.iconFilePath) }}" class="icon" alt="userIcon">
+                                            {% else %}
+                                            <img src="{{ user.iconFilePath }}" class="icon" alt="userIcon">
+                                            {% endif %}
                                         </div>
                                         <!-- カメラのSVGアイコン -->
                                         <div class="cameraIconBox">
@@ -244,8 +250,7 @@
                                                 class="cameraIcon">
                                         </div>
                                         <!-- アイコン選択input -->
-                                        <input type="file" id="triming_image" name="file" class="triming-image"
-                                            accept="image/*" />
+                                        <input type="file" id="triming_image" name="file" class="triming-image" accept="image/*" />
                                     </div>
 
                                     <div class="modalInputBox">
