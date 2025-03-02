@@ -1,73 +1,227 @@
-<div class="carousel-container">
-    <div class="carousel">
+<div class="slider-container">
+    <div class="slider">
         {% for sale in topPriceSales %}
-        <div class="carousel-slide">
-
-            <div class="carousel-content">
-                <a href="{{ url_for('saleDetail_view', sale_id=sale.saleId) }}" class="carousel-link">
-                    <div class="image-wrapper">
+        <div class="slide">
+            <!-- <div class="slide-rank">{{ loop.index }}</div> -->
+            <a href="{{ url_for('saleDetail_view', sale_id=sale.saleId) }}" class="slide-link">
+                <div class="slide-content">
+                    <div class="image-container">
                         {% if config.IS_LOCAL %}
-                        <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}"
-                            class="carousel-image">
+                            <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">
                         {% else %}
-                        <img src="{{ sale.filePath }}" alt="{{ sale.title }}" class="carousel-image">
+                            <img src="{{ sale.filePath }}" alt="{{ sale.title }}">
                         {% endif %}
                     </div>
-
-                    <div class="carousel-info">
-                        <div>
-                            <h3 class="carousel-title">{{ sale.title }}</h3>
-                            <p class="carousel-artist">{{ sale.displayName }}</p>
-                        </div>
-                        <div class="carousel-stats">
-                            <div class="carousel-stat">
-                                <span class="icon" id="heart">
-                                    <img src="{{ url_for('static', filename='parts/heart.svg') }}" alt="heart">
-                                </span>
+                    <div class="slide-info">
+                        <h3>{{ sale.title }}</h3>
+                        <p class="artist">{{ sale.displayName }}</p>
+                        <div class="stats">
+                            <!-- <div class="stat"></div>
+                                <span class="icon">⏳️</span>
+                                <span>{{ sale.creationTime }}</span>
+                            </div> -->
+                            <div class="stat">
+                                <span class="icon">♥</span>
                                 <span>{{ sale.like_count }}</span>
                             </div>
-                            <div class="carousel-stat" id="currentPrice">
+                            <div class="stat">
                                 <span class="icon">¥</span>
                                 <span>{{ '{:,}'.format(sale.currentPrice) }}</span>
                             </div>
                         </div>
                     </div>
-                </a>
-            </div>
-
+                </div>
+            </a>
         </div>
         {% endfor %}
     </div>
-    <button class="carousel-button prev">&#10094;</button>
-    <button class="carousel-button next">&#10095;</button>
+    <button class="slider-button prev">&#10094;</button>
+    <button class="slider-button next">&#10095;</button>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const carousel = document.querySelector('.carousel');
-        const slides = document.querySelectorAll('.carousel-slide');
-        const prevButton = document.querySelector('.prev');
-        const nextButton = document.querySelector('.next');
-        let currentIndex = 0;
+document.addEventListener('DOMContentLoaded', function() {
+    const slider = document.querySelector('.slider');
+    const slides = document.querySelectorAll('.slide');
+    const prevButton = document.querySelector('.prev');
+    const nextButton = document.querySelector('.next');
+    let currentIndex = 0;
 
-        function updateCarousel() {
-            carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
-        }
+    function updateSlider() {
+        slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+    }
 
-        prevButton.addEventListener('click', () => {
-            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-            updateCarousel();
-        });
-
-        nextButton.addEventListener('click', () => {
-            currentIndex = (currentIndex + 1) % slides.length;
-            updateCarousel();
-        });
-
-        // 自動スライド（コメントアウトしておく）
-        // setInterval(() => {
-        //     currentIndex = (currentIndex + 1) % slides.length;
-        //     updateCarousel();
-        // }, 5000);
+    prevButton.addEventListener('click', () => {
+        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+        updateSlider();
     });
+
+    nextButton.addEventListener('click', () => {
+        currentIndex = (currentIndex + 1) % slides.length;
+        updateSlider();
+    });
+
+    // 自動スライド
+    setInterval(() => {
+        currentIndex = (currentIndex + 1) % slides.length;
+        updateSlider();
+    }, 5000);
+});
 </script>
+
+<style>
+.slider-container {
+    position: relative;
+    width: 100%;
+    margin: 40px auto;
+    overflow: hidden;
+    background-color: #f8f8f8;
+    padding: 20px 0;
+}
+
+.slider {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.slide {
+    min-width: 100%;
+    padding: 0 40px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.slide-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.slide-content {
+    /* background: white; */
+    width: 600px;
+    border-radius: 20px;
+    overflow: hidden;
+    /* box-shadow: 0 2px 10px rgba(0,0,0,0.1); */
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.image-container {
+    width: 350px;
+    height: 350px;
+    flex-shrink: 0;
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.slide-content img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background-color: white;
+}
+
+.slide-info {
+    padding-left: 70px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.slide-info h3 {
+    margin: 0;
+    font-size: 1.8em;
+    color: #333;
+}
+
+.slide-info .artist {
+    color: #666;
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.stats {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.5em;
+}
+
+.icon {
+    width: 20px;
+    display: inline-block;
+}
+
+.slider-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: white;
+    color: #333;
+    border: none;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.slider-button:hover {
+    background: #f5f5f5;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.prev {
+    left: 10px;
+}
+
+.next {
+    right: 10px;
+}
+
+@media (max-width: 768px) {
+    .slide-content {
+        flex-direction: column;
+    }
+    
+    .image-container {
+        width: 100%;
+        height: 0;
+        padding-bottom: 100%;
+    }
+    
+    .slide-content img {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    
+    .slide-info {
+        width: 100%;
+        padding: 20px 0 0 0;
+    }
+    
+    .stats {
+        margin-top: 15px;
+        gap: 8px;
+    }
+}
+</style>

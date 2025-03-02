@@ -1,157 +1,45 @@
 @charset "UTF-8";
 
 body {
+  font-family: "游ゴシック Medium", "Yu Gothic Medium", "游ゴシック体", YuGothic,
+    sans-serif;
+  font-size: 16px;
+  color: #333;
+  background-color: #fff;
   position: relative;
 }
 
-/* header */
-header {
-  padding: 10px 40px;
-  border-bottom: #000 1px solid;
-}
-#headerLogo img {
-  width: 150px;
-  height: auto;
+.backbotan {
+  position: absolute;
+  height: 30%;
+  top: 4%;
+  left: 4%;
 }
 
-/* main */
-main {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin: auto;
-  padding: 0;
-  width: 80%;
-  color: #fff;
-}
-
-/* 戻るボタン */
-#backbutton {
-  width: 100%;
-}
-.backbutton_form {
-  margin: 20px 30px;
-}
-.button {
+.backbotan .btn {
   font-size: 16px;
   font-weight: bold;
   color: #070707;
   padding: 10px 30px;
-  border-radius: 5px;
-  border: #333 1px solid;
+  border-radius: 0;
   text-decoration: none;
-  background: #fff;
   transition: all 0.2s;
   cursor: pointer;
 }
-.button:hover {
+
+.backbotan .btn:hover {
   color: #474747;
   transition: all 0.4s;
 }
 
-/* 商品情報 */
-#myCanvas {
-  flex: 1;
-  width: 100%;
-  height: auto;
-  border: #000 1px solid;
-  border-radius: 10px;
-}
-.side {
-  flex: 1;
-  width: 100%;
-  padding: 10px 20px;
-  color: #000;
-}
-.timerResult p,
-.moneyResult p {
-  font-size: 24px;
-}
-.side > * p2 {
-  font-size: 28px;
-  color: #e91e63;
-  margin: 0;
-}
-
-/* タイトル */
-.titleComponent {
-  width: 100%;
-  position: relative;
-  margin-top: 5%;
-}
-.inputText,
-.label {
-  color: #333;
-}
-.inputText {
-  width: 100%;
-  padding: 12px 0px;
-  border: #333 1px solid;
-  border-radius: 5px;
-  background: #ffffff;
-  font-size: 1em;
-  line-height: 1.5;
-}
-.label {
-  position: absolute;
-  top: -0.5em;
-  left: 4%;
-  background: #fff;
-  display: block;
-  font-size: 0.9em;
-  padding: 0 5px;
-}
-
-/* カテゴリ */
-.categoryComponent {
-  position: relative;
-  margin: 20px 0px;
-}
-.kategriTitle {
-  position: absolute;
-  top: -0.5em;
-  left: 4%;
-  background: #fff;
-  display: block;
-  font-size: 0.9em;
-  padding: 0 5px;
-}
-#kategori {
-  width: 100%;
-  padding: 12px 0;
-  border: #333 1px solid;
-  border-radius: 5px;
-  font-size: 1em;
-  line-height: 1.5;
-}
-#kategori option {
-  padding: 12px 0;
-}
-
-/* 掲載期間 */
-#postingTerm {
-  width: 100%;
-}
-.postingTerm_select {
+main {
   display: flex;
+  justify-content: space-around;
+  margin: auto;
+  padding: 5% 0;
+  width: 70%;
+  color: #fff;
 }
-#one_week,
-#times {
-  flex: 1;
-  padding: 12px;
-  border-radius: 5px;
-  font-size: 1em;
-  line-height: 1.5;
-  text-align: center;
-}
-#one_week {
-  margin-right: 3px;
-}
-#times {
-  margin-left: 3px;
-}
-
-
 @media screen and (max-width: 768px) {
   main {
     flex-direction: column;
@@ -164,7 +52,10 @@ main {
   }
 
   .side {
-
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
   }
 }
 
@@ -176,11 +67,48 @@ main {
   border-radius: 15px;
 }
 
+.side {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.side > * p {
+  color: #070707;
+  margin: 0;
+}
 
+.timerResult p,
+.moneyResult p {
+  font-size: 32px;
+}
 
+.titleComponent {
+  margin-top: 5%;
+}
+.inputText,
+.label {
+  color: #333;
+}
 
+.label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.9em;
+}
 
+.inputText {
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 3px;
+  background: #f7f7f7;
+  font-size: 1em;
+  line-height: 1.5;
+}
 
+.inputText::placeholder {
+  color: #999;
+}
 
 .btn {
   margin-top: 5%;

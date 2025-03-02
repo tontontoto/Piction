@@ -23,18 +23,12 @@ from routes.myLikeList import myLikeList, sort_products
 from routes.lineup import lineup
 from routes.bid_sale_detail import *
 from routes.download_artwork import download_artwork
+
 from routes.contact import contact
-from routes.termsOfUse import termsOfUse
-from routes.privacyPolicy import privacyPolicy
 
 # MARK:== database ==
 from database.insert_data import add_payment_methods
 from database.insert_fake_data import *
-# データベースURLの設定
-if ENVIRONMENT == 'local':
-    DB_URL = os.getenv('DB_URL')
-else:
-    DB_URL = os.getenv('DB_URL')
 
 # MARK:== error ==
 from errors.error_handlers import *
@@ -121,10 +115,6 @@ bidConfirmation(app)
 download_artwork(app)
 # contact
 contact(app)
-# termOfUse
-termsOfUse(app)
-# privacyPolicy
-privacyPolicy(app)
 # error_handler
 error_handler(app)
 

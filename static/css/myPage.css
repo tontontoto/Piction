@@ -2,18 +2,22 @@
     margin: 0;
     padding: 0;
 }
+
 html,
 body {
     min-height: 100vh;
 }
+
 body {
     display: flex;
     flex-direction: column;
 }
+
 #header {
     margin: 0 10px;
     border-bottom: 1px #000 solid;
 }
+
 #logo {
     width: 10vw;
     margin: 15px 5px 10px;
@@ -43,13 +47,9 @@ body {
     height: 50%;
 }
 
-#profile_sp {
-    display: none;
-}
-#profile_pc {
-    display: block;
-}
-.profile_media_pc {
+.profile {
+    width: 70%;
+    padding-left: 5%;
     background: #ffffff;
     box-shadow: 0px 0px 15px -7px #787878;
     border-radius: 21px;
@@ -58,26 +58,22 @@ body {
     flex-wrap: wrap;
     position: relative;
     align-items: center;
-    padding: 20px;
 }
 
 .userIcon {
-    width: 35%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
+    padding: 3%;
+    vertical-align: center;
 }
 
 .userIcon img {
-    width: 60%;
+    width: 200px;
     border-radius: 10em;
-    vertical-align: top;
-    margin: 0 auto;
 }
 
 .userInfo {
-    width: 65%;
+    padding: 3%;
+    margin-left: 8%;
+    width: 40%;
 }
 
 .userInfo p {
@@ -85,15 +81,14 @@ body {
 }
 
 .profileDisplayName {
-    font-size: 32px;
+    font-size: 32px !important;
     font-weight: bold;
-    padding: 2%;
+    padding: 2% 2% 0 0;
 }
 
 .userName,
 .mailAddress {
     color: #989898;
-    padding-left: 2%;
 }
 
 .mailAddress img {
@@ -102,65 +97,41 @@ body {
     vertical-align: middle;
     color: #989898;
 }
-/* btn_profile */
-.btn_profile {
-    background: none;
-    padding: 4px 25px;
-    margin: 15px 0 0;
-    border: #46a0dc 1px solid;
-    border-radius: 5px;
-    width: 100%;
-    color: #1d4864;
-    transition: .3s;
-}
-.btn_profile:hover {
-    background: #46a0dc;
-    color: #fff;
-}
-/* 売上金、出品数、いいねした商品 */
-#pc_sale_overview {
+
+/* ユーザーの出品数、いいね商品数 */
+.userWantSale {
     display: flex;
     flex-direction: row;
-    box-shadow: 0px 0px 15px -7px #787878;
-    border-radius: 21px;
-    padding: 10px 5px;
-    margin: 10px 0;
-}
-/* 売上金エリア */
-.salesMoney {
-    width: 33%;
-}
-.salesMoney p:nth-child(1),
-.listingNumber p:nth-child(1),
-.thumbsUpSaleNumber p:nth-child(1) {
-    padding-left: 3%;
-    margin: 2%;
-}
-.salesMoney p:nth-child(2) {
-    font-size: 40px;
     text-align: center;
-    margin: 3% 0;
-}
-/* ユーザーの出品数、いいね商品数 */
-.listingNumber,
-.thumbsUpSaleNumber {
-    width: 33%;
-    display: block;
-}
-.listingCount,
-.likeCount {
-    font-size: 40px;
-    text-align: center;
-    margin: 3% 0;
+    margin-top: 5%;
 }
 
+.userWantSale h3 {
+    border-bottom: #818181 1px solid;
+    display: inline-block;
+    white-space: nowrap;
+    width: 100%;
+    font-size: medium;
+}
+
+.userWantSale p {
+    font-size: 30px;
+    margin: 0 !important;
+}
+
+.listingNumber,
+.thumbsUpSaleNumber {
+    display: block;
+    margin: 10px 15px 10px 0;
+    padding: 3%;
+    width: 50%;
+}
 .saleListIcon {
     width: 2.5em;
     height: 2.5em;
     vertical-align: middle;
     margin-right: 5px;
 }
-
 
 /* プロフィールの変更モーダル */
 .profileChange {
@@ -186,7 +157,7 @@ body {
 /* Modal content  */
 /* Modal1 Modal2　共通 */
 .modal-content {
-    min-height: 100%;
+    min-height: 600px;
 }
 /* Modal1 */
 /* Modal header */
@@ -219,7 +190,6 @@ body {
 
 /* Modal main */
 .modalMain {
-    position: relative;
     padding: 30px;
 }
 
@@ -292,17 +262,6 @@ body {
     pointer-events: none;
     transition: all 0.3s ease;
 }
-#modal_userId {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    text-align:right;
-    margin: 0;
-    margin-right: 10px;
-    padding: 2px;
-    color: #888;
-}
-
 
 /* modalの中 */
 .modalInput {
@@ -311,6 +270,13 @@ body {
     width: 100%;
 }
 
+
+/* btn_profile */
+.btn_profile {
+    background: none;
+    border: none;
+    color: #000;
+}
 /* Modal2 */
 .modal-header-left .back_btn {
     background: #fff;
@@ -323,7 +289,29 @@ body {
     background: #fff;
     color: #000;
 }
+/* --------------------- */
+/* 売上金エリア */
+.salesMoney {
+    background: #ffffff;
+    box-shadow: 0px 0px 15px -7px #787878;
+    border-radius: 21px;
+    width: 30%;
+    max-width: 30%;
+    min-width: 400px;
+    /* 仮 */
+    height: 50%;
+}
 
+.salesMoney p:nth-child(1) {
+    padding-left: 3%;
+    margin: 2%;
+}
+
+.salesMoney p:nth-child(2) {
+    font-size: 40px;
+    text-align: center;
+    margin: 3% 0;
+}
 
 /* いいね一覧エリア */
 .thumbsUpSaleList {
@@ -385,7 +373,7 @@ body {
 .tab-1 {
     display: flex;
     flex-wrap: wrap;
-    width: 95%;
+    width: 70%;
     margin: 0 auto;
 }
 
@@ -395,7 +383,7 @@ body {
     min-width: 70px;
     padding: .7em 1em .5em;
     border-bottom: 1px solid #f0f0f0;
-    border-radius: 5px 5px 0 0;
+    border-radius: 0;
     background-color: #e9f0f6;
     color: #535353;
     font-size: .9em;
@@ -430,136 +418,32 @@ body {
 .tab-1 label:has(:checked) + div {
     display: block;
 }
-@media (max-width: 960px) {
 
+/* #mainContents {
+    width: 70%;
+    margin: 5vw auto;
+    align-items: center;
 }
-@media (max-width: 570px) {
-    /* pc css 無効 */
-    #profile_pc {
-        display: none;
-    }
-    /* --------------------- */
-    #main {
-        flex-direction: column;
-        width: 95%;
-        margin: 3vh auto;
-    }
-    .profile {
-        width: 100%;
-        padding-left: 0;
-    }
-    #profile_sp {
-        display: block;
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .box_shadow_each {
-        display: flex;
-        align-items: center;
-        box-shadow: 0px 0px 15px -7px #787878;
-        border-radius: 21px;
-        padding: 10px 5px;
-        margin: 10px 0;
-    }
-    #profile_card {
-        flex-direction: row;
-    }
-    .userIcon {
-        width: 30%;
-        padding: 0%;
-        margin: 3%;
-    }
-    .userIcon img {
-        width: 100%;
-        align-items: center;
-        vertical-align: top;
-    }
-    .userInfo {
-        padding: 0;
-        margin-left: 0;
-        width: 70%;
-        text-align: left;
-        margin: 0 4%;
-    }
-    .profileDisplayName {
-        padding: 0%;
-        font-size: 22px;
-        width: 100%;
-        line-height: 24px;
-    }
-    .btn_profile {
-        padding: 4px 25px;
-        margin: 4px 0 0;
-        border: #46a0dc 1px solid;
-        border-radius: 5px;
-        width: 100%;
-        color: #1d4864;
-    }
-    #sp_separator_line {
-        border-color: #878787;
-        border-width: 1px 0 0 0;
-        border-style: solid;
-        width: 90%;
-        margin: 0 auto;
-    }
-    #sp_sale_overview {
-        flex-direction: column;
-    }
-    .salesMoney {
-        position: relative;
-        width: 100%;
-        min-width: 100%;
-        box-shadow: none;
-        border-radius: 0;
-    }
-    .salesMoney p:nth-child(1) {
-        position: absolute;
-        top: 0;
-        left: 0;
-        padding: 2px;
-        font-size: 22px;
-    }
-    .salesMoney p:nth-child(2) {
-        font-size: 30px;
-    }
+.userInfo {
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+}
+.iconArea {
+    padding: 0 5%;
+}
+.iconArea img{
+    border-radius: 50%;
+}
 
-    .userWantSale {
-        width: 100%;
-        margin-top: 8px;
-        display: flex;
-        flex-direction: row;
-    }
-    .listingNumber,
-    .thumbsUpSaleNumber {
-        position: relative;
-        margin: 0 10px;
-        padding: 5% 0 0;
-        width: 50%;
-    }
-    .listingNumber {
-        border-right: #878787 1px solid;
-    }
-    .userWantSale_p {
-        display: inline;
-        white-space: nowrap;
-        width: 100%;
-        font-weight: medium;
-        margin-bottom: 0%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        text-align: left;
-        padding: 2px;
-        border: none;
-        font-size: 22px;
-    }
-    .listingCount,
-    .likeCount {
-        font-size: 30px;
-        margin: 0;
-        font-size: 30px;
-        text-align: center;
-        margin-top: 10px;
-    }
+.users {
+    padding: 0 5%;
 }
+.displayName {
+    font-size: x-large;
+    font-weight: bold;
+}
+.userName,
+.mailAddress {
+    color: #989898;
+} */

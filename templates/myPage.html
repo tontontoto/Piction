@@ -28,7 +28,6 @@
         crossorigin="anonymous"></script>
 
     <script src="{{ url_for('static', filename='js/myPage.js') }}" defer></script>
-    <script src="{{ url_for('static', filename='js/footer.js') }}" defer></script>
 
     <!-- cropper.js -->
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"
@@ -43,49 +42,34 @@
     <!------------------->
     <main id="main">
         <div class="profile">
-            <!-- mobile -->
-            <div id="profile_sp">
-                <div class="profile_media_570 box_shadow_each" id="profile_card">
-                    <div class="userIcon">
-                        {% if config.IS_LOCAL %}
-                            <img src="{{ url_for('static', filename=user.iconFilePath) }}" class="icon" alt="userIcon">
-                        {% else %}
-                            <img src="{{ user.iconFilePath }}" class="icon" alt="userIcon">
-                        {% endif %}
+            <div class="userIcon">
+                {% if config.IS_LOCAL %}
+                    <img src="{{ url_for('static', filename=user.iconFilePath) }}" class="icon" alt="userIcon">
+                {% else %}
+                    <img src="{{ user.iconFilePath }}" class="icon" alt="userIcon">
+                {% endif %}
+            </div>
+            <div class="userInfo">
+                <p class="profileDisplayName">{{ user.displayName }}</p>
+                <p class="userName">@{{ user.userName }}</p>
+                <p class="mailAddress">
+                    <!-- <span><img src="{{ url_for('static', filename='parts/mail.svg') }}"></span> -->
+                    {{ user.mailAddress }}
+                </p>
+
+                <div class="userWantSale">
+                    <div class="listingNumber">
+                        <h3 class="listingNumber_h3">出品</h3>
+                        <p>{{ listingCount }}</p>
                     </div>
-                    <div class="userInfo">
-                        <p class="profileDisplayName">{{ user.displayName }}</p>
-                        <p class="userName">@{{ user.userName }}</p>
-                        <p class="mailAddress">
-                            <!-- <span><img src="{{ url_for('static', filename='parts/mail.svg') }}"></span> -->
-                            {{ user.mailAddress }}
-                        </p>
-                        <div>
-                            <button class="btn_profile" data-bs-target="#exampleModalToggle_sp"
-                                data-bs-toggle="modal">プロフィールの編集</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- 売上金、出品数、いいねした商品-->
-                <div class="box_shadow_each" id="sp_sale_overview">
-                    <div class="salesMoney">
-                        <p class="sp_salesMoney_title">売上金</p>
-                        <p class="sp_salesMoney_content">￥{{ '{:,}'.format(revenue) }}</p>
-                    </div>
-                    <hr id="sp_separator_line" />
-                    <div class="userWantSale">
-                        <div class="listingNumber">
-                            <p class="userWantSale_p">出品数</p>
-                            <p class="listingCount">{{ listingCount }}</p>
-                        </div>
-                        <div class="thumbsUpSaleNumber">
-                            <p class="userWantSale_p">いいねした商品</p>
-                            <p class="likeCount">{{ likeCount }}</p>
-                        </div>
+                    <div class="thumbsUpSaleNumber">
+                        <h3>いいねした商品</h3>
+                        <p>{{ likeCount }}</p>
                     </div>
                 </div>
+
                 <!-- Modal1 -->
-                <div class="modal fade" id="exampleModalToggle_sp" aria-hidden="true"
+                <div class="modal fade" id="exampleModalToggle" aria-hidden="true"
                     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
                     <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
@@ -94,7 +78,7 @@
                                     <div class="modal-header-left">
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
-                                        <h5 class="modal-title" id="exampleModalLabel_sp">プロフィールを編集</h5>
+                                        <h5 class="modal-title" id="exampleModalLabel">プロフィールを編集</h5>
                                     </div>
                                     <div class="modal-header-right">
                                         <input type="submit" value="変更" class="profileSubmitbtn">
@@ -139,161 +123,33 @@
                                 </div>
                             </form>
                             <div class="modal-footer" style="display: none;">
-                                <button class="btn btn-primary" data-bs-target="#exampleModalToggle2_sp"
+                                <button class="btn btn-primary" data-bs-target="#exampleModalToggle2"
                                     data-bs-toggle="modal" id="trimingiconedit">Open second modal</button>
                             </div>
                         </div>
 
                     </div>
                 </div>
+
                 <!-- Modal2 -->
-                <div class="modal fade" id="exampleModalToggle2_sp" aria-hidden="true"
+                <div class="modal fade" id="exampleModalToggle2" aria-hidden="true"
                     aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
                     <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <div class="modal-header-left">
                                     <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                                                                    data-bs-toggle="modal" data-bs-target="#exampleModalToggle">←</button> -->
-                                    <button class="btn btn-primary back_btn" id="backExampleModalToggle_sp"
-                                        data-bs-target="#exampleModalToggle" data-bs-toggle="modal">←</button>
-                                    <h5 class="modal-title" id="exampleModalLabel_sp">メディアを編集</h5>
-                                </div>
-                                <div class="modal-header-right">
-                                    <input type="button" id="crop_btn" class="profileSubmitbtn" value="適用" />
-                                    </p>
-                                    <!-- <input type="button" id="crop_btn" class="profileSubmitbtn" value="適用" /> -->
-                                </div>
-                                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                aria-label="Close"></button> -->
-                            </div>
-                            <!-- Modal2-Main -->
-                            <div class="modalMain">
-                                <div class="cropper-container">
-                                    <p><img src="" alt="トリミング画像" id="trimed_image" style="display: none;" /></p>
-                                </div>
-                                <!-- <div id="result"></div> -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- pc -->
-            <div id="profile_pc">
-                <div class="profile_media_pc">
-                    <div class="userIcon">
-                        <img src="{{ url_for('static', filename=user.iconFilePath) }}" class="icon" alt="userIcon">
-                    </div>
-                    <div class="userInfo">
-                        <p class="profileDisplayName">{{ user.displayName }}</p>
-                        <p class="userName">@{{ user.userName }}</p>
-                        <p class="mailAddress">
-                            <!-- <span><img src="{{ url_for('static', filename='parts/mail.svg') }}"></span> -->
-                            {{ user.mailAddress }}
-                        </p>
-                        <div>
-                            <button class="btn_profile" data-bs-target="#exampleModalToggle_pc"
-                                data-bs-toggle="modal">プロフィールの編集</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- 売上金、出品数、いいねした商品-->
-                <div class="box_shadow_each" id="pc_sale_overview">
-                    <div class="salesMoney">
-                        <p>売上金</p>
-                        <p>￥{{ '{:,}'.format(revenue) }}</p>
-                    </div>
-                    <div class="listingNumber">
-                        <p class="userWantSale_p">出品数</p>
-                        <p class="listingCount">{{ listingCount }}</p>
-                    </div>
-                    <div class="thumbsUpSaleNumber">
-                        <p class="userWantSale_p">いいねした商品</p>
-                        <p class="likeCount">{{ likeCount }}</p>
-                    </div>
-
-                </div>
-                <!-- Modal1 -->
-                <div class="modal fade" id="exampleModalToggle_pc" aria-hidden="true"
-                    aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div class="modal-content">
-                            <form method="post" enctype="multipart/form-data">
-                                <div class="modal-header">
-                                    <div class="modal-header-left">
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                        <h5 class="modal-title" id="exampleModalLabel_pc">プロフィールを編集</h5>
-                                    </div>
-                                    <div class="modal-header-right">
-                                        <input type="submit" value="変更" class="profileSubmitbtn">
-                                    </div>
-                                </div>
-                                <!-- Modal1-Main -->
-                                <div class="modalMain">
-                                    <div class="fileContainer">
-                                        <!-- 現在の表示アイコン -->
-                                        <div id="result">
-                                            <img src="{{ url_for('static', filename=user.iconFilePath) }}" id="icon"
-                                                alt="userIcon">
-                                        </div>
-                                        <!-- カメラのSVGアイコン -->
-                                        <div class="cameraIconBox">
-                                            <img src="{{ url_for('static', filename='parts/camera-plus.svg') }}" alt=""
-                                                class="cameraIcon">
-                                        </div>
-                                        <!-- アイコン選択input -->
-                                        <input type="file" id="triming_image" name="file" class="triming-image"
-                                            accept="image/*" />
-                                    </div>
-
-                                    <div class="modalInputBox">
-                                        <label for="displayName" class="inputLabel">表示名</label>
-                                        <input type="text" name="displayName" class="modalInput"
-                                            value="{{ user.displayName }}">
-                                    </div>
-                                    <div class="modalInputBox">
-                                        <label for="userName" class="inputLabel">ユーザー名</label>
-                                        <input type="text" name="userName" class="modalInput"
-                                            value="{{ user.userName }}">
-                                    </div>
-                                    <div class="modalInputBox">
-                                        <label for="mailAddress" class="inputLabel">Email</label>
-                                        <input type="text" name="mailAddress" class="modalInput"
-                                            value="{{ user.mailAddress }}">
-                                    </div>
-                                </div>
-                            </form>
-                            <p id="modal_userId">Piciton ID: {{ user.userId }}</p>
-                            <div class="modal-footer" style="display: none;">
-                                <button class="btn btn-primary" data-bs-target="#exampleModalToggle2_pc"
-                                    data-bs-toggle="modal" id="trimingiconedit">Open second modal</button>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <!-- Modal2 -->
-                <div class="modal fade" id="exampleModalToggle2_pc" aria-hidden="true"
-                    aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <div class="modal-header-left">
-                                    <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                                                                    data-bs-toggle="modal" data-bs-target="#exampleModalToggle">←</button> -->
+                                        data-bs-toggle="modal" data-bs-target="#exampleModalToggle">←</button> -->
                                     <button class="btn btn-primary back_btn" id="backExampleModalToggle"
                                         data-bs-target="#exampleModalToggle" data-bs-toggle="modal">←</button>
-                                    <h5 class="modal-title" id="exampleModalLabel_pc">メディアを編集</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">メディアを編集</h5>
                                 </div>
                                 <div class="modal-header-right">
-                                    <input type="button" id="crop_btn" class="profileSubmitbtn" value="適用" />
-                                    </p>
+                                    <input type="button" id="crop_btn" class="profileSubmitbtn" value="適用" /></p>
                                     <!-- <input type="button" id="crop_btn" class="profileSubmitbtn" value="適用" /> -->
                                 </div>
                                 <!-- <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                aria-label="Close"></button> -->
+                                    aria-label="Close"></button> -->
                             </div>
                             <!-- Modal2-Main -->
                             <div class="modalMain">
@@ -305,8 +161,35 @@
                         </div>
                     </div>
                 </div>
-            </div>
+                <button class="btn_profile" data-bs-target="#exampleModalToggle"
+                    data-bs-toggle="modal">プロフィールの編集</button>
 
+            </div>
+        </div>
+
+
+        </div>
+        <div class="flex1">
+            <div class="salesMoney">
+                <p>売上金</p>
+                <p>￥{{ '{:,}'.format(revenue) }}</p>
+            </div>
+            <div class="flex2">
+                <div class="thumbsUpSaleList">
+                    <img src="{{ url_for('static', filename='../static/parts/heart.svg') }}" class="saleListIcon" alt="heart">
+                    <p>いいね一覧</p>
+                    <img src="{{ url_for('static', filename='../static/parts/chevron-right.svg')}}"
+                        class="chevron-right" alt="chevron-right">
+                    <a href="/myLikeList"></a>
+                </div>
+                <div class="thumbsUpSaleList">
+                    <img src="{{ url_for('static', filename='../static/parts/auction.svg') }}" class="saleListIcon" alt="chart-line">
+                    <p>落札した商品</p>
+                    <img src="{{ url_for('static', filename='../static/parts/chevron-right.svg')}}" class="chevron-right" alt="chevron-right">
+                    <a href='/my_winning_bids'></a>
+                </div>
+            </div>
+        </div>
     </main>
 
     <div class="tab-1">
@@ -320,7 +203,7 @@
             {% include 'userSales.html' %}
             {% endwith %}
         </div>
-
+    
         <label>
             <input type="radio" name="tab-1">
             落札した商品
@@ -331,7 +214,7 @@
             {% include 'successfulBid.html' %}
             {% endwith %}
         </div>
-
+    
         <label>
             <input type="radio" name="tab-1">
             入札した商品
@@ -340,7 +223,7 @@
             {% with myBidSales = myBidSales %}
             {% include 'myBid.html' %}
             {% endwith %}
-        </div>
+        </div> 
     </div>
 
 

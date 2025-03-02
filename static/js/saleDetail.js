@@ -5,14 +5,16 @@ document.addEventListener("DOMContentLoaded", function () {
   const specifyInput = document.getElementById("specify");
   const addAmountButton = document.getElementById("addAmount");
   const minBidPrice = document.getElementById("minBidPrice");
-  // let specifyInputValue = specifyInput.value;
-  console.log(minBidPrice.textContent);
+
+  let currentAmount = parseInt(
+    document.getElementById("addAmount").textContent.replace(/[^0-9]/g, ""),
+    10
+  );
+
   // 金額を更新する関数
   function updateAmount(amount) {
-    // 現在の値を取得し、指定されたamountを足してinputの値を更新
-    const currentValue = parseInt(specifyInput.value, 10) || 0; // 初期値が設定されていない場合0を使用
-    const newValue = currentValue + amount;
-    specifyInput.value = newValue; // inputのvalueを更新
+    currentAmount += amount;
+    addAmountButton.textContent = `${currentAmount}`;
   }
 
   // 金額増加ボタンのイベントリスナー
@@ -61,33 +63,32 @@ document.addEventListener("DOMContentLoaded", function () {
   // 入札ボタンのイベントリスナー
   bidButton.addEventListener("click", function () {
     const specifiedAmount = parseInt(specifyInput.value, 10) || 0;
-    const minBid = parseInt(minBidPrice.textContent.replace(/,/g,""), 10);
-    console.log(minBid);
-    // 入札額が最低入札金額より大きいか確認
-    if (specifiedAmount < minBid) {
-      // 入札額が最低入札金額以下の場合
-      alert("入札額は最低入札金額より大きくなければなりません。");
-      return; // 入札を中止
+    const addAmount = parseInt(addAmountButton.textContent, 10);
+    const minBid = parseInt(minBidPrice.textContent, 10);
+
+    let finalAmount = Math.max(specifiedAmount, addAmount);
+
+    if (isNaN(finalAmount) || finalAmount < minBid) {
+      alert("有効な金額を入力してください"+"specifiedAmount:"+specifiedAmount+"addAmount:"+addAmount+"minBid:"+minBid);
+      return;
     }
 
-    // 入札処理を行う
     fetch("/bid", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        saleId: document.getElementById("saleId").dataset.saleId, // saleIdを送信
-        amount: specifiedAmount, // 入札額を送信
+        saleId: document.getElementById("saleId").dataset.saleId,
+        amount: finalAmount,
       }),
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
           alert("入札が成功しました");
-          location.reload(); // 成功したらページをリロード
+          location.reload();
         } else {
           alert(data.message || "入札に失敗しました");
-        }
-      })
+      }})
       .catch((error) => {
         console.error("Error:", error);
         alert("入札に失敗しました");
