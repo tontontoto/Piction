@@ -101,6 +101,8 @@ clearButton.addEventListener("click", () => {
 
 // マウスダウンおよびタッチスタートイベント
 function startDrawing(e) {
+  document.body.style.overflow = 'hidden';
+
   isDrawing = true;
   const rect = canvas.getBoundingClientRect();
   const mouseX = (e.clientX || e.touches[0].clientX) - rect.left;
@@ -135,6 +137,8 @@ function moveDrawing(e) {
 
 // マウスアップおよびタッチエンドイベント
 function endDrawing() {
+  document.body.style.overflow = '';
+
   isDrawing = false;
   line.graphics.endStroke();
   stage.update();
