@@ -150,7 +150,7 @@ header {
     color: #000;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 570px) {
     .header-wrapper {
         padding: 10px 15px;
     }
