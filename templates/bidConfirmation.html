@@ -37,7 +37,7 @@
                     <div class="price-info">
                         <div class="info-row">
                             <span class="label">落札価格</span>
-                            <span class="value price">¥{{ sale.currentPrice }}</span>
+                            <span class="value price">¥{{ '{:,}'.format(sale.currentPrice) }}</span>
                         </div>
                         <div class="info-row">
                             <span class="label">落札日時</span>

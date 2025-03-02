@@ -40,25 +40,20 @@ else:
 from errors.error_handlers import *
 
 # == インスタンス作成 ==
+
+# MARK:インスタンス化
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.urandom(24)
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['UPLOAD_ICON_FOLDER'] = UPLOAD_ICON_FOLDER
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
-app.config['IS_LOCAL'] = True if ENVIRONMENT == 'local' else False
-# Secureなセッション管理
-SESSION_COOKIE_HTTPONLY = True  # JavaScriptからアクセス不可
-SESSION_COOKIE_SECURE = True    # HTTPSでのみ送信（
-SESSION_COOKIE_SAMESITE = 'Lax'  # クロスサイトリクエストを制限
+app.config['IS_LOCAL'] = UPLOAD_STORAGE == 'local'
 
 # == ローカル画像保存先フォルダの作成 ==
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(app.config['UPLOAD_ICON_FOLDER'], exist_ok=True)
-
-# Azure Blob Storage接続
-blob_service_client, container_client = connect_to_azure_blob()
 
 # DB設定
 try:
@@ -81,9 +76,9 @@ update_ranking(app)
 
 # ログイン機能設定
 login_manager = LoginManager(app)
-login_manager.login_view = '/'
+login_manager.login_view = '/login'
 #現在のログインユーザーの情報を保持
-login_manager.user_loader(load_user)
+login_manager.user_loader(load_user) 
 
 # MARK:==ROUTES==
 #welcome
@@ -133,20 +128,20 @@ privacyPolicy(app)
 # error_handler
 error_handler(app)
 
+print(f"現在の環境: {ENVIRONMENT}")
+print(f"データベースURL: {DB_URL}")
 
-# MARK:テーブルの作成
-if __name__ == '__main__': 
-    with app.app_context():
-        try:
-            # db.drop_all()  # テーブルの全削除
-            db.create_all()
-            # dummy_users = add_users()
-            # dummy_categories = add_categories()
-            # add_sales(dummy_categories)
-            # add_payment_methods()
-        except Exception as e:
-            print(f"Error テーブル作成失敗: {e}")
-            db.session.rollback()
-            db.session.close()
-            exit()
-    app.run(host='0.0.0.0', port=80, debug=True)
+# MARK: テーブルの作成
+with app.app_context():
+    try:
+        # db.drop_all()  # テーブルの全削除
+        db.create_all()
+    except Exception as e:
+        print(f"Error テーブル作成失敗: {e}")
+        db.session.rollback()
+        db.session.close()
+        exit()
+        
+if __name__ == '__main__':
+    PORT = int(os.getenv('PORT', 5000))
+    app.run(host='0.0.0.0', port=PORT, debug=True)

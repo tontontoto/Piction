@@ -23,4 +23,4 @@ def search(app):
             
         except Exception as e:
             print(f"Error 検索処理失敗: {e}")
-            return render_template('lineup.html', sales=[], bidCount={}, query=query)
+            return render_template('lineup.html', sales=[], bidCount={}, query=query, config=app.config)

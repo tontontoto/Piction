@@ -47,7 +47,11 @@
             <div id="profile_sp">
                 <div class="profile_media_570 box_shadow_each" id="profile_card">
                     <div class="userIcon">
-                        <img src="{{ url_for('static', filename=user.iconFilePath) }}" class="icon" alt="userIcon">
+                        {% if config.IS_LOCAL %}
+                            <img src="{{ url_for('static', filename=user.iconFilePath) }}" class="icon" alt="userIcon">
+                        {% else %}
+                            <img src="{{ user.iconFilePath }}" class="icon" alt="userIcon">
+                        {% endif %}
                     </div>
                     <div class="userInfo">
                         <p class="profileDisplayName">{{ user.displayName }}</p>
@@ -101,8 +105,11 @@
                                     <div class="fileContainer">
                                         <!-- 現在の表示アイコン -->
                                         <div id="result">
-                                            <img src="{{ url_for('static', filename=user.iconFilePath) }}" id="icon"
-                                                alt="userIcon">
+                                                {% if config.IS_LOCAL %}
+                                                    <img src="{{ url_for('static', filename=user.iconFilePath) }}" id="icon"alt="userIcon">
+                                                {% else %}
+                                                    <img src="{{ user.iconFilePath }}" id="icon" alt="userIcon">
+                                                {% endif %}
                                         </div>
                                         <!-- カメラのSVGアイコン -->
                                         <div class="cameraIconBox">

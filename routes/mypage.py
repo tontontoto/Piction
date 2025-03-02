@@ -1,5 +1,9 @@
 from imports import *
 from auth.img_helper import allowed_file
+from sqlalchemy.sql import select
+from azure.storage.blob import BlobServiceClient, ContentSettings
+from auth.azure_blob import connect_to_azure_blob
+from auth.config import AZURE_STORAGE_ACCOUNT, AZURE_STORAGE_CONNECTION_STRING, AZURE_STORAGE_CONTAINER, AZURE_STORAGE_ICON_SAS, AZURE_STORAGE_ICON_CONTAINER
 
 # MARK: マイページ
 def mypage(app):
@@ -8,7 +12,7 @@ def mypage(app):
     def myPage_view():
         userId = session.get('userId')
         try:
-            user = User.query.get(userId)
+            user = db.session.query(User).get(userId)
             # session(ログイン状態のuserId)のsaleの行を取り出し、
             # 外部キーのuserIdよりUserテーブルの中のデータを参照できる。
             sales = db.session.query(Sale).join(User).filter_by(userId=userId).all()
@@ -36,18 +40,7 @@ def mypage(app):
         except Exception as e:
             print(f"Error いいねした商品のカウントに失敗: {e}")
             likeCount = "---"
-        
-        # 自分が落札した商品の情報を取得
-        myBidList = db.session.query(WinningBid).join(Sale).filter(WinningBid.buyerId == userId).all()
-
-        # 落札した商品の情報を取得
-        myBidSales = []
-        for bid in myBidList:
-            sale = Sale.query.get(bid.saleId)
-            myBidSales.append(sale)
-
-        print("落札した商品の一覧", myBidSales)
-        
+            
         # 自分が入札した作品を取得
         # 最新のBidを取得するためのサブクエリ
         latest_bid_subquery = (
@@ -59,13 +52,35 @@ def mypage(app):
             .group_by(Sale.saleId)
             .subquery()
         )
+        
+        # 自分が落札した商品の情報を取得
+        myWinningBidList = db.session.query(WinningBid).join(Sale).filter(
+            WinningBid.buyerId == userId
+        ).all()
+        
+        myBidList= (
+            db.session.query(Bid, Sale, User)
+            .join(Sale, Bid.saleId == Sale.saleId)
+            .join(User, Sale.userId == User.userId)
+            .filter(Bid.bidId.in_(select(latest_bid_subquery)), Sale.saleStatus == 0)
+            .order_by(Bid.bidId.desc())  # 最新のBid順に並べる
+            .all()
+        )
+
+        # 落札した商品の情報を取得
+        myBidSales = []
+        for bid in myBidList:
+            sale = Sale.query.get(bid.Sale.saleId)
+            myBidSales.append(sale)
+
+        print("落札した商品の一覧", myBidSales)
 
         # 最新のBidを持つSale情報を取得
         my_bids_query = (
             db.session.query(Bid, Sale, User)
             .join(Sale, Bid.saleId == Sale.saleId)
             .join(User, Sale.userId == User.userId)
-            .filter(Bid.bidId.in_(latest_bid_subquery))
+            .filter(Bid.bidId.in_(select(latest_bid_subquery)), Sale.saleStatus == 1)
             .order_by(Bid.bidId.desc())  # 最新のBid順に並べる
             .all()
         )
@@ -100,29 +115,56 @@ def mypage(app):
                     filename = secure_filename(file.filename)
                     file_extension = filename.rsplit('.', 1)[1].lower()
 
-                    # 新しいファイル名を作成
-                    new_filename = f"user_icon_{len(os.listdir(app.config['UPLOAD_ICON_FOLDER'])) + 1}.{file_extension}"
-                    file_path = os.path.join(app.config['UPLOAD_ICON_FOLDER'], new_filename).replace('\\', '/')
+                    # ユーザーごとの固有ファイル名を決定
+                    if iconFilePath == "static/img/icon_user_light.png":
+                        print('アイコン 新規保存')
+                        new_filename = f"user_icon_{user.userId}.{file_extension}"
+                    else:
+                        print('アイコン 更新保存')
+                        # 既にアイコンアップロード済みの場合、既存のファイル名を利用（Azureの場合はSAS等のクエリ文字列を除外）
+                        new_filename = os.path.basename(iconFilePath.split('?')[0])
+                        base, ext = os.path.splitext(new_filename)
+                        if ext.lower() != f".{file_extension}":
+                            new_filename = f"user_icon_{user.userId}.{file_extension}"
+                    
+                    if app.config['IS_LOCAL']:
+                        print('アイコン ローカル保存')
+                        # ディレクトリが存在しない場合、作成する
+                        os.makedirs(app.config['UPLOAD_ICON_FOLDER'], exist_ok=True)
+                        file_path = os.path.join(app.config['UPLOAD_ICON_FOLDER'], new_filename).replace('\\', '/')
 
-                    # ディレクトリが存在しない場合、作成する
-                    os.makedirs(app.config['UPLOAD_ICON_FOLDER'], exist_ok=True)
+                        # 既存のアイコンがあれば削除（オプション）
+                        if iconFilePath and os.path.exists(os.path.join(app.config['UPLOAD_ICON_FOLDER'], iconFilePath.split('/')[-1])):
+                            try:
+                                os.remove(os.path.join(app.config['UPLOAD_ICON_FOLDER'], iconFilePath.split('/')[-1]))
+                                print(f"既存のアイコンファイル({iconFilePath})を削除しました。")
+                            except Exception as e:
+                                print(f"既存のアイコン削除に失敗しました: {e}")
 
-                    # 既存のアイコンがあれば削除（オプション）
-                    if iconFilePath and os.path.exists(os.path.join(app.config['UPLOAD_ICON_FOLDER'], iconFilePath.split('/')[-1])):
+                        # 新しい画像ファイルを保存
                         try:
-                            os.remove(os.path.join(app.config['UPLOAD_ICON_FOLDER'], iconFilePath.split('/')[-1]))
-                            print(f"既存のアイコンファイル({iconFilePath})を削除しました。")
+                            file.save(file_path)
+                            print(f"新しいアイコンが保存されました: {file_path}")
+                            iconFilePath = f"upload_icon/{new_filename}"  # 新しいアイコンファイルパス
                         except Exception as e:
-                            print(f"既存のアイコン削除に失敗しました: {e}")
-
-                    # 新しい画像ファイルを保存
-                    try:
-                        file.save(file_path)
-                        print(f"新しいアイコンが保存されました: {file_path}")
-                        iconFilePath = f"upload_icon/{new_filename}"  # 新しいアイコンファイルパス
-                    except Exception as e:
-                        print(f"ファイルの保存に失敗しました: {e}")
-                        iconFilePath = None
+                            print(f"ファイルの保存に失敗しました: {e}")
+                            iconFilePath = None
+                    else:
+                        print('アイコン Azure Blob Storage保存')
+                         # Azure Blob Storageにアップロードする場合
+                        try:
+                            # Azure Blob Storage接続
+                            blob_service_client, container_client = connect_to_azure_blob(AZURE_STORAGE_ICON_CONTAINER)
+                            content_settings = ContentSettings(content_type=file.content_type)
+                            # ファイルポインタを先頭に戻す
+                            file.seek(0)
+                            container_client.upload_blob(new_filename, file, overwrite=True, content_settings=content_settings)
+                            # BlobのURLをiconFilePathに設定
+                            iconFilePath = f"https://{AZURE_STORAGE_ACCOUNT}.blob.core.windows.net/{AZURE_STORAGE_ICON_CONTAINER}/{new_filename}?{AZURE_STORAGE_ICON_SAS}"
+                            print(f"新しいアイコンがBlob Storageに保存されました: {iconFilePath}")
+                        except Exception as e:
+                            print(f"Blob Storageへのアップロードに失敗しました: {e}")
+                            iconFilePath = None
 
             # ユーザー情報をデータベースに保存
             try:
@@ -148,7 +190,7 @@ def mypage(app):
                 print(f"データベース保存エラー: {e}")
 
             # リダイレクトでフォーム送信後の再送信を防ぐ
-            return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, my_bids=my_bids, revenue=revenue)
+            return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, my_bids=my_bids, revenue=revenue, config=app.config)
             
 
-        return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, my_bids=my_bids, revenue=revenue)
+        return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, my_bids=my_bids, revenue=revenue, config=app.config)

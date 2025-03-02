@@ -6,7 +6,7 @@
             {% if config.IS_LOCAL %}
             <img src="{{ url_for('static', filename=saleRanking.filePath) }}" alt="saleImage" id="uploadImg">
             {% else %}
-            <img src="{{ sale.filePath }}" alt="{{ sale.title }}">
+            <img src="{{ sale.filePath }}" alt="{{ sale.title }}" id="uploadImg">
             {% endif %}
         </div>
         <div class="saleRankingBox_content">

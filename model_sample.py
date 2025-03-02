@@ -1,29 +1,21 @@
 from imports import *
 from os.path import join, dirname
-from sqlalchemy.ext.declarative import declarative_base
-
+from auth.config import ENVIRONMENT, DB_URL, load_dotenv
+import pytz
 
 ENVIRONMENT = os.getenv('ENVIRONMENT')
 if not ENVIRONMENT:
     raise ValueError("model 環境変数 ENVIRONMENT が設定されていません")
 
-print(ENVIRONMENT)
 if ENVIRONMENT == 'local':
     dotenv_path = join(dirname(__file__), '.env')
     load_dotenv(dotenv_path, verbose=True)
-    print("if文の中")
-DB_URL = os.getenv("DB_URL")
-print("model",DB_URL)
-try:
-    Base = declarative_base()
-    engine = create_engine(DB_URL, echo=True)
-    db = SQLAlchemy()
-    connection = engine.connect()
-    print("✅ SQLAlchemy で接続成功！")
-    connection.close()
-except Exception as e:
-    print(f"❌ 接続エラー: {e}")
-	
+    
+def get_current_time_jst():
+    return datetime.now(pytz.timezone('Asia/Tokyo'))
+
+db = SQLAlchemy()
+
 saleCategoryAssociation = Table(
     'saleCategoryAssociation', db.metadata,
     Column('saleId', Integer, ForeignKey('sale.saleId'), primary_key=True),
@@ -33,15 +25,14 @@ saleCategoryAssociation = Table(
 # MARK: User
 class User(UserMixin, db.Model):
     __tablename__ = "user"
+    __table_args__ = {'sqlite_autoincrement': True}
     userId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userName = db.Column(db.String(15), unique=True)
     displayName = db.Column(db.String(10))
     mailAddress = db.Column(db.String(254), unique=True)
     password = db.Column(db.String(254))
     registrationDate = db.Column(db.Date, default=date.today())
-    iconFilePath = db.Column(db.String(254), nullable=False, default="img/icon_user_light.png")
-
-    # usericon = db.relationship("UserIcon", back_populates="user", uselist=False)
+    iconFilePath = db.Column(db.String(254), nullable=False, default="static/img/icon_user_light.png")
     sales= db.relationship("Sale", back_populates="user")
     bids = db.relationship("Bid", back_populates="user") 
     likes = db.relationship("Like", back_populates="user")
@@ -65,6 +56,7 @@ class User(UserMixin, db.Model):
 # MARK:Category
 class Category(db.Model):
     __tablename__ = "category"
+    __table_args__ = {'sqlite_autoincrement': True}
     categoryId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     categoryName = db.Column(db.String(20))
     sales = db.relationship("Sale", secondary=saleCategoryAssociation, back_populates="categories", lazy='dynamic')
@@ -72,9 +64,10 @@ class Category(db.Model):
 # MARK: Sale
 class Sale(db.Model):
     __tablename__ = "sale"
+    __table_args__ = {'sqlite_autoincrement': True}
     saleId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userId = db.Column(db.Integer, ForeignKey('user.userId'))
-    displayName = db.Column(db.String(10), ForeignKey('user.displayName'))
+    # displayName = db.Column(db.String(10), ForeignKey('user.displayName'))
     title = db.Column(db.String(40), default="無題")
     displayName = db.Column(db.String(10))
     # categoryId = db.Column(db.Integer, ForeignKey('category.categoryId'))
@@ -99,12 +92,13 @@ class Sale(db.Model):
 # MARK:Bid
 class Bid(db.Model):    
     __tablename__ = "bid"
+    __table_args__ = {'sqlite_autoincrement': True}
     bidId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     saleId = db.Column(db.Integer, ForeignKey('sale.saleId'))
     userId = db.Column(db.Integer, ForeignKey('user.userId'))
 
     bidPrice = db.Column(db.Integer)
-    bidTime = db.Column(db.DATETIME, default=datetime.now, nullable=False)
+    bidTime = db.Column(db.DATETIME, default=get_current_time_jst, nullable=False)
 
     user = db.relationship("User", back_populates="bids")
     sale = db.relationship("Sale", back_populates="bids")
@@ -113,6 +107,7 @@ class Bid(db.Model):
 # MARK:WinningBid
 class WinningBid(db.Model):
     __tablename__ = "winningBid"
+    __table_args__ = {'sqlite_autoincrement': True}
     winningBidId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     buyerId = db.Column(db.Integer, ForeignKey('user.userId'))
     saleId = db.Column(db.Integer, ForeignKey('sale.saleId'))
@@ -127,6 +122,7 @@ class WinningBid(db.Model):
 # MARK:PaymentWay
 class PaymentWay(db.Model):
     __tablename__ = "paymentWay"
+    __table_args__ = {'sqlite_autoincrement': True}
     paymentWayId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     paymentWayName = db.Column(db.String(20))
     payments = db.relationship("Payment", back_populates="paymentWay")
@@ -134,11 +130,12 @@ class PaymentWay(db.Model):
 # Payment
 class Payment(db.Model):
     __tablename__ = "payment"
+    __table_args__ = {'sqlite_autoincrement': True}
     paymentId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     saleId = db.Column(db.Integer, ForeignKey('sale.saleId'))
     winningBidId = db.Column(db.Integer, ForeignKey('winningBid.winningBidId'))
     paymentWayId = db.Column(db.Integer, ForeignKey('paymentWay.paymentWayId'))
-    paymentDate = db.Column(db.DATETIME, default=datetime.now(), nullable=False)
+    paymentDate = db.Column(db.DATETIME, default=get_current_time_jst, nullable=False)
 
     sale = db.relationship("Sale", back_populates="payment")
     paymentWay = db.relationship("PaymentWay", back_populates="payments")
@@ -147,6 +144,7 @@ class Payment(db.Model):
 # MARK: Like
 class Like(db.Model):
     __tablename__ = "like"
+    __table_args__ = {'sqlite_autoincrement': True}
     likeId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userId = db.Column(db.Integer, ForeignKey('user.userId'))
     saleId = db.Column(db.Integer, ForeignKey('sale.saleId'))
@@ -157,6 +155,7 @@ class Like(db.Model):
 # MARK: InquiryKind
 class InquiryKind(db.Model):
     __tablename__ = "inquiryKind"
+    __table_args__ = {'sqlite_autoincrement': True}
     inquiryKindId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     inquiryKindName = db.Column(db.String(10))
 
@@ -165,6 +164,7 @@ class InquiryKind(db.Model):
 # MARK: Inquiry
 class Inquiry(db.Model):
     __tablename__ = "inquiry"
+    __table_args__ = {'sqlite_autoincrement': True}
     inquiryId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userId = db.Column(db.Integer, ForeignKey('user.userId'))
     displayName = db.Column(db.String(10))
