@@ -10,11 +10,16 @@
                 </button>
             </div>
         </div>
-        
+
         <div class="footer-main">
             <div class="footer-links">
                 <div class="footer-column">
-                    <h3>About</h3>
+                    <div class="media-570px-style">
+                        <h3>About</h3>
+                        <span class="chevron-down">
+                            <img src="{{ url_for('static', filename='parts/chevron-down.svg') }}" alt="chevron-down">
+                        </span>
+                    </div>
                     <ul>
                         <li><a href="/myPage">Myページ</a></li>
                         <li><a href="/top">ランキング</a></li>
@@ -23,16 +28,22 @@
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h3>Support</h3>
+                    <div class="media-570px-style">
+                        <h3>Support</h3>
+                        <span class="chevron-down">
+                            <img src="{{ url_for('static', filename='parts/chevron-down.svg') }}" alt="chevron-down">
+                        </span>
+                    </div>
                     <ul>
                         <li><a href="/draw">作品を出品する</a></li>
                         <li><a href="/logout">ログアウト</a></li>
                         <li><a href="/contact">お問い合わせ</a></li>
                         <li><a href="/contact">FAQ</a></li>
-                        <li><a href="/top">プライバシーポリシー</a></li>
+                        <li><a href="/termsOfUse">利用規約</a></li>
+                        <li><a href="/privacyPolicy">プライバシーポリシー</a></li>
                     </ul>
                 </div>
-                <div class="footer-column">
+                <div class="footer-column media-570px-style">
                     <h3>Payment Methods</h3>
                     <div class="payment-icons">
                         <img src="{{ url_for('static', filename='icon/payment/visa.png') }}" alt="Visa">

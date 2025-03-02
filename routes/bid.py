@@ -22,8 +22,8 @@ def bid(app):
             
             db.session.add(new_bid)
             db.session.commit()
+            return jsonify({'success': True, 'message': '入札が成功しました'})
+        
         except Exception as e:
             print(f"Error 入札処理失敗: {e}")
             return jsonify({'success': False, 'message': '入札に失敗しました'}), 500
-
-        return jsonify({'success': True, 'message': '入札が成功しました'})

@@ -662,44 +662,59 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 //本保存
+// 出品ボタンのクリックイベントリスナー
 const download = document.getElementById("download");
 download.addEventListener("click", () => {
-  const comboboxNode = document.querySelector('.combobox-list input');
-  const time = localStorage.getItem("elapsedTime");
-  const price = localStorage.getItem("moneyValue");
-  const title = document.getElementById("title").value;
-  const postingTime = document.getElementById("postingTime").value;
-  const dataURL = canvas.toDataURL("image/png"); // 画像をBase64に変換
+    const time = localStorage.getItem("elapsedTime");
+    const price = localStorage.getItem("moneyValue");
+    const title = document.getElementById("title").value;
+    const postingTime = document.getElementById("postingTime").value;
+    const dataURL = canvas.toDataURL("image/png"); // 画像をBase64に変換
 
-  console.log("Selected category:", comboboxNode.value);
+    // kategoriセレクトボックスの選択されたvalueを取得
+    const kategoriSelectValue = document.getElementById('kategori').value;
 
-  localStorage.removeItem("canvasImage");
-  localStorage.removeItem("timerValue");
-  localStorage.removeItem("elapsedTime");
-  localStorage.removeItem("moneyValue");
-
-  fetch("/add_sale", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ 
-      title,
-      postingTime,
-      image: dataURL, 
-      time: time, 
-      price: price,
-      categories: [comboboxNode.value] || ""
-    }),
-  })
-    .then((response) => {
-      // 画像保存の結果を表示 デバック用
-      if (response.ok) {
-        alert("正常に保存されました。");
-      } else {
-        alert("保存に失敗しました。");
-        console.log("categories="+ comboboxNode.value)
-      }
+    // バックエンドに送信
+    fetch("/add_sale", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            title,
+            postingTime,
+            image: dataURL,
+            time: time,
+            price: price,
+            kategori: kategoriSelectValue
+        }),
     })
-    .then((title) => {
-      console.log(title);
-    });
+    .then((response) => {
+        if (response.ok) {
+            alert("正常に保存されました。");
+        } else {
+            alert("保存に失敗しました。");
+        }
+    })
+    .catch((error) => console.log("送信エラー:", error));
+});
+
+// kategoriセレクトボックスを取得
+const kategoriSelect = document.getElementById('kategori');
+// 'change' イベントをリスン
+kategoriSelect.addEventListener('change', () => {
+    const selectedCategoryId = kategoriSelect.value; // 選択されたcategoryIdを取得
+
+    if (selectedCategoryId) {
+        // バックエンドに送信する処理
+        fetch("/get_category_name", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ categoryId: selectedCategoryId }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // サーバーから返されたカテゴリ名を表示
+            console.log("カテゴリ名:", data.categoryName);
+        })
+        .catch(error => console.log("カテゴリ名の取得エラー:", error));
+    }
 });

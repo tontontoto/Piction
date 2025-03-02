@@ -1,0 +1,189 @@
+* {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+html {
+    scroll-behavior: smooth;
+}
+li {
+    list-style: none;
+}
+
+body {
+    scroll-behavior: smooth;
+}
+header {
+    width: 100%;
+    border-bottom: 1px solid #bababa;
+}
+.header_icon img{
+    width: 110px;
+    padding: 10px 50px;
+}
+main {
+    position: relative;
+    width: 80%;
+    margin: 20px auto;
+    align-items: center;
+}
+.page_top_button {
+    display: none;
+}
+.privacyPolicy_title {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+.privacyPolicy_title h1 {
+    display: inline-block;   
+    padding: 0 10px;
+    margin: 0 auto;
+    border-bottom: 3px solid #46A0DC;
+    font-weight: bold;
+    font-size: 40px;
+}
+.privacyPolicy_contents {
+    background: #fff;
+    padding: 40px 20px;
+    box-shadow: 0px 0px 15px -10px #000;
+    border-radius: 10px;
+}
+.item {
+    margin: 20px auto;
+    padding: 10px 5px;
+    align-items: center;
+    width: 90%;
+    cursor: default;
+}
+.item h2 {
+    margin-bottom: 10px;
+}
+.item_title {
+    transition: 0.2s;
+}
+.item_title:hover {
+    color: #46A0DC;
+}
+.item p,
+.item ul {
+    margin: 0 30px;
+}
+.item .font_bold {
+    font-weight: bold;
+    margin-top: 0.5em;
+}
+.paragraph {
+    padding: 0 1em;
+}
+#contact_link {
+    position: relative;
+    color: #46A0DC;
+    transition: .2s;
+}
+#contact_link::after {
+    position: absolute;
+    left: 0;
+    content: '';
+    width: 100%;
+    height: 2px;
+    background: #46A0DC;
+    bottom: 20px; /*アンダーラインが現れ始める位置（aタグの下辺からの高さ）*/
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+}
+#contact_link:hover::after {
+    visibility: visible;
+    bottom: 0px; /*アニメーションが止まる位置*/
+    opacity: 1;
+}
+.siteInfo {
+    width: 90%;
+    margin: 10px auto;
+    text-align: right;
+}
+.siteInfo_logo_img {
+    width: auto;
+    height: 32px;
+}
+
+.close_button {
+    display: flex;
+    justify-content: center;
+    width: 70%;
+    margin: 30px auto;
+    align-items: center;
+}
+.close_button button {
+    width: 20%;
+    padding: 0.7em;
+    color: #fff;
+    background: #000;
+    border: #aeaeae 1px solid;
+    border-radius: 5px;
+    box-shadow: 0px 0px 15px -10px #000;
+    transition: 0.2s;
+}
+.close_button button a {
+    text-decoration: none;
+    color: inherit;
+}
+.close_button button:hover {
+    background: #fff;
+    color: #000;
+}
+
+/* mobile */
+@media (max-width:570px) {
+    main {
+        width: 97%;
+        margin: 10px auto;  
+    }
+    .page_top_button {
+        display: block;
+        position: fixed;
+        right: 10%;
+        bottom: 5%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        height: 50px;
+        background: #fff;
+        border: #aeaeae 1px solid;
+        border-radius: 50em;
+    }
+    .header_icon img {
+        padding: 5px 20px;
+    }
+    .privacyPolicy_title {
+        margin-bottom: 18px;
+    }
+    .privacyPolicy_title h1 {
+        font-size: 24px;
+        white-space: nowrap;
+    }
+    .privacyPolicy_contents {
+        padding: 10px 0;
+        align-items: center;
+        margin: 0 auto;
+    }
+    .item {
+        margin: 5px auto;
+        padding: 5px 0;
+        align-items: center;
+        width: 90%;
+    }
+    .item h2 {
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+    .item p, 
+    .item ul {
+        font-size: 16px;
+    }
+    .close_button button{
+        min-width: 100px;
+    }
+}

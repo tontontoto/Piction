@@ -9,6 +9,15 @@
     <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
 </head>
 <body>
+    <!-- header -->
+    <header>
+        <div class="header_icon" id="page_top">
+            <a href="/top">
+                <img src="{{ url_for('static', filename='icon/logo.png') }}" alt="Piction">
+            </a>
+        </div>
+    </header>
+    <!-- main -->
     <main>
         <div class="drawArea">
             <div class="selectTool">
@@ -30,7 +39,7 @@
                         <span>リセット</span>
                     </button>
                 </div>
-                <a href="/top" class="back-button">
+                <a href="/top" class="back-button_pc">
                     <span class="icon">←</span>
                     トップに戻る
                 </a>
@@ -64,14 +73,23 @@
                 </div>
             </div>
 
-            <form action="/result" class="btn">
-                <button type="submit" class="submit-button" id="saveButton">
-                    完成、出品手続きへ
-                    <span class="icon">→</span>
-                </button>
-            </form>
+            <div class="pageOperation">
+                <a href="/top" class="back-button_sp">
+                    <span class="icon">←</span>
+                    トップに戻る
+                </a>
+                <form action="/result" class="btn">
+                    <button type="submit" class="submit-button" id="saveButton">
+                        完成、出品手続きへ
+                        <span class="icon">→</span>
+                    </button>
+                </form>
+            </div>
         </div>
     </main>
+    <!-- footer -->
+    
+    <!-- script -->
     <script src="../static/js/script.js"></script>
 </body>
 </html>

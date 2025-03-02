@@ -3,64 +3,88 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>art</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css/result.css">
-    <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
+    <!-- favicon -->
+    <link rel="icon" href="../static/icon/favicon.png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/result.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <title>art</title>
 
+    <!-- script -->
+    <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
 </head>
 
 <body>
-    <form action="/draw" class="backbotan">
-        <button type="submit" class="btn">&lt;最初から作り直す</button>
-    </form>
+    <header>
+        <div id="headerLogo">
+            <img src="{{ url_for('static', filename='icon/logo.png')}}" alt="piction-logo">
+        </div>
+    </header>
+    <div id="backbutton">
+        <form action="/draw" class="backbutton_form">
+            <button type="submit" class="button">&lt;最初から作り直す</button>
+        </form>
+    </div>
     <main>
-        <!-- index.htmlで作成した画像を表示 -->
-        <canvas id="myCanvas"></canvas>
+            <canvas id="myCanvas"></canvas>
 
-        <article class="side">
-
-            <div class="timerResult">
-                <p>制作時間: <p2>0:00</p2>秒</p>
-            </div>
-            <div class="moneyResult">
-                <p>出品価格: <p2>500</p2>円</p>
-            </div>
-
-            <section class="combobox-container">
-                <label for="cb1-input">カテゴリ</label>
-                <div class="combobox combobox-list">
-                    <div class="group">
-                        <input id="cb1-input" class="cb_edit" type="text" role="combobox" aria-autocomplete="both"
-                            aria-expanded="false" aria-controls="cb1-listbox" placeholder="カテゴリを選択">
-                        <button type="button" id="cb1-button" aria-label="States" aria-expanded="false"
-                            aria-controls="cb1-listbox" tabindex="-1"
-                            class="material-symbols-outlined">expand_more</button>
-                    </div>
-                    <ul id="cb1-listbox" role="listbox" aria-label="States">
-                        {% for category in categories %}
-                        <li id="{{ category.categoryId }}" role="option">{{ category.categoryName }}</li>
-                        {% endfor %}
-                    </ul>
+            <!-- 商品情報-->
+            <article class="side">
+                <div class="moneyResult">
+                    <p>開始価格: <p2>500</p2>円</p>
                 </div>
-            </section>
+                <div class="timerResult">
+                    <p>制作時間: <p2>0:00</p2>秒</p>
+                </div>
 
-            <div class="titleComponent">
-                <span class="label">タイトル</span>
-                <input type="text" id="title" class="inputText" placeholder="タイトル">
-            </div>
+                <!-- タイトル -->
+                <div class="titleComponent">
+                    <div>
+                        <span class="label">タイトル</span>
+                        <input type="text" id="title" class="inputText">
+                    </div>
+                    <div class="error"></div>
+                </div>
 
-            <!-- 掲載期間 -->
-            <div>
+                <!-- カテゴリ -->
+                <div class="categoryComponent">
+                    <span class="kategriTitle">カテゴリ</span>
+                    <select id="kategori" aria-placeholder="カテゴリ選択">
+                        <!-- <option value=""></option> -->
+                        {% for category in categories %}
+                        <option id="{{ category.categoryId }}" class="categoryContents" role="option"
+                            value="{{category.categoryId}}">{{ category.categoryName }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- 掲載期間 -->
+                <div id="postingTerm">
+                    <p>終了日時</p>
+                    <div class="postingTerm_select">
+                        <select name="one_week" id="one_week">
+                            {% for one_week in one_weeks %}
+                            <option value="">{{ one_week }}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="times" id="times">
+                            {% for times in times_list %}
+                            <option value="">{{ times }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <p>仮</p>
                 <input type="number" id="postingTime" placeholder="掲載時間（分）">
-            </div>
 
-            <div class="btn">
-                <button type="submit" class="button" id="openModal">出品</button>
-            </div>
 
-        </article>
+                <!-- 出品ボタン -->
+                <div class="btn">
+                    <button type="submit" class="button" id="openModal">出品</button>
+                </div>
+            </article>
     </main>
 
     <div class="modalContainer"><!-- モーダルウィンドウ -->
@@ -74,7 +98,6 @@
                     <a href="/top"><button type="button" class="confirm" id="download">出品</button></a>
                     <button type="button" class="modalClose">キャンセル</button>
                 </div>
-
             </div>
         </div>
     </div>

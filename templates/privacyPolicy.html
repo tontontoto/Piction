@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/scrollbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/privacyPolicy.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <script src="{{ url_for('static', filename='js/footer.js') }}" defer></script>
+    <link rel="icon" href="../static/icon/favicon.png">
+    <title>プライバシーポリシー | Piction</title>
+</head>
+
+<body>
+    <!-- header -->
+    <header>
+        <div class="header_icon" id="page_top">
+            <a href="/top">
+                <img src="{{ url_for('static', filename='icon/logo.png') }}" alt="Piction">
+            </a>
+        </div>
+    </header>
+
+    <!-- main -->
+    <main>
+        <div class="page_top_button">
+            <a href="#page_top">
+                <img src="{{ url_for('static', filename='parts/chevron-up.svg') }}" alt="topに戻る">
+            </a>
+        </div>
+        <div id="privacyPolicy">
+            <div class="privacyPolicy">
+                <div class="privacyPolicy_title">
+                    <h1>プライバシーポリシー</h1>
+                </div>
+                <div class="privacyPolicy_contents">
+                    <div class="item item1">
+                        <h2>1. <span class="item_title">はじめに</span></h2>
+                        <p>本プライバシーポリシーは、Pictionにおける、ユーザーの個人情報の収集、利用、管理方法について説明するものです。当社は、ユーザーのプライバシーを尊重し、個人情報を適切に取り扱うことをお約束します。
+                        </p>
+                    </div>
+                    <div class="item item2">
+                        <h2>2. <span class="item_title">収集する個人情報</span></h2>
+                        <p>当社が収集する個人情報は、次の通りです。</p>
+                        <ul>
+                            <li>・ユーザーネーム、表示名</li>
+                            <li>・メールアドレス</li>
+                            <li>・お支払い情報</li>
+                            <li>・IPアドレス、クッキー情報</li>
+                            <li>・ユーザーの意見やフィードバック</li>
+                        </ul>
+                    </div>
+                    <div class="item item3">
+                        <h2>3. <span class="item_title">情報の収集方法</span></h2>
+                        <p>当社は、次の方法で個人情報を収集します。</p>
+                        <p class="font_bold">(1) ユーザーからの提供</p>
+                        <p class="paragraph">ユーザーがアカウント登録時、サービス利用時に提供する情報。</p>
+                        <p class="font_bold">(2) 自動的な収集</p>
+                        <p class="paragraph">ユーザーが本サービスを利用する際に、クッキーやログファイルを通じて自動的に収集される情報。</p>
+                    </div>
+                    <div class="item item4">
+                        <h2>4. <span class="item_title">情報の利用目的</span></h2>
+                        <p>当社は、収集した個人情報を本サービスの提供および運営の目的で利用します。</p>
+                    </div>
+                    <div class="item item5">
+                        <h2>5. <span class="item_title">お問い合わせ</span></h2>
+                        <p>本プライバシーポリシーに関するご質問や、個人情報の取り扱いについてのお問い合わせは、
+                            <a href="/contact" id="contact_link">お問い合わせ</a>
+                            までお願いいたします。
+                        </p>
+                    </div>
+                    <div class="siteInfo item5">
+                        <p>制定日：2025年3月1日</p>
+                        <p>最終改定日：2025年3月1日</p>
+                        <div class="siteInfo_logo">
+                            <a href="/top">
+                            <img src="{{ url_for('static', filename='icon/logo.png') }}" alt="Piction" class="siteInfo_logo_img">
+                        </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="close_button" onclick="goBack()">
+                <button><a href="/top">閉じる</a></button>
+            </div>
+        </div>
+    </main>
+    <!-- footer -->
+    {% include 'footer.html' %}
+</body>
+
+</html>
