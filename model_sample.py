@@ -25,6 +25,7 @@ saleCategoryAssociation = Table(
 # MARK: User
 class User(UserMixin, db.Model):
     __tablename__ = "user"
+    __table_args__ = {'sqlite_autoincrement': True}
     userId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userName = db.Column(db.String(15), unique=True)
     displayName = db.Column(db.String(10))
@@ -55,6 +56,7 @@ class User(UserMixin, db.Model):
 # MARK:Category
 class Category(db.Model):
     __tablename__ = "category"
+    __table_args__ = {'sqlite_autoincrement': True}
     categoryId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     categoryName = db.Column(db.String(20))
     sales = db.relationship("Sale", secondary=saleCategoryAssociation, back_populates="categories", lazy='dynamic')
@@ -62,6 +64,7 @@ class Category(db.Model):
 # MARK: Sale
 class Sale(db.Model):
     __tablename__ = "sale"
+    __table_args__ = {'sqlite_autoincrement': True}
     saleId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userId = db.Column(db.Integer, ForeignKey('user.userId'))
     # displayName = db.Column(db.String(10), ForeignKey('user.displayName'))
@@ -89,6 +92,7 @@ class Sale(db.Model):
 # MARK:Bid
 class Bid(db.Model):    
     __tablename__ = "bid"
+    __table_args__ = {'sqlite_autoincrement': True}
     bidId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     saleId = db.Column(db.Integer, ForeignKey('sale.saleId'))
     userId = db.Column(db.Integer, ForeignKey('user.userId'))
@@ -103,6 +107,7 @@ class Bid(db.Model):
 # MARK:WinningBid
 class WinningBid(db.Model):
     __tablename__ = "winningBid"
+    __table_args__ = {'sqlite_autoincrement': True}
     winningBidId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     buyerId = db.Column(db.Integer, ForeignKey('user.userId'))
     saleId = db.Column(db.Integer, ForeignKey('sale.saleId'))
@@ -117,6 +122,7 @@ class WinningBid(db.Model):
 # MARK:PaymentWay
 class PaymentWay(db.Model):
     __tablename__ = "paymentWay"
+    __table_args__ = {'sqlite_autoincrement': True}
     paymentWayId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     paymentWayName = db.Column(db.String(20))
     payments = db.relationship("Payment", back_populates="paymentWay")
@@ -124,6 +130,7 @@ class PaymentWay(db.Model):
 # Payment
 class Payment(db.Model):
     __tablename__ = "payment"
+    __table_args__ = {'sqlite_autoincrement': True}
     paymentId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     saleId = db.Column(db.Integer, ForeignKey('sale.saleId'))
     winningBidId = db.Column(db.Integer, ForeignKey('winningBid.winningBidId'))
@@ -137,6 +144,7 @@ class Payment(db.Model):
 # MARK: Like
 class Like(db.Model):
     __tablename__ = "like"
+    __table_args__ = {'sqlite_autoincrement': True}
     likeId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userId = db.Column(db.Integer, ForeignKey('user.userId'))
     saleId = db.Column(db.Integer, ForeignKey('sale.saleId'))
@@ -147,6 +155,7 @@ class Like(db.Model):
 # MARK: InquiryKind
 class InquiryKind(db.Model):
     __tablename__ = "inquiryKind"
+    __table_args__ = {'sqlite_autoincrement': True}
     inquiryKindId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     inquiryKindName = db.Column(db.String(10))
 
@@ -155,6 +164,7 @@ class InquiryKind(db.Model):
 # MARK: Inquiry
 class Inquiry(db.Model):
     __tablename__ = "inquiry"
+    __table_args__ = {'sqlite_autoincrement': True}
     inquiryId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userId = db.Column(db.Integer, ForeignKey('user.userId'))
     displayName = db.Column(db.String(10))
