@@ -66,17 +66,18 @@ body {
 }
 .userIcon {
     width: 50%;
-    padding: 3%;
+    height: 100%;
+    padding: auto 3%;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
     position: relative;
     vertical-align: center;
 }
 
 .userIcon img {
-    width: 200px;
-    height: 200px;
+    width: 230px;
+    height: 230px;
     object-fit: cover;
     border-radius: 50%;
     border: 3px solid #46A0DC;
@@ -113,8 +114,10 @@ body {
 
 /* ユーザーの出品数、いいね商品数 */
 .userWantSale {
+    /* background: #f8f8f8; */
+    border-radius: 15px;
     position: absolute;
-    bottom: 50px;
+    bottom: 75px;
     right: 0;
     width: 50%;
     display: flex;
@@ -264,34 +267,6 @@ body {
     fill: white;
     padding: 1px;
 }
-/* カメラアイコンの改善 */
-.cameraIconBox {
-    position: absolute;
-    bottom: 10px;
-    right: 30px;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 50%;
-    border: 2px solid #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.cameraIconBox:hover {
-    background: rgba(255, 255, 255, 1);
-    transform: scale(1.1);
-}
-
-.cameraIcon {
-    width: 60%;
-    height: 60%;
-    position: static;
-    transform: none;
-}
-
 
 #triming_image {
     display: none;
@@ -323,10 +298,10 @@ body {
 
 /* プロフィール編集ボタンの改善 */
 .btn_profile {
-    width: 40%;
+    width: 50%;
     position: absolute;
     bottom: 20px;
-    left: 40px;
+    right: 0;
     align-self: flex-start;
     margin-top: 20px;
     padding: 10px 20px;
