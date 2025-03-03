@@ -250,6 +250,9 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 50%;
     height: 50%;
     background: rgba(201, 201, 201, 0.3);
@@ -265,11 +268,8 @@ body {
 .cameraIcon {
     width: 50%;
     height: 50%;
-    top: -50%;
-    left: -50%;
-    transform: translate(50%, 50%);
     fill: white;
-    padding: 1px;
+    padding: auto;
 }
 
 #triming_image {
@@ -588,7 +588,6 @@ body {
     .modalMain {
         padding: 15px;
     }
-    
     #icon, #trimed {
         max-width: 120px;
         max-height: 120px;
