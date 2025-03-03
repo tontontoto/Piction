@@ -1,7 +1,12 @@
 // // 画像またはSVGアイコンをクリックしたときにファイル選択ダイアログを開く
 document.querySelector('.cameraIconBox').addEventListener('click', function () {
-    document.getElementsByClassName('trimming_image').click();
+    let fileInput = document.querySelector('.trimming_image'); // 1つ目の要素を取得
+    if (fileInput) {
+        fileInput.click();
+        console.log(document.querySelector('.cameraIconBox'));
+    }
 });
+
 
 document.getElementsByClassName('trimming_image').addEventListener('change', function () {
     // ファイルが選択されたとき、または同じファイルが選択されたとき
