@@ -146,12 +146,6 @@ body {
     justify-content: center;
     align-items: center;
 }
-
-.listingNumber:hover, .thumbsUpSaleNumber:hover {
-    background: #f5f5f5;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-}
 .saleListIcon {
     width: 2.5em;
     height: 2.5em;
@@ -457,6 +451,7 @@ body {
     border-width: 4px 1px 1px;
     border-radius: 5px;
     color: #333333;
+    padding-top: calc(0.7em - 4px);
 }
 
 .tab-1 label:has(:checked) + div {
