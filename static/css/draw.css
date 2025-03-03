@@ -4,7 +4,7 @@ body {
     sans-serif;
     font-size: 16px;
     color: #333;
-    background-color: #f8f8f8;
+    background-color: #ffffff;
     margin: 0;
     min-height: 100vh;
 }
@@ -286,106 +286,102 @@ main {
 }
 
 /* mobile */
+/* スマホ画面の設定 */
 @media (max-width: 570px) {
-    .header_icon img {
-        padding: 10px 30px;
-    }
     main {
         flex-direction: column;
         width: 100%;
         padding: 0;
+        margin: 5px auto;
         gap: 5px;
-    }
-    /* 順番 */
-    .drawArea {
-        order: 2;
-    }
-    .side {
-        order: 1;
-    }
-    .sideTop {
-        order: 2;
-    }
-    .pageOperation {
-        order: 1;
     }
 
-    /* drawArea */
-    .drawArea {
-        display: flex;
-        flex-direction: column;
-        padding: 0;
-        gap: 5px;
+    .myCanvas_pc {
+        display: none;
     }
-    #myCanvas {
-        order: 1;
-    }
-    .selectTool {
-        order: 2;
-        padding: 0px;
-    }
-    .sliderContainer {
-        order: 3;
+    /* myCanvasを固定 */
+    .myCanvas_sp {
+        display: block;
+        position: sticky;
+        top: 0; /* 上部に固定 */
+        z-index: 10; /* 他の要素より前面に配置 */
     }
 
     #myCanvas {
         width: 98% !important;
-        height: 98% !important;
+        height: 98% !important; /* 高さを指定して、画面に収める */
         margin: 10px auto;
     }
 
-    /* toolGroup */
+    /* drawArea全体のスクロール設定 */
+    .drawArea {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        overflow-y: auto; /* 内容が溢れた場合、スクロールできる */
+        max-height: calc(100vh - 210px); /* myCanvasを除いた部分がスクロール領域 */
+    }
+
+    .sliderContainer {
+        order: 3;
+        padding: 10px;
+    }
+
+    .selectTool {
+        order: 2;
+        padding: 10px;
+        flex-grow: 1;
+    }
+
+    /* toolGroupの表示を調整 */
     .tool-group {
         flex-direction: row;
         justify-content: space-around;
         gap: 5px;
         padding: 10px;
     }
+
     .color-picker,
     .btn_push {
         flex: 1;
     }
+
     .color-picker label {
         order: 1;
     }
+
     .color-picker input {
         width: 32px;
         height: 32px;
     }
 
-    /* sliderContainer */
     .sliderContainer {
         display: flex;
         flex-direction: column;
         gap: 10px;
         padding: 10px;
     }
+
     .slider-group {
         flex-direction: row;
         align-items: center;
         gap: 5px;
-    }
-    .slider-group label {
-        font-size: 10px;
-        width: 10%;
-    }
-    .slider-group input[type="range"] {
-        width: 80%;
-        flex: 1;
     }
 
     /* side */
     .side {
         width: 100%;
         display: flex;
+        flex-direction: column;
     }
-    /* sideTop */
+
     .sideTop {
         display: flex;
         flex-direction: row;
         gap: 10px;
         padding: 0 10px;
     }
+
     .timer,
     .money {
         flex: 1;
@@ -397,9 +393,11 @@ main {
         justify-content: space-between;
         padding: 0 10px;
     }
+
     .back-button_pc {
         display: none;
     }
+
     .back-button_sp {
         display: block;
         width: 30%;
@@ -412,12 +410,12 @@ main {
         font-weight: bold;
         cursor: pointer;
     }
+
     .submit-button {
         flex: 1;
     }
-
-
 }
+
 /* @media screen and (max-width: 768px) {
     main {
         flex-direction: column;

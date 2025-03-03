@@ -89,6 +89,16 @@ eraserButton.addEventListener("click", () => {
     }
 });
 
+// タッチスタートおよびタッチエンド時にスクロールを無効にする
+canvas.addEventListener('touchstart', (e) => {
+  e.preventDefault(); // スクロールを無効にする
+}, { passive: false });
+
+canvas.addEventListener('touchend', (e) => {
+  e.preventDefault(); // スクロールを無効にする
+}, { passive: false });
+
+
 // クリアボタンのクリックイベント
 const clearButton = document.getElementById("reset");
 clearButton.addEventListener("click", () => {

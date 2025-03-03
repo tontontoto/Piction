@@ -6,8 +6,12 @@
     <title>作品を描く | Piction</title>
     <link rel="stylesheet" href="../static/css/draw.css">
     <link rel="icon" href="../static/icon/favicon.png">
+    <!-- font -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
     <!-- scrollbar -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/scrollbar.css') }}">
+    <!-- nav_sp -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav_sp.css') }}">
     <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
 </head>
 <body>
@@ -19,8 +23,12 @@
             </a>
         </div>
     </header>
+    <!-- nav_sp -->
+    {% include 'nav_sp.html' %}
+
     <!-- main -->
     <main>
+        <canvas id="myCanvas" class="myCanvas_sp"></canvas>  
         <div class="drawArea">
             <div class="selectTool">
                 <div class="tool-group">
@@ -47,7 +55,7 @@
                 </a>
             </div>
 
-            <canvas id="myCanvas"></canvas>  
+            <canvas id="myCanvas" class="myCanvas_pc"></canvas>  
 
             <div class="sliderContainer">
                 <div class="slider-group">
