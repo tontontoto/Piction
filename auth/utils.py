@@ -22,8 +22,12 @@ def login_user_session(user):
     login_user(user)
 
 # topページの最新商品情報取得関数
-def get_recent_sales(count):
-    return Sale.query.order_by(Sale.saleId.desc()).limit(count).all()
+def get_recent_sales(count=None):
+    query = Sale.query.order_by(Sale.saleId.desc())
+    if count is not None:
+        query = query.limit(count)
+    return query.all()
+
 
 def get_top_price_sales(count):
     return Sale.query.order_by(Sale.currentPrice.desc()).limit(count).all()

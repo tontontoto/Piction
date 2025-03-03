@@ -10,6 +10,7 @@ def like(app):
         try:
             # すでにこのユーザーがこの商品に「いいね」をしていないか確認
             existing_like = Like.query.filter_by(saleId=sale_id, userId=user_id).first()
+            print("いいね確認処理成功")
         except Exception as e:
             print(f"Error いいねの確認処理失敗: {e}")
             return jsonify({'error': 'Failed to query existing like'}), 500
@@ -19,6 +20,7 @@ def like(app):
                 # すでに「いいね」している場合は削除
                 db.session.delete(existing_like)
                 db.session.commit()
+                print("いいね削除成功")
             except Exception as e:
                 print(f"Error いいねの削除失敗: {e}")
                 return jsonify({'error': 'Failed to remove like'}), 500
@@ -29,6 +31,7 @@ def like(app):
                 new_like = Like(userId=user_id, saleId=sale_id)
                 db.session.add(new_like)
                 db.session.commit()
+                print("いいね追加成功")
             except Exception as e:
                 print(f"Error いいね追加失敗: {e}")
                 return jsonify({'error': 'Failed to add like'}), 500
@@ -37,6 +40,7 @@ def like(app):
         try:
             # 「いいね」された商品に対する「いいね」の数を取得
             like_count = Like.query.filter_by(saleId=sale_id).count()
+            print("いいね数取得成功", like_count)
         except Exception as e:
             print(f"Error いいね数の取得失敗: {e}")
             return jsonify({'error': 'Failed to query like count'}), 500
