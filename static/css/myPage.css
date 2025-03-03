@@ -37,6 +37,8 @@ body {
 .flex1 {
     display: flex;
     flex-direction: column;
+    max-width: 100%;
+    min-width: 40%;
     gap: 20px;
 }
 
@@ -66,7 +68,7 @@ body {
 }
 .userIcon {
     width: 50%;
-    height: 100%;
+    
     padding: auto 3%;
     display: flex;
     justify-content: center;
@@ -76,13 +78,21 @@ body {
 }
 
 .userIcon img {
-    width: 230px;
-    height: 230px;
+
     object-fit: cover;
     border-radius: 50%;
     border: 3px solid #46A0DC;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
+}
+@media screen and (min-width: 1024px) {
+    .userIcon{
+        height: 100%;
+    }
+    .userIcon img {
+        width: 230px;
+        height: 230px;
+    } 
 }
 
 .userIcon img:hover {
@@ -333,9 +343,6 @@ body {
     background: #ffffff;
     box-shadow: 0px 0px 15px -7px #787878;
     border-radius: 21px;
-    width: 30%;
-    max-width: 30%;
-    min-width: 400px;
     /* 仮 */
     height: 50%;
 }
@@ -656,5 +663,127 @@ body {
     
     .inputLabel {
         font-size: 11px;
+    }
+}
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    
+    /* プロフィールエリアの調整 */
+    .profile {
+        width: 50%;
+        padding: 20px 10px;
+        flex-direction: column;
+        align-items: center;
+    }
+    .flex1 {
+        width: 50%;
+    }
+    
+    .userIcon {
+        width: 50%;
+        padding: 10px;
+        text-align: center;
+        position: static;
+    }
+    
+    .icon {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .userInfo {
+        margin-left: 5%;
+        padding: 10px;
+        text-align: center;
+        position: relative;
+    }
+    .nameAndMail{
+        width: 50%;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: absolute;
+        right: 0;
+        top: 18px; 
+        text-align:left
+    }
+    
+    .profileDisplayName {
+        padding: 0;
+        font-size: 24px !important;
+    }
+    
+    /* ユーザーの出品数、いいね数エリアの調整 */
+    .userWantSale {
+        position: static;
+        flex-direction: row;
+        width: 100%;
+        /* flex-wrap: wrap; */
+        margin-top: 15px;
+    }
+    
+    .listingNumber, .thumbsUpSaleNumber {
+        background-color: none;
+        width: 100%;
+        margin: 5px 0;
+        padding: 10px;
+    }
+    
+    .userWantSale p {
+        font-size: 24px;
+    }
+    
+    /* いいね一覧の調整 */
+    .thumbsUpSaleList {
+        height: 70px;
+    }
+    
+    .thumbsUpSaleList img {
+        height: 40%;
+    }
+    
+    .thumbsUpSaleList p {
+        font-size: 16px;
+    }
+    
+    /* モーダルの調整 */
+    .modal-content {
+        min-height: 450px;
+    }
+    
+    .modalMain {
+        padding: 15px;
+    }
+    
+    #icon, #trimed {
+        max-width: 120px;
+        max-height: 120px;
+        min-width: 120px;
+        min-height: 120px;
+    }
+    
+    .modal-title {
+        font-size: 18px;
+        margin-left: 5px;
+    }
+    
+    .profileSubmitbtn {
+        padding: 5px 15px;
+        font-size: 14px;
+    }
+    
+    .modalInput {
+        font-size: 16px; /* タッチしやすいサイズに */
+    }
+    
+    /* プロフィール編集ボタンの調整 */
+    .btn_profile {
+        position: static;
+        width: 100%;
+        margin: 10px auto;
+        padding: 8px 15px;
+        border: 1px solid #eee;
+        border-radius: 20px;
+        display: inline-block;
     }
 }
