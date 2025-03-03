@@ -204,6 +204,9 @@ body {
     margin: 0 3%;
     white-space: nowrap;
 }
+.modal-footer{
+    display:none;
+}
 .profileSubmitbtn {
     border-radius: 50em;
     text-decoration: none;
@@ -235,7 +238,7 @@ body {
 }
 
 /* 画像アイコン */
-#icon, #trimed{
+.icon, #trimed{
     max-width: 150px;
     max-height: 150px;
     min-width: 150px;
@@ -272,7 +275,7 @@ body {
     padding: 1px;
 }
 
-#triming_image {
+.trimming_image {
     display: none;
 }
 

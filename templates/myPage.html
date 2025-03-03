@@ -105,11 +105,11 @@
                                 <div class="modalMain">
                                     <div class="fileContainer">
                                         <!-- 現在の表示アイコン -->
-                                        <div id="result">
+                                        <div class="result">
                                             {% if config.IS_LOCAL %}
-                                            <img src="{{ url_for('static', filename=user.iconFilePath) }}" id="icon" alt="userIcon">
+                                            <img src="{{ url_for('static', filename=user.iconFilePath) }}" class="icon" alt="userIcon">
                                             {% else %}
-                                            <img src="{{ user.iconFilePath }}" id="icon" alt="userIcon">
+                                            <img src="{{ user.iconFilePath }}" class="icon" alt="userIcon">
                                             {% endif %}
                                         </div>
                                         <!-- カメラのSVGアイコン -->
@@ -117,7 +117,7 @@
                                             <img src="{{ url_for('static', filename='parts/camera-plus.svg') }}" alt="" class="cameraIcon">
                                         </div>
                                         <!-- アイコン選択input -->
-                                        <input type="file" id="triming_image" name="file" class="triming-image" accept="image/*" />
+                                        <input type="file" name="file" class="trimming-image trimming_image" accept="image/*" />
                                     </div>
 
                                     <div class="modalInputBox">
@@ -137,9 +137,9 @@
                                     </div>
                                 </div>
                             </form>
-                            <div class="modal-footer" style="display: none;">
+                            <div class="modal-footer">
                                 <button class="btn btn-primary" data-bs-target="#exampleModalToggle2_sp"
-                                    data-bs-toggle="modal" id="trimingiconedit">Open second modal</button>
+                                    data-bs-toggle="modal" class="trimmingIconEdit">Open second modal</button>
                             </div>
                         </div>
 
@@ -154,12 +154,12 @@
                                 <div class="modal-header-left">
                                     <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
                                                                     data-bs-toggle="modal" data-bs-target="#exampleModalToggle">←</button> -->
-                                    <button class="btn btn-primary back_btn" id="backExampleModalToggle_sp"
+                                    <button class="btn btn-primary back_btn" class="backExampleModalToggle"
                                         data-bs-target="#exampleModalToggle" data-bs-toggle="modal">←</button>
                                     <h5 class="modal-title" id="exampleModalLabel_sp">メディアを編集</h5>
                                 </div>
                                 <div class="modal-header-right">
-                                    <input type="button" id="crop_btn" class="profileSubmitbtn" value="適用" />
+                                    <input type="button" class="crop_btn" class="profileSubmitbtn" value="適用" />
                                     </p>
                                     <!-- <input type="button" id="crop_btn" class="profileSubmitbtn" value="適用" /> -->
                                 </div>
@@ -169,9 +169,9 @@
                             <!-- Modal2-Main -->
                             <div class="modalMain">
                                 <div class="cropper-container">
-                                    <p><img src="" alt="トリミング画像" id="trimed_image" style="display: none;" /></p>
+                                    <p><img src="" alt="トリミング画像" class="trimed_image" style="display: none;" /></p>
                                 </div>
-                                <!-- <div id="result"></div> -->
+                                <!-- <div class="result"></div> -->
                             </div>
                         </div>
                     </div>
@@ -237,7 +237,7 @@
                                 <div class="modalMain">
                                     <div class="fileContainer">
                                         <!-- 現在の表示アイコン -->
-                                        <div id="result">
+                                        <div class="result">
                                             {% if config.IS_LOCAL %}
                                             <img src="{{ url_for('static', filename=user.iconFilePath) }}" class="icon" alt="userIcon">
                                             {% else %}
@@ -246,11 +246,10 @@
                                         </div>
                                         <!-- カメラのSVGアイコン -->
                                         <div class="cameraIconBox">
-                                            <img src="{{ url_for('static', filename='parts/camera-plus.svg') }}" alt=""
-                                                class="cameraIcon">
+                                            <img src="{{ url_for('static', filename='parts/camera-plus.svg') }}" alt="" class="cameraIcon">
                                         </div>
                                         <!-- アイコン選択input -->
-                                        <input type="file" id="triming_image" name="file" class="triming-image" accept="image/*" />
+                                        <input type="file" name="file" class="trimming-image trimming_image" accept="image/*" />
                                     </div>
 
                                     <div class="modalInputBox">
@@ -271,9 +270,9 @@
                                 </div>
                             </form>
                             <p id="modal_userId">Piciton ID: {{ user.userId }}</p>
-                            <div class="modal-footer" style="display: none;">
+                            <div class="modal-footer">
                                 <button class="btn btn-primary" data-bs-target="#exampleModalToggle2_pc"
-                                    data-bs-toggle="modal" id="trimingiconedit">Open second modal</button>
+                                    data-bs-toggle="modal" class="trimmingIconEdit">Open second modal</button>
                             </div>
                         </div>
 
@@ -288,12 +287,12 @@
                                 <div class="modal-header-left">
                                     <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
                                                                     data-bs-toggle="modal" data-bs-target="#exampleModalToggle">←</button> -->
-                                    <button class="btn btn-primary back_btn" id="backExampleModalToggle"
+                                    <button class="btn btn-primary back_btn" class="backExampleModalToggle"
                                         data-bs-target="#exampleModalToggle" data-bs-toggle="modal">←</button>
                                     <h5 class="modal-title" id="exampleModalLabel_pc">メディアを編集</h5>
                                 </div>
                                 <div class="modal-header-right">
-                                    <input type="button" id="crop_btn" class="profileSubmitbtn" value="適用" />
+                                    <input type="button" class="crop_btn" class="profileSubmitbtn" value="適用" />
                                     </p>
                                     <!-- <input type="button" id="crop_btn" class="profileSubmitbtn" value="適用" /> -->
                                 </div>
@@ -303,9 +302,9 @@
                             <!-- Modal2-Main -->
                             <div class="modalMain">
                                 <div class="cropper-container">
-                                    <p><img src="" alt="トリミング画像" id="trimed_image" style="display: none;" /></p>
+                                    <p><img src="" alt="トリミング画像" class="trimed_image" style="display: none;" /></p>
                                 </div>
-                                <!-- <div id="result"></div> -->
+                                <!-- <div class="result"></div> -->
                             </div>
                         </div>
                     </div>

@@ -1,24 +1,24 @@
 // // 画像またはSVGアイコンをクリックしたときにファイル選択ダイアログを開く
 document.querySelector('.cameraIconBox').addEventListener('click', function () {
-    document.getElementById('triming_image').click();
+    document.getElementsByClassName('trimming_image').click();
 });
 
-document.getElementById('triming_image').addEventListener('change', function () {
+document.getElementsByClassName('trimming_image').addEventListener('change', function () {
     // ファイルが選択されたとき、または同じファイルが選択されたとき
     if (this.files.length > 0) {
-        document.getElementById('trimingiconedit').click();  // 次のアクションを実行
+        document.getElementsByClassName('trimmingIconEdit').click();  // 次のアクションを実行
     }
 });
 
-document.getElementById('backExampleModalToggle').addEventListener('click', function () {
+document.getElementsByClassName('backExampleModalToggle').addEventListener('click', function () {
     // 前回選択されたファイルと同じファイルが選ばれてもイベントが発火するように、inputのvalueをリセット
-    document.getElementById('triming_image').value = '';  // valueをリセット
+    document.getElementsByClassName('trimming_image').value = '';  // valueをリセット
     console.log('valueリセット');
     
 });
 
-document.getElementById('crop_btn').addEventListener('click', function() {
-    document.getElementById('backExampleModalToggle').click();
+document.getElementsByClassName('crop_btn').addEventListener('click', function() {
+    document.getElementsByClassName('backExampleModalToggle').click();
 });
 
 
@@ -56,7 +56,7 @@ var myModal = new bootstrap.Modal(document.getElementById('exampleModalToggle2')
 // // モーダル1が閉じられた際にリセットする
 // document.getElementById('exampleModalToggle').addEventListener('hidden.bs.modal', function () {
 //     // ファイル選択の状態をリセット
-//     document.getElementById('triming_image').value = '';
+//     document.getElementsByClassName('triming_image').value = '';
 //     document.getElementById('icon').src = ''; // アイコンの画像もリセット
 // });
 
