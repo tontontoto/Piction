@@ -1,10 +1,19 @@
 window.onload = function () {
   const canvas = document.getElementById("myCanvas");
   const context = canvas.getContext("2d");
+
+  // ローカルストレージから保存されたデータを取得
   const dataURL = localStorage.getItem("canvasImage");
+  const canvasWidth = localStorage.getItem("canvasWidth");
+  const canvasHeight = localStorage.getItem("canvasHeight");
+  console.log(canvasWidth, canvasHeight);
+  
   if (dataURL) {
     const img = new Image();
     img.onload = function () {
+      // 画像を描画する前にキャンバスサイズを復元
+      canvas.width = canvasWidth || canvas.width;  // 幅が保存されていない場合はそのまま
+      canvas.height = canvasHeight || canvas.height; // 高さが保存されていない場合はそのまま
       context.drawImage(img, 0, 0);
     };
     img.src = dataURL;
@@ -23,6 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelector(".moneyResult p2").textContent = price;
   }
 });
+
 
 // このクラスはコピペだからわけわかんねえっす
 // ComboboxAutocompleteクラスはコンボボックスのオートコンプリート機能を処理します
@@ -669,7 +679,7 @@ download.addEventListener("click", () => {
     const price = localStorage.getItem("moneyValue");
     const title = document.getElementById("title").value;
     const postingTime = document.getElementById("postingTime").value;
-    const dataURL = canvas.toDataURL("image/png"); // 画像をBase64に変換
+    const dataURL = localStorage.getItem("canvasImage");
 
     // kategoriセレクトボックスの選択されたvalueを取得
     const kategoriSelectValue = document.getElementById('kategori').value;

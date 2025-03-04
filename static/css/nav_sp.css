@@ -1,11 +1,10 @@
-@media (min-width: 571px) {
-    #nav_sp {
-        display: none;
-    }
+#nav_sp {
+    display: none;
 }
 
 @media (max-width: 570px) {
     #nav_sp {
+        display: block;
         position: fixed;
         width: 100%;
         bottom: 0px;

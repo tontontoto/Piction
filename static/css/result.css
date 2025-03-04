@@ -56,6 +56,7 @@ main {
   height: auto;
   border: #000 1px solid;
   border-radius: 10px;
+  object-fit: cover;
 }
 .side {
   flex: 1;
