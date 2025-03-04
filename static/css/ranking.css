@@ -87,6 +87,20 @@
 .uploadImg{
     aspect-ratio: 1/1;
 }
+.rankingLikeContainer{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+.rankingLikeContainer svg {
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    z-index: 10;
+}
+.rankingLikeContainer span {
+    margin-left: 3px;
+}
 @media (max-width: 960px) {
     .saleRanking {
         display: flex;
@@ -146,9 +160,10 @@
     .saleRankingBoxDetail p:first-of-type {
         color: gray;
     }
-
-    .likeContainer {
-        display: none;
+    .rankingLikeContainer {
+        position: absolute;
+        bottom: 3px;
+        right: 3px;
     }
 }
 @media (max-width: 570px) {
