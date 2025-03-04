@@ -150,35 +150,37 @@ header {
     color: #000;
 }
 
-@media (max-width: 768px) {
-    .header-wrapper {
-        padding: 10px 15px;
+/* mobile */
+@media (max-width: 570px) {
+    /* 表示非表示 */
+    .header-icon,
+    .navigation-main {
+        display: none;
     }
-
+    /* レイアウト */
+    .header-wrapper {
+        padding: 6px 15px;
+    }
     .header-top {
         flex-wrap: wrap;
-        gap: 15px;
+        align-items: center;
+        margin-bottom: 5px;
     }
-
+    .header-logo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30%;
+    }
+    .header-logo img {
+        width: 100px;
+        height: auto;
+    }
     .search-box {
-        order: 3;
-        min-width: 100%;
+        width: 60%;
     }
 
     .header-icon {
         gap: 15px;
-    }
-
-    .navigation-main ul {
-        gap: 20px;
-        flex-wrap: wrap;
-    }
-
-    .nav-link {
-        padding: 0;
-    }
-
-    .nav-link span {
-        display: none;
     }
 }

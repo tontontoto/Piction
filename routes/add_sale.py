@@ -4,6 +4,7 @@ from auth.azure_blob import connect_to_azure_blob
 from auth.img_helper import *
 import pytz
 import sys
+import base64
 
 def add_sale(app):
     
@@ -61,8 +62,14 @@ def add_sale(app):
         if not image_data:
             return jsonify({'error': 'No image data provided'}), 400
 
-        image_bytes = decode_image(image_data)
-        if not image_bytes:
+        # Base64デコードの処理を明示的に記述
+        if image_data.startswith("data:image/png;base64,"):
+            image_data = image_data.replace("data:image/png;base64,", "")
+
+        try:
+            image_bytes = base64.b64decode(image_data)
+        except Exception as e:
+            print(f"Error: Base64 decoding failed - {e}")
             return jsonify({'error': 'Invalid image data'}), 400
 
         if UPLOAD_STORAGE == 'local':

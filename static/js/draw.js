@@ -1,20 +1,30 @@
 const canvas = document.getElementById("myCanvas");
 const stage = new createjs.Stage(canvas);
 
-const size = Math.min(window.innerWidth * 0.8, window.innerHeight * 0.8);
-canvas.style.width = `${size}px`; // 見た目のサイズ
-canvas.style.height = `${size}px`; // 見た目のサイズ
-canvas.width = size; // 描画解像度（内部ピクセル数）
-canvas.height = size;
+// 関数を作成して、canvasのサイズを画面サイズに合わせる
+function resizeCanvas() {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
 
-window.addEventListener("resize", () => {
-  const size = Math.min(window.innerWidth * 0.8, window.innerHeight * 0.8);
-  canvas.style.width = `${size}px`;
-  canvas.style.height = `${size}px`;
+  // 幅と高さがどちらも570px以上の場合でも正方形を維持
+  const size = Math.min(width, height, 570); // 570px以下でも正方形を保つ
+
+  // 画面サイズに合わせてcanvasのサイズを変更
   canvas.width = size;
   canvas.height = size;
-});
+  canvas.style.width = `${size}px`; // 見た目のサイズ
+  canvas.style.height = `${size}px`; // 見た目のサイズ
 
+  stage.update();
+}
+
+// 初期化時にサイズを調整
+resizeCanvas();
+
+// 画面サイズが変更されたときにもサイズを調整
+window.addEventListener("resize", resizeCanvas);
+
+// 背景を描画する関数
 function drawBackground() {
   const background = new createjs.Shape();
   background.graphics.beginFill("white").drawRect(0, 0, canvas.width, canvas.height);
@@ -89,6 +99,61 @@ eraserButton.addEventListener("click", () => {
     }
 });
 
+// 色履歴を表示する関数
+function loadColorHistory() {
+  const colorHistory = JSON.parse(localStorage.getItem('colorHistory')) || [];
+  const colorList = document.getElementById('colorList');
+  
+  // 既存の色リストをクリア
+  colorList.innerHTML = '';
+
+  // 色履歴を表示
+  colorHistory.forEach(color => {
+      const colorItem = document.createElement('li');
+      colorItem.style.backgroundColor = color;
+      colorItem.textContent = color; // カラーコードを表示
+      colorItem.addEventListener('click', () => {
+        // クリックした色をペンの色として選択
+        document.getElementById('inputColor').value = color;
+      });
+      colorList.appendChild(colorItem);
+  });
+}
+
+// 色選択ボックスの変更イベント
+const colorInput = document.getElementById('inputColor');
+colorInput.addEventListener('change', (event) => {
+  const selectedColor = event.target.value;
+
+  // 色履歴に保存
+  let colorHistory = JSON.parse(localStorage.getItem('colorHistory')) || [];
+
+  // 色が履歴にない場合、最大3色まで追加
+  if (!colorHistory.includes(selectedColor)) {
+      colorHistory.unshift(selectedColor); // 新しい色を先頭に追加
+      if (colorHistory.length > 3) {
+          colorHistory = colorHistory.slice(0, 3); // 最新3色だけ保持
+      }
+      localStorage.setItem('colorHistory', JSON.stringify(colorHistory));
+  }
+
+  loadColorHistory(); // 色履歴を再表示
+});
+
+// 初期化時に色履歴を読み込む
+window.onload = function () {
+  loadColorHistory();
+};
+
+// タッチスタートおよびタッチエンド時にスクロールを無効にする
+canvas.addEventListener('touchstart', (e) => {
+  e.preventDefault(); // スクロールを無効にする
+}, { passive: false });
+
+canvas.addEventListener('touchend', (e) => {
+  e.preventDefault(); // スクロールを無効にする
+}, { passive: false });
+
 // クリアボタンのクリックイベント
 const clearButton = document.getElementById("reset");
 clearButton.addEventListener("click", () => {
@@ -117,11 +182,23 @@ function startDrawing(e) {
 
     // 色を16進数から10進数のRGBに変換
     const paintColorRGB = parseInt(paintColorHex.slice(1), 16); // #を除去して数値に変換
+
+    // 描画を始める時に色を履歴に追加
+    let colorHistory = JSON.parse(localStorage.getItem('colorHistory')) || [];
+    if (!colorHistory.includes(paintColorHex)) {
+      colorHistory.unshift(paintColorHex); // 新しい色を履歴に追加
+      if (colorHistory.length > 3) {
+        colorHistory = colorHistory.slice(0, 3); // 最新3色まで保持
+      }
+      localStorage.setItem('colorHistory', JSON.stringify(colorHistory));
+      loadColorHistory(); // 色履歴を再表示
+    }
+
     line.graphics
-    .setStrokeStyle(lineWidth, 1, "round")
-    .beginStroke(createjs.Graphics.getRGB(paintColorRGB, lineOpacity))
-    .moveTo(mouseX, mouseY)
-    .lineTo(mouseX, mouseY);
+      .setStrokeStyle(lineWidth, 1, "round")
+      .beginStroke(createjs.Graphics.getRGB(paintColorRGB, lineOpacity))
+      .moveTo(mouseX, mouseY)
+      .lineTo(mouseX, mouseY);
   }
 }
 
@@ -171,6 +248,7 @@ function startTimer(duration, display) {
 
       // 経過時間をローカルストレージに保存
       localStorage.setItem('elapsedTime', elapsed);
+      console.log("time saved!")
 
       if (--timer < 0) { // タイマーが0になったら内容の保存＆リダイレクト
         saveCanvas();
@@ -205,6 +283,10 @@ function saveCanvas() {
   var dataURL = canvas.toDataURL();
   localStorage.setItem('canvasImage', dataURL);
 
+  // キャンバスの幅と高さも保存
+  localStorage.setItem('canvasWidth', canvas.width);
+  localStorage.setItem('canvasHeight', canvas.height);
+
   // タイマーと値段を保存
   var timerValue = document.querySelector('.timer p').textContent;
   localStorage.setItem('timerValue', timerValue);
@@ -217,4 +299,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
   if (saveButton) {
     saveButton.addEventListener('click', saveCanvas);
   }
+});
+
+// color-picker がクリックされたときに inputColor を起動
+const colorPicker = document.querySelector('.color-picker');
+const inputColor = document.getElementById('inputColor');
+
+colorPicker.addEventListener('click', () => {
+    inputColor.click(); // inputColor のクリックをトリガー
 });
