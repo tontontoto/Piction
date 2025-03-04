@@ -3,12 +3,10 @@
 <div class="ranking">
     <div class="saleTitle rankingTitle">
         <h2>人気の作品｜ランキング</h2>
-        <p class="showMore_responsive"><a href="/lineup">もっとみる</a></p>
     </div>
     <div class="saleRanking">
         {% for saleRanking in saleRankings %}
-        <a class="saleRankingBox" href="{{ url_for('saleDetail_view', sale_id=saleRanking.saleId) }}"
-            data-rank="No.{{ loop.index }}">
+        <a class="saleRankingBox" href="{{ url_for('saleDetail_view', sale_id=saleRanking.saleId) }}" data-rank="No.{{ loop.index }}">
             <div id="saleRankingBox">
                 <div class="uploadImg uploadImgRanking">
                     {% if config.IS_LOCAL %}
@@ -40,5 +38,4 @@
         {% endfor %}
 
     </div>
-    <button class="showMore"><a href="top.html">もっと見る</a></button>
 </div>

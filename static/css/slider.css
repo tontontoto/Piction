@@ -3,10 +3,12 @@
     position: relative;
     overflow: hidden;
     margin: 2% 0;
+    width: 100%;
 }
 .carousel {
     display: flex;
     transition: transform 0.3s ease-in-out;
+    touch-action: pan-y pinch-zoom;
 }
 .carousel-slide {
     width: 100%;
@@ -118,11 +120,31 @@
     right: 10px;
 }
 
+/* タブレット向けレスポンシブ */
+@media (min-width: 571px) and (max-width: 1024px) {
+    .carousel-content {
+        width: 70%;
+    }
+
+    .carousel-title {
+        font-size: 1.5em;
+    }
+
+    .carousel-artist {
+        font-size: 1.2em;
+    }
+
+    .carousel-stats {
+        gap: 3px;
+    }
+}
+
 /* スマホ向けレスポンシブ */
 @media (max-width: 570px) {
     .carousel-container {
         width: 100%;
         flex-direction: column;
+        touch-action: pan-x pinch-zoom;
     }
 
     .carousel-slide {
@@ -148,7 +170,6 @@
         flex: 1;
         width: 50%;
         margin: 0;
-        margin-left: 6%;
         display: flex;
         align-items: center;
     }
@@ -199,6 +220,7 @@
     }
 
     .carousel-button {
+        display: none;
         font-size: 1.5rem;
         padding: 8px;
     }

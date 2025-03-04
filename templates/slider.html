@@ -49,11 +49,41 @@
         const prevButton = document.querySelector('.prev');
         const nextButton = document.querySelector('.next');
         let currentIndex = 0;
+        let startX = 0;
+        let isDragging = false;
 
         function updateCarousel() {
             carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
         }
 
+        // タッチイベントの処理
+        carousel.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].pageX;
+            isDragging = true;
+        });
+
+        carousel.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            const currentX = e.touches[0].pageX;
+            const diff = startX - currentX;
+            
+            if (Math.abs(diff) > 50) { // スワイプの閾値
+                if (diff > 0) {
+                    currentIndex = Math.min(currentIndex + 1, slides.length - 1);
+                } else {
+                    currentIndex = Math.max(currentIndex - 1, 0);
+                }
+                updateCarousel();
+                isDragging = false;
+            }
+        });
+
+        carousel.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+
+        // 既存のボタンイベント
         prevButton.addEventListener('click', () => {
             currentIndex = (currentIndex - 1 + slides.length) % slides.length;
             updateCarousel();
@@ -65,9 +95,9 @@
         });
 
         // 自動スライド（コメントアウトしておく）
-        // setInterval(() => {
-        //     currentIndex = (currentIndex + 1) % slides.length;
-        //     updateCarousel();
-        // }, 5000);
+        setInterval(() => {
+            currentIndex = (currentIndex + 1) % slides.length;
+            updateCarousel();
+        }, 5000);
     });
 </script>

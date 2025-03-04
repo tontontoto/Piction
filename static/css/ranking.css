@@ -3,8 +3,13 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    margin: 0 auto;
+    margin: 10% auto 5%;
     align-items: center;
+}
+.saleTitle h2{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5%;
 }
 
 .saleRanking {
@@ -21,7 +26,7 @@
     align-items: center;
     background: rgb(255, 255, 255);
     box-shadow: 4px 4px 9px -3px #c2c2c2;
-    border-radius: 2px;
+    border-radius: 10px;
     text-decoration: none;
     color: #070707;
 }
@@ -34,35 +39,68 @@
 .saleRankingBox::before {
     content: attr(data-rank);
     position: absolute;
+    width: 20%;
+    height: 7%;
     top: 0;
     left: 0;
     padding: 4px;
     font-size: 14px;
     border-radius: 10px 0 10px 0;
+    
 }
 
-.saleRankingBox[data-rank="No.1"]::before {
-    background-color: gold;
+/* ランキングごとに枠線の色を変更 */
+/* 1位: ゴールド */
+.saleRankingBox[data-rank="No.1"] {
+    border: 3px solid #ffcc00;
+    box-shadow: 0 0 15px  linear-gradient(135deg, #c0c0c0, #dcdcdc);
 }
 
-.saleRankingBox[data-rank="No.2"]::before {
-    background-color: silver;
+/* 2位: シルバー */
+.saleRankingBox[data-rank="No.2"] {
+    border: 3px solid #c0c0c0;
+    box-shadow: 0 0 15px linear-gradient(135deg, rgba(192, 192, 192, 0.1), rgba(220, 220, 220, 0.2));
 }
 
-.saleRankingBox[data-rank="No.3"]::before {
-    background-color: #cd7f32;
+/* 3位: ブロンズ */
+.saleRankingBox[data-rank="No.3"] {
+    border: 3px solid #cd7f32;
+    box-shadow: 0 0 15px linear-gradient(135deg, rgba(205, 127, 50, 0.1), rgba(184, 115, 51, 0.2));
 }
 
+/* それ以外のランク */
+.saleRankingBox {
+    border: 2px solid #e0e0e0;
+    background: #fff;
+    transition: border 0.3s, box-shadow 0.3s, transform 0.3s;
+}
+
+/* ホバー時のエフェクト */
+.saleRankingBox:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+#saleRankingBox{
+    position: relative;
+}
+.uploadImg{
+    aspect-ratio: 1/1;
+}
 @media (max-width: 960px) {
     .saleRanking {
-        display: block;
-        margin: 0 5%;
+        display: flex;
+        justify-content: center;
+        width: 80%;
+        height: auto;
+        padding: 10px;
+        margin: 0;
     }
 
     .saleRankingBox {
         width: 100%;
         padding: 0;
-
+        margin-bottom: 10%;
         align-items: center;
         background: none;
         text-decoration: none;
@@ -72,14 +110,13 @@
     #saleRankingBox {
         display: flex;
         flex-direction: row;
-        padding: 10px 10%;
-        margin: 0 0 10px;
         box-shadow: 0px 0px 15px -5px #777777;
         border-radius: 10px;
     }
 
     .uploadImgRanking {
-        width: 30%;
+        margin-left: 15%;
+        width: 50%;
     }
 
     .uploadImgRanking img {
@@ -88,7 +125,7 @@
     }
 
     .saleRankingBox_content {
-        width: 70%;
+        width: 50%;
         display: flex;
         flex-direction: row;
     }
@@ -101,10 +138,10 @@
     }
 
     .saleRankingBoxDetail h3 {
-        font-size: 4vw;
+        font-size: 1.5em;
     }
     .saleRankingBoxDetail p {
-        font-size: 3vw;   
+        font-size: 1em;   
     }
     .saleRankingBoxDetail p:first-of-type {
         color: gray;
@@ -118,8 +155,5 @@
     .saleTitle {
         display: flex;
         flex-direction: column;
-    }
-    .showMore_responsive {
-
     }
 }
