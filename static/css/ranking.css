@@ -1,6 +1,7 @@
 /* ranking */
 .ranking {
     width: 100%;
+    height: ;
     display: flex;
     flex-direction: column;
     margin: 10% auto 5%;
@@ -13,40 +14,26 @@
 }
 
 .saleRanking {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin: 0 auto;
-    align-items: center;
-    gap: 10%;
+    width: 70%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 50px;
 }
 
 .saleRankingBox {
-    padding: 3% 2%;
-    align-items: center;
-    background: rgb(255, 255, 255);
-    box-shadow: 4px 4px 9px -3px #c2c2c2;
-    border-radius: 10px;
+    display: block;
     text-decoration: none;
-    color: #070707;
-}
-
-.saleRankingBox {
-    width: 20%;
-    position: relative;
+    color: inherit;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 2px solid #eee;
 }
 
 .saleRankingBox::before {
     content: attr(data-rank);
     position: absolute;
-    width: 20%;
-    height: 7%;
-    top: 0;
-    left: 0;
-    padding: 4px;
-    font-size: 14px;
-    border-radius: 10px 0 10px 0;
-    
 }
 
 /* ランキングごとに枠線の色を変更 */
@@ -80,21 +67,51 @@
     transform: translateY(-3px);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
-
-#saleRankingBox{
-    position: relative;
-}
 .uploadImg{
-    aspect-ratio: 1/1;
+    position: relative;
+    padding-top: 100%;
+    background: #f8f8f8;
 }
 .uploadImg img{
+    aspect-ratio: 1/1;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-bottom: 1px solid #eee;
+}
+.saleRankingBox_content {
+    padding: 15px;
+}
+.saleRankingBox_content h2 {
+    margin: 0 0 10px;
+    font-size: 16px;
+    line-height: 1.4;
+    color: #333;
+}
+.card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+    color: #666;
+}
+
+.price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
 }
 .rankingLikeContainer{
     display: flex;
     justify-content: left;
     align-items: center;
+    bottom: 5%;
+    right: 5%;
 }
+
 .rankingLikeContainer svg {
     width: 28px;
     height: 28px;
@@ -105,73 +122,31 @@
     margin-left: 3px;
 }
 @media (max-width: 960px) {
-    .saleRanking {
-        display: flex;
-        justify-content: center;
-        width: 80%;
-        height: auto;
-        padding: 10px;
-        margin: 0;
-    }
 
-    .saleRankingBox {
-        width: 100%;
-        padding: 0;
-        margin-bottom: 10%;
-        align-items: center;
-        background: none;
-        text-decoration: none;
-        color: #070707;
-    }
-
-    #saleRankingBox {
-        display: flex;
-        flex-direction: row;
-        box-shadow: 0px 0px 15px -5px #777777;
-        border-radius: 10px;
-    }
-
-    .uploadImgRanking {
-        margin-left: 15%;
-        width: 50%;
-    }
-
-    .uploadImgRanking img {
-        width: 100%;
-        border: none;
-    }
-
-    .saleRankingBox_content {
-        width: 50%;
-        display: flex;
-        flex-direction: row;
-    }
-
-    .saleRankingBoxDetail {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        margin: 0 10%;
-    }
-
-    .saleRankingBoxDetail h3 {
-        font-size: 1.5em;
-    }
-    .saleRankingBoxDetail p {
-        font-size: 1em;   
-    }
-    .saleRankingBoxDetail p:first-of-type {
-        color: gray;
-    }
-    .rankingLikeContainer {
-        position: absolute;
-        bottom: 3px;
-        right: 3px;
-    }
 }
 @media (max-width: 570px) {
     .saleTitle {
         display: flex;
         flex-direction: column;
+    }
+    .saleRanking{
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+    }
+    .saleRankingBox{
+        display: flex;
+        height: auto;
+    }
+    .uploadImg{
+        width: 50%;
+        padding: 0;
+    }
+    .uploadImg img{
+        aspect-ratio: 1/1;
+        object-fit: contain;
+    }
+    .saleRankingBox_content{
+        width: 30%;
     }
 }

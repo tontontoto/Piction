@@ -57,6 +57,9 @@
 .showMore_responsive {
     display: none;
 }
+.showMore {
+    display: none;
+}
 
 @media (max-width: 768px) {
     .search-result-header {
