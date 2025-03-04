@@ -3,23 +3,25 @@
         <h2>作品一覧</h2>
         <p class="showMore_responsive"><a href="/lineup">もっとみる</a></p>
     </div>
-    <div class="sale">
-        {% for sale in sales %}
-        <a class="saleBox" href="{{ url_for('saleDetail_view', sale_id=sale.saleId) }}">
-            <div>
-                <div class="uploadImg">
+    <div class="sale-container">
+        <div class="sale-grid">
+            {% for sale in sales %}
+            <a class="sale-card" href="{{ url_for('saleDetail_view', sale_id=sale.saleId) }}">
+                <div class="card-image">
                     {% if config.IS_LOCAL %}
-                        <img src="{{ url_for('static', filename=sale.filePath) }}" alt="saleImage" id="uploadImg">
+                    <img src="{{ url_for('static', filename=sale.filePath) }}" alt="saleImage">
                     {% else %}
-                        <img src="{{ sale.filePath }}" alt="saleImage" id="uploadImg">
+                    <img src="{{ sale.filePath }}" alt="saleImage">
                     {% endif %}
                     <!-- <img src="{{ sale.filePath }}" alt="saleImage" id="uploadImg"> -->
-                    <p class="currentPrice">￥{{ '{:,}'.format(sale.currentPrice) }}</p>
                 </div>
-                <p class="saleBoxTitle">{{ sale.title }}</p>
-                <!-- <p>{{ sale.user.displayName }}</p> -->
-
-
+                <div class="card-content">
+                    <h2>{{ sale.title }}</h2>
+                    <div class="card-info">
+                        <div class="displayName">{{ sale.displayName }}</div>
+                        <div class="price">¥{{ '{:,}'.format(sale.currentPrice) }}</div>
+                    </div>
+                </div>
                 <!-- ハート♡♡♡♡♡ -->
                 <div class="likeContainer">
                     <svg class="heart-icon-{{ sale.saleId }}" class="heart_svg" viewBox="0 0 32 32" fill="none"
@@ -31,11 +33,9 @@
                     </svg>
                     <span class="like-count-{{ sale.saleId }} likeCount">{{ sale.like_count }}</span>
                 </div>
-
-            </div>
-        </a>
-
-        {% endfor %}
+            </a>
+            {% endfor %}
+        </div>
     </div>
     <button class="showMore"><a href="/lineup">もっと見る</a></button>
 </div>

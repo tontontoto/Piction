@@ -87,6 +87,9 @@
 .uploadImg{
     aspect-ratio: 1/1;
 }
+.uploadImg img{
+    width: 100%;
+}
 .rankingLikeContainer{
     display: flex;
     justify-content: left;

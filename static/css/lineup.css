@@ -1,8 +1,3 @@
-#lineup {
-    width: 80%;
-    margin: 0 auto;
-}
-
 .lineupArea {
     width: 100%;
     display: flex;
@@ -58,6 +53,9 @@
 
 .browse-all:hover {
     background: #333;
+}
+.showMore_responsive {
+    display: none;
 }
 
 @media (max-width: 768px) {
