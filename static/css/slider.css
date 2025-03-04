@@ -27,18 +27,21 @@
     width: 40%;
     margin: 0 auto;
     padding: 15px;
-    box-shadow: 0px 0px 15px -5px #777777;
-    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0px 0px 15px -7px #787878;
+    border-radius: 21px;
 }
 .image-wrapper {
-    flex: 1;;
+    flex: 1;
     overflow: hidden;
-    box-shadow: 0px 0px 15px -8px #858585;
-    border-radius: 5px;    
+    background: #ffffff;
+    box-shadow: 0px 0px 15px -7px #787878;
+    border-radius: 21px;   
 }
 .carousel-image {
     width: 100%;
     height: auto;
+    aspect-ratio: 1/1;
     object-fit: cover;
 }
 .carousel-info {
@@ -51,11 +54,11 @@
     width: 100%; /* 親要素の幅を制限 */
 }
 .carousel-title {
-    font-size: 1.2em;
+    font-size: 2em;
     margin-bottom: 1em;
 }
 .carousel-artist {
-    font-size: 0.8em;
+    font-size: 1.5em;
     color: #777;
 }
 .carousel-stats {
@@ -133,17 +136,19 @@
     }
 
     .carousel-content {
-        width: 80%;
+        width: 100%;
         flex-direction: row;
-        margin: 0 auto;
-        box-shadow: 0px 0px 15px -5px #777777;
-        border-radius: 10px;
+        margin: 0 ;
+        background: #ffffff;
+        box-shadow: 0px 0px 15px -7px #787878;
+        border-radius: 21px;
     }
 
     .image-wrapper {
         flex: 1;
         width: 50%;
         margin: 0;
+        margin-left: 6%;
         display: flex;
         align-items: center;
     }
@@ -156,10 +161,12 @@
         padding: 5px 10px;
         text-align: left;
     }
-
+    .carousel-text{
+        padding-left: 13px;
+    }
     .carousel-title {
-        font-size: 16px;
         overflow: hidden;
+        margin-bottom: 0;
         text-overflow: ellipsis;
         display: block; /* ブロック要素として扱う */
         -webkit-line-clamp: 2; /* 2行に制限 */
@@ -168,13 +175,10 @@
         display: -webkit-box; /* 必須: 多行省略のため */
     }
 
-    .carousel-artist {
-        font-size: 14px;
-    }
-
     .carousel-stats {
         flex-direction: column;
         justify-content: left;
+        padding-right: 15px;
         gap: 0px;
     }
 
@@ -197,6 +201,12 @@
     .carousel-button {
         font-size: 1.5rem;
         padding: 8px;
+    }
+    .prev{
+        left: 15px;
+    }
+    .next{
+        right: 15px;
     }
 }
 
