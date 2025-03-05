@@ -141,9 +141,7 @@ colorInput.addEventListener('change', (event) => {
 });
 
 // 初期化時に色履歴を読み込む
-window.onload = function () {
-  loadColorHistory();
-};
+loadColorHistory();
 
 // タッチスタートおよびタッチエンド時にスクロールを無効にする
 canvas.addEventListener('touchstart', (e) => {
