@@ -59,11 +59,12 @@ header {
     border-radius: 25px;
     font-size: 14px;
     transition: border-color 0.2s ease;
+    cursor: pointer;
 }
 
 .search-box input[type="text"]:focus {
     outline: none;
-    border-color: #000;
+    border-color: #46A0DC;
 }
 
 .search-box button {
