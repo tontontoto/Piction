@@ -34,5 +34,6 @@ def contact(app):
                 print(f"Error お問い合わせ送信失敗: {e}")
                 flash('お問い合わせの送信に失敗しました。もう一度お試しください。', 'error')
                 db.session.rollback()
-                
-        return render_template('contact.html')
+
+        else:
+            return render_template('contact.html')

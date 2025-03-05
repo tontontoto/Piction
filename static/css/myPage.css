@@ -57,18 +57,20 @@ body {
     box-shadow: 0px 0px 15px -7px #787878;
     border-radius: 21px;
 }
+
 .userInfo {
     padding: 3%;
     position: relative;
-    height: 100%;  
+    height: 100%;
 }
 
 .userInfo p {
     margin: 0;
 }
+
 .userIcon {
     width: 50%;
-    
+
     padding: auto 3%;
     display: flex;
     justify-content: center;
@@ -85,21 +87,23 @@ body {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
 }
+
 @media screen and (min-width: 1024px) {
-    .userIcon{
+    .userIcon {
         height: 100%;
     }
+
     .userIcon img {
         width: 230px;
         height: 230px;
-    } 
+    }
 }
 
 .userIcon img:hover {
     transform: scale(1.03);
 }
 
-.nameAndMail{
+.nameAndMail {
     position: absolute;
     right: 0;
     top: 0;
@@ -147,7 +151,9 @@ body {
     font-size: 30px;
     margin: 0 !important;
 }
-.listingNumber, .thumbsUpSaleNumber {
+
+.listingNumber,
+.thumbsUpSaleNumber {
     border-radius: 15px;
     padding: 3%;
     width: 50%;
@@ -157,6 +163,7 @@ body {
     justify-content: center;
     align-items: center;
 }
+
 .saleListIcon {
     width: 2.5em;
     height: 2.5em;
@@ -190,6 +197,7 @@ body {
 .modal-content {
     min-height: 600px;
 }
+
 /* Modal1 */
 /* Modal header */
 .modal-header {
@@ -198,14 +206,17 @@ body {
     flex-direction: row;
     justify-content: space-between;
 }
+
 .modal-header-left {
     display: flex;
     flex-direction: row;
 }
+
 .modal-title {
     margin: 0 3%;
     white-space: nowrap;
 }
+
 .profileSubmitbtn {
     border-radius: 50em;
     text-decoration: none;
@@ -215,6 +226,7 @@ body {
     cursor: pointer;
     transition: .3s;
 }
+
 .profileSubmitbtn:hover {
     background: #1a1a1a;
 }
@@ -236,7 +248,8 @@ body {
 }
 
 /* 画像アイコン */
-#icon, #trimed{
+#icon,
+#trimed {
     max-width: 150px;
     max-height: 150px;
     min-width: 150px;
@@ -261,7 +274,8 @@ body {
     cursor: pointer;
     transition: .3s;
 }
-.cameraIconBox:hover{
+
+.cameraIconBox:hover {
     background: rgba(255, 255, 255, 0.3);
 }
 
@@ -284,7 +298,7 @@ body {
 
 .inputLabel {
     position: absolute;
-    top: 8px; 
+    top: 8px;
     left: 12px;
     padding: 0 7px;
     font-size: 12px;
@@ -292,6 +306,25 @@ body {
     background: #fff;
     pointer-events: none;
     transition: all 0.3s ease;
+}
+
+.errorMessageRequired {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-15%);
+    display: none;
+    background: #ed3b3b;
+    font-size: 10px;
+    border-radius: 6px;
+    color: #fff;
+    padding: 0 1em;
+}
+
+@media (max-width:570px) {
+    .errorMessageRequired {
+        transform: translateY(-1%);
+    }
 }
 
 /* modalの中 */
@@ -327,6 +360,7 @@ body {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     transform: translateY(-2px);
 }
+
 /* Modal2 */
 .modal-header-left .back_btn {
     background: #fff;
@@ -335,10 +369,12 @@ body {
     padding: 0;
     margin: 0;
 }
+
 .back_btn {
     background: #fff;
     color: #000;
 }
+
 /* --------------------- */
 /* 売上金エリア */
 .salesMoney {
@@ -424,7 +460,7 @@ body {
     margin: 0 auto;
 }
 
-.tab-1 > label {
+.tab-1>label {
     flex: 1 1;
     order: -1;
     min-width: 70px;
@@ -438,7 +474,7 @@ body {
     cursor: pointer;
 }
 
-.tab-1 > label:hover {
+.tab-1>label:hover {
     opacity: .8;
 }
 
@@ -446,7 +482,7 @@ body {
     display: none;
 }
 
-.tab-1 > div {
+.tab-1>div {
     display: none;
     width: 100%;
     padding: 1.5em 1em;
@@ -463,10 +499,12 @@ body {
     padding-top: calc(0.7em - 4px);
 }
 
-.tab-1 label:has(:checked) + div {
+.tab-1 label:has(:checked)+div {
     display: block;
 }
+
 @media screen and (max-width: 768px) {
+
     /* メインレイアウトの調整 */
     #main {
         width: 90%;
@@ -474,7 +512,7 @@ body {
         flex-direction: column;
         gap: 15px;
     }
-    
+
     /* プロフィールエリアの調整 */
     .profile {
         width: 100%;
@@ -482,19 +520,19 @@ body {
         flex-direction: column;
         align-items: center;
     }
-    
+
     .userIcon {
         width: 50%;
         padding: 10px;
         text-align: center;
         position: static;
     }
-    
+
     .icon {
         width: 150px;
         height: 150px;
     }
-    
+
     .userInfo {
         width: 90%;
         margin-left: 5%;
@@ -502,7 +540,8 @@ body {
         text-align: center;
         position: relative;
     }
-    .nameAndMail{
+
+    .nameAndMail {
         width: 50%;
         padding: 10px;
         display: flex;
@@ -510,26 +549,26 @@ body {
         justify-content: center;
         position: absolute;
         right: 0;
-        top: 18px; 
-        text-align:left
+        top: 18px;
+        text-align: left
     }
-    
+
     .profileDisplayName {
         padding: 0;
         font-size: 24px !important;
     }
-    
+
     /* 売上金エリアの調整 */
-    .salesMoney {   
+    .salesMoney {
         width: 100%;
         min-width: unset;
         max-width: none;
     }
-    
+
     .salesMoney p:nth-child(2) {
         font-size: 28px;
     }
-    
+
     /* ユーザーの出品数、いいね数エリアの調整 */
     .userWantSale {
         position: static;
@@ -538,36 +577,39 @@ body {
         /* flex-wrap: wrap; */
         margin-top: 15px;
     }
-    
-    .listingNumber, .thumbsUpSaleNumber {
+
+    .listingNumber,
+    .thumbsUpSaleNumber {
         background-color: none;
         width: 100%;
         margin: 5px 0;
         padding: 10px;
     }
-    
+
     .userWantSale p {
         font-size: 24px;
     }
-    
+
     /* Flexコンテナの調整 */
-    .flex1, .flex2 {
+    .flex1,
+    .flex2 {
         width: 100%;
     }
-    
+
     /* タブの調整 */
     .tab-1 {
         width: 100%;
     }
-    
-    .tab-1 > label {
+
+    .tab-1>label {
         padding: 1em;
         font-size: 0.8em;
     }
-    
-    .tab-1 > div {
+
+    .tab-1>div {
         padding: 1em 0.5em;
     }
+
     .tab-1 label:has(:checked) {
         padding-top: calc(1em - 4px);
     }
@@ -576,44 +618,47 @@ body {
     .thumbsUpSaleList {
         height: 70px;
     }
-    
+
     .thumbsUpSaleList img {
         height: 40%;
     }
-    
+
     .thumbsUpSaleList p {
         font-size: 16px;
     }
-    
+
     /* モーダルの調整 */
     .modal-content {
         min-height: 450px;
     }
-    
+
     .modalMain {
         padding: 15px;
     }
-    #icon, #trimed {
+
+    #icon,
+    #trimed {
         max-width: 120px;
         max-height: 120px;
         min-width: 120px;
         min-height: 120px;
     }
-    
+
     .modal-title {
         font-size: 18px;
         margin-left: 5px;
     }
-    
+
     .profileSubmitbtn {
         padding: 5px 15px;
         font-size: 14px;
     }
-    
+
     .modalInput {
-        font-size: 16px; /* タッチしやすいサイズに */
+        font-size: 16px;
+        /* タッチしやすいサイズに */
     }
-    
+
     /* プロフィール編集ボタンの調整 */
     .btn_profile {
         position: static;
@@ -625,9 +670,8 @@ body {
         display: inline-block;
     }
 }
-@media (max-width: 570px) {
-    
-}
+
+@media (max-width: 570px) {}
 
 
 /* 小型モバイルデバイス用（iPhone SE等） */
@@ -636,45 +680,48 @@ body {
         width: 110px;
         height: 110px;
     }
-    
+
     .profileDisplayName {
         font-size: 20px !important;
     }
-    
-    .userName, .mailAddress {
+
+    .userName,
+    .mailAddress {
         font-size: 14px;
     }
-    
+
     .salesMoney p:nth-child(2) {
         font-size: 24px;
     }
-    
+
     .userWantSale p {
         font-size: 20px;
     }
-    
-    .tab-1 > label {
+
+    .tab-1>label {
         font-size: 0.7em;
         min-width: 50px;
     }
-    
-    #icon, #trimed {
+
+    #icon,
+    #trimed {
         max-width: 100px;
         max-height: 100px;
         min-width: 100px;
         min-height: 100px;
     }
-    
+
     .modalInputBox {
         margin-bottom: 10px;
     }
-    
+
     .inputLabel {
         font-size: 11px;
     }
 }
+
 @media screen and (min-width: 769px) and (max-width: 1024px) {
-    
+
     /* プロフィールエリアの調整 */
     .profile {
         width: 50%;
@@ -682,29 +729,31 @@ body {
         flex-direction: column;
         align-items: center;
     }
+
     .flex1 {
         width: 50%;
     }
-    
+
     .userIcon {
         width: 50%;
         padding: 10px;
         text-align: center;
         position: static;
     }
-    
+
     .icon {
         width: 100px;
         height: 100px;
     }
-    
+
     .userInfo {
         margin-left: 5%;
         padding: 10px;
         text-align: center;
         position: relative;
     }
-    .nameAndMail{
+
+    .nameAndMail {
         width: 50%;
         padding: 10px;
         display: flex;
@@ -712,15 +761,15 @@ body {
         justify-content: center;
         position: absolute;
         right: 0;
-        top: 18px; 
-        text-align:left
+        top: 18px;
+        text-align: left
     }
-    
+
     .profileDisplayName {
         padding: 0;
         font-size: 24px !important;
     }
-    
+
     /* ユーザーの出品数、いいね数エリアの調整 */
     .userWantSale {
         position: static;
@@ -729,61 +778,64 @@ body {
         /* flex-wrap: wrap; */
         margin-top: 15px;
     }
-    
-    .listingNumber, .thumbsUpSaleNumber {
+
+    .listingNumber,
+    .thumbsUpSaleNumber {
         background-color: none;
         width: 100%;
         margin: 5px 0;
         padding: 10px;
     }
-    
+
     .userWantSale p {
         font-size: 24px;
     }
-    
+
     /* いいね一覧の調整 */
     .thumbsUpSaleList {
         height: 70px;
     }
-    
+
     .thumbsUpSaleList img {
         height: 40%;
     }
-    
+
     .thumbsUpSaleList p {
         font-size: 16px;
     }
-    
+
     /* モーダルの調整 */
     .modal-content {
         min-height: 450px;
     }
-    
+
     .modalMain {
         padding: 15px;
     }
-    
-    #icon, #trimed {
+
+    #icon,
+    #trimed {
         max-width: 120px;
         max-height: 120px;
         min-width: 120px;
         min-height: 120px;
     }
-    
+
     .modal-title {
         font-size: 18px;
         margin-left: 5px;
     }
-    
+
     .profileSubmitbtn {
         padding: 5px 15px;
         font-size: 14px;
     }
-    
+
     .modalInput {
-        font-size: 16px; /* タッチしやすいサイズに */
+        font-size: 16px;
+        /* タッチしやすいサイズに */
     }
-    
+
     /* プロフィール編集ボタンの調整 */
     .btn_profile {
         position: static;

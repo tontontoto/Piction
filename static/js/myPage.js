@@ -14,14 +14,12 @@ document.getElementById('backExampleModalToggle').addEventListener('click', func
     // 前回選択されたファイルと同じファイルが選ばれてもイベントが発火するように、inputのvalueをリセット
     document.getElementById('triming_image').value = '';  // valueをリセット
     console.log('valueリセット');
-    
+
 });
 
-document.getElementById('crop_btn').addEventListener('click', function() {
+document.getElementById('crop_btn').addEventListener('click', function () {
     document.getElementById('backExampleModalToggle').click();
 });
-
-
 
 
 var myModal = new bootstrap.Modal(document.getElementById('exampleModalToggle2'), {
@@ -29,6 +27,73 @@ var myModal = new bootstrap.Modal(document.getElementById('exampleModalToggle2')
     keyboard: false       // ESCキーで閉じない
 });
 
+
+document.addEventListener("DOMContentLoaded", function () {
+    const profileForm = document.getElementById("saveButton");
+    const displayName = document.querySelector("input[name='displayName']");
+    const userName = document.querySelector("input[name='userName']");
+    const mailAddress = document.querySelector("input[name='mailAddress']");
+    const errorMessages = document.querySelectorAll(".errorMessageRequired");
+
+    // ユーザー名の正規表現（半角英数+アンダースコア、2～15字）
+    const userNameRegex = /^[a-zA-Z0-9_]{2,15}$/;
+    // メールアドレスの正規表現
+    const emailRegex = /^[a-zA-Z0-9_\-]+(\.[a-zA-Z0-9_\-]+)*@([a-zA-Z0-9\-]*[a-zA-Z0-9]\.)+[a-zA-Z]{2,}$/;
+
+    // フォーム送信時にチェックする処理
+    profileForm.addEventListener("submit", function (event) {
+        let hasError = false;
+
+        // **表示名のチェック（1～30文字）**
+        if (displayName.value.length === 0) {
+            errorMessages[0].style.display = "block";
+            errorMessages[0].textContent = "必須";
+            hasError = true;
+        } else if (displayName.value.length > 30) {
+            errorMessages[0].style.display = "block";
+            errorMessages[0].textContent = "30文字以内で入力してください。";
+            hasError = true;
+        } else {
+            errorMessages[0].textContent = "";
+        }
+
+        // **ユーザー名のチェック**
+        if (userName.value.length === 0) {
+            errorMessages[1].style.display = "block";
+            errorMessages[1].textContent = "必須";
+            hasError = true;
+        } else if (!/^[a-zA-Z0-9_]/.test(userName.value[0])) {
+            errorMessages[1].style.display = "block";
+            errorMessages[1].textContent = "半角英数字または半角アンダーバーで始めてください。";
+            hasError = true;
+        } else if (!userNameRegex.test(userName.value)) {
+            errorMessages[1].style.display = "block";
+            errorMessages[1].textContent = "半角英数字と半角アンダーバーのみ、2〜15文字で入力してください。";
+            hasError = true;
+        } else {
+            errorMessages[1].textContent = "";
+        }
+
+        // **メールアドレスのチェック**
+        if (mailAddress.value.length === 0) {
+            errorMessages[2].style.display = "block";
+            errorMessages[2].textContent = "必須";
+            hasError = true;
+        } else if (!emailRegex.test(mailAddress.value)) {
+            errorMessages[2].style.display = "block";
+            errorMessages[2].textContent = "有効なメールアドレスを入力してください。";
+            hasError = true;
+        } else {
+            errorMessages[2].textContent = "";
+        }
+
+        // **エラーがある場合、送信を防ぐ**
+        if (hasError) {
+            console.log("フォーム送信を中止");
+            event.preventDefault();
+        }
+    });
+});
 
 
 // // モーダル1の「次のステップ」ボタンをクリックしたとき
