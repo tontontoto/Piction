@@ -175,6 +175,10 @@ input[type="number"]::-webkit-inner-spin-button {
     margin: 0;
     padding: 10px;
 }
+#price_specification_container {
+    display: flex;
+    flex-direction: row;
+}
 #specify {
     width: 40%;
     min-width: 220px;
@@ -190,6 +194,9 @@ input[type="number"]::-webkit-inner-spin-button {
     font-size: 16px;
     font-weight: bold;
     color: #626262;
+}
+.enn {
+    display: inline;
 }
 
 .botan2{
@@ -469,6 +476,7 @@ input[type="number"]::-webkit-inner-spin-button {
     .price_specification_container {
         display: flex;
         flex-direction: row;
+        justify-content: center;
         align-items: center;
     }
     .btn {
