@@ -139,8 +139,7 @@
         grid-template-columns: repeat(2, 1fr);
         gap: 15px;
     }
-    .saleBoxTitle, 
-    .likeCount{
+    .saleBoxTitle{
         display: none;
     }
 
