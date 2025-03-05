@@ -58,8 +58,16 @@
     background-color: #46A0DC;
     color: #fff;
 }
+#supportedBrowser {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+#supportedBrowser p {
+    padding: 5px 20px;
+}
 
-@media (max-width: 525px) {
+@media (max-width: 570px) {
     .signupLoginArea {
         display: flex;
         flex-direction: column;
@@ -73,6 +81,15 @@
         width: 70vw;
         min-width: 300px;
         margin: 0 auto;
+    }
+    #supportedBrowser {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+    }
+    #supportedBrowser p {
+        padding: 5px 20px;
+        font-size: 8px;
     }
 }
 
