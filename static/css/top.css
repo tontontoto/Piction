@@ -7,7 +7,6 @@ html, body {
 body {
     display: flex;
     flex-direction: column;
-    margin-bottom: 50px;
 }
 
 /* メインコンテンツ部分を伸縮可能に */

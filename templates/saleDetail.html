@@ -149,11 +149,11 @@
                         </tr>
                         <tr>
                             <th>最小入札価格</th>
-                            <td id="minBidPrice">{{ '{:,}'.format(currentPrice + 1) }}</td>
+                            <td id="minBidPrice">￥{{ '{:,}'.format(currentPrice + 1) }}</td>
                         </tr>
                         <tr>
                             <th>開始価格</th>
-                            <td>¥{{ '{:,}'.format(sale.startingPrice) }}</td>
+                            <td>￥{{ '{:,}'.format(sale.startingPrice) }}</td>
                         </tr>
                         <tr>
                             <th>終了日時</th>
@@ -181,11 +181,11 @@
             <div class="contents">
                 <div class="scroll-contents">
                     <table>
-                        <tr>
+                        <thead>
                             <th>入札者</th>
                             <th>入札額</th>
                             <th>日時</th>
-                        </tr>
+                        </thead>
                         {% for bid in bids %}
                         <tr>
                             <td>{{ bid.userId }}</td>

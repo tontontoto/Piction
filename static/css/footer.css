@@ -128,7 +128,7 @@ footer {
 }
 
 /* モバイル対応 */
-@media (max-width: 960px) {
+@media ((max-width: 960px)) {
     footer {
         padding: 30px 0 15px;
     }
@@ -184,10 +184,10 @@ footer {
     .footer-column {
         display: flex;
         flex-direction: column;
-        border-top: #9a9a9a 1px solid;
+        border-top: #eee 2px solid;
         padding: 10px;
         cursor: pointer;
-    }
+    }   
     .media-570px-style {
         display: flex;
         flex-direction: row;

@@ -23,7 +23,7 @@ function submitSortOrder() {
                     <div class="card-content">
                         <h2>${sale.title}</h2>
                         <div class="card-info">
-                            <div class="price">¥${sale.currentPrice.toLocaleString()}</div>
+                            <div class="price">￥${sale.currentPrice.toLocaleString()}</div>
                             <div class="bid-count">入札 ${sale.bidCount}</div>
                             <div class="remaining-time">${sale.remainingTime}</div>
                         </div>

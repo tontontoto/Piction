@@ -344,6 +344,9 @@ input[type="number"]::-webkit-inner-spin-button {
     width: 100%;
     border-collapse: collapse;
 }
+.scroll-contents thead {
+    border-bottom: 1px #d5d5d5 solid;
+}
 .scroll-contents th {
     background: #f8f8f8;
     padding: 12px;
@@ -355,6 +358,9 @@ input[type="number"]::-webkit-inner-spin-button {
 .scroll-contents th:nth-child(2),
 .scroll-contents th:nth-child(3) {
     text-align: center;
+}
+.scroll-contents tr:nth-child(even) {
+    background: #f8f8f8;
 }
 .scroll-contents td {
     padding: 12px;
