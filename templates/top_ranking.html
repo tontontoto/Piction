@@ -3,7 +3,7 @@
 <div class="ranking">
     <div class="saleTitle rankingTitle">
         <h2>人気の作品｜ランキング</h2>
-    </div>
+    </div>  
     <div class="saleRanking">
         {% for saleRanking in saleRankings %}
         <a class="saleRankingBox" href="{{ url_for('saleDetail_view', sale_id=saleRanking.saleId) }}"

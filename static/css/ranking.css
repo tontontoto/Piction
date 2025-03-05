@@ -21,6 +21,7 @@
 }
 
 .saleRankingBox {
+    position: relative;
     display: block;
     text-decoration: none;
     color: inherit;
@@ -28,31 +29,51 @@
     border-radius: 8px;
     overflow: hidden;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border: 2px solid #eee;
+    border: 4px solid #eee;
 }
 
 .saleRankingBox::before {
     content: attr(data-rank);
     position: absolute;
+    top: 10px;
+    left: 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    z-index: 2;
 }
 
 /* ランキングごとに枠線の色を変更 */
 /* 1位: ゴールド */
 .saleRankingBox[data-rank="No.1"] {
-    border: 3px solid #ffcc00;
-    box-shadow: 0 0 15px  linear-gradient(135deg, #c0c0c0, #dcdcdc);
+    border: 4px solid #ffcc00;
+    box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+}
+.saleRankingBox[data-rank="No.1"]::before {
+    background: linear-gradient(135deg, #ffcc00, #fff2a6);
+    box-shadow: 0 0 8px rgba(255, 204, 0, 0.8);
 }
 
 /* 2位: シルバー */
 .saleRankingBox[data-rank="No.2"] {
-    border: 3px solid #c0c0c0;
-    box-shadow: 0 0 15px linear-gradient(135deg, rgba(192, 192, 192, 0.1), rgba(220, 220, 220, 0.2));
+    border: 4px solid #c0c0c0;
+    box-shadow: 0 0 15px rgba(192, 192, 192, 0.5);
+}
+.saleRankingBox[data-rank="No.2"]::before {
+    background: linear-gradient(135deg, #c0c0c0, #f0f0f0);
+    box-shadow: 0 0 8px rgba(192, 192, 192, 0.8);
 }
 
 /* 3位: ブロンズ */
 .saleRankingBox[data-rank="No.3"] {
-    border: 3px solid #cd7f32;
-    box-shadow: 0 0 15px linear-gradient(135deg, rgba(205, 127, 50, 0.1), rgba(184, 115, 51, 0.2));
+    border: 4px solid #cd7f32;
+    box-shadow: 0 0 15px rgba(205, 127, 50, 0.5);
+}
+.saleRankingBox[data-rank="No.3"]::before {
+    background: linear-gradient(135deg, #cd7f32, #e3a56b);
+    box-shadow: 0 0 8px rgba(205, 127, 50, 0.8);
 }
 
 /* それ以外のランク */

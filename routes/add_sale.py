@@ -139,15 +139,6 @@ def add_sale(app):
             return jsonify({'error': 'Failed to create sale'}), 500
 
         try:
-            # 新しいビッドを作成
-            new_bid = Bid(userId=userId, saleId=new_sale.saleId, bidPrice=price)
-            db.session.add(new_bid)
-            db.session.commit()
-        except Exception as e:
-            print(f"Error ビッド処理失敗: {e}")
-            return jsonify({'error': 'Failed to add bid'}), 500
-
-        try:
             # 中間テーブルにカテゴリ関連を追加
             new_association = saleCategoryAssociation.insert().values(saleId=new_sale.saleId, categoryId=kategori)
             db.session.execute(new_association)

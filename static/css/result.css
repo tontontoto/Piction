@@ -1,4 +1,9 @@
 @charset "UTF-8";
+input, select {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
 
 body {
   position: relative;
@@ -13,6 +18,7 @@ header {
   width: 150px;
   height: auto;
 }
+
 
 /* main */
 main {
@@ -185,18 +191,19 @@ main {
   border: 1px solid #000000;
   font-size: 16px;
   font-weight: bold;
-  color: #070707;
-  background-color: #ff5a65;
+  color: #fdfdfd;
+  background-color: #46A0DC;
   padding: 10px 30px;
-  border-radius: 0px;
+  border-radius: 5px;
+  border: 1px #c3c3c3 solid;
   text-decoration: none;
   transition: all 0.2s;
   cursor: pointer;
 }
 
 .btn .button:hover {
-  background-color: #ff0011;
-  color: #ffffff;
+  background-color: #fff;
+  color: #000;
   transition: all 0.4s;
 }
 

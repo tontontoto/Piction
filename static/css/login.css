@@ -47,6 +47,8 @@
     line-height: 100%;
     font-size: 16px;
     height: 50px;
+    border-radius: 5px;
+    inline-size: 1px solid #000;
 }
 .inputArea input:focus{
     outline: none;
@@ -77,6 +79,16 @@
     text-align: right;
     margin: 3% 0;
 }
+.signupLink a {
+    color: #000;
+    text-decoration: none;
+    border-bottom: #000 2px solid;
+}
+.signupLink a:hover {
+    color: #898989;
+    border-bottom-color: #898989;
+}
+
 @media screen and (max-width: 570px) {
 
     #loginForm {
