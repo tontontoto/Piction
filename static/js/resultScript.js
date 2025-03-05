@@ -737,7 +737,7 @@ document.addEventListener("DOMContentLoaded", () => {
 //本保存
 const download = document.getElementById("download");
 download.addEventListener("click", () => {
-    const title = document.getElementById("title").value;
+    const title = document.getElementById("title").value.trim() || "無題";
     const postingDate = document.getElementById("one_week").value; // 例: "3月4日 (月)"
     const postingTime = document.getElementById("times").value;   // 例: "10時～11時"
     const dataURL = localStorage.getItem("canvasImage");
@@ -745,7 +745,7 @@ download.addEventListener("click", () => {
     const price = localStorage.getItem("moneyValue");
     const kategoriSelectValue = document.getElementById("kategori").value;
 
-    if (!title || !postingDate || !postingTime || !dataURL || !price) {
+    if (!postingDate || !postingTime || !dataURL || !price) {
         alert("必要な情報が足りません。全ての項目を入力してください。");
         return;
     }
