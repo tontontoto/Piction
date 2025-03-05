@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <!-- footer -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav_sp.css') }}">
     <!-- sale -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sale.css') }}">
     <!-- scrollbar -->
@@ -28,6 +29,7 @@
 <body>
     <!-- ヘッダーエリア -->
     {% include 'header.html' %}
+    {% include 'nav_sp.html' %}
 
     <main>
         {% if query %}

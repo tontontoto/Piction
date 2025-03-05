@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <!-- footer -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav_sp.css') }}">
     <!-- scrollbar -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/scrollbar.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
@@ -20,6 +21,8 @@
 
 <body>
     {% include 'header.html' %}
+    {% include 'nav_sp.html' %}
+    
 
     <main class="bid-container">
         <div class="bid-card">

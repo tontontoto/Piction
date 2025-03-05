@@ -11,12 +11,14 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <!-- footer -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav_sp.css') }}">
     
     <script src="{{ url_for('static', filename='js/footer.js') }}" defer></script>
     <title>落札した作品 | Piction</title>
 </head>
 <body>
     {% include 'header.html' %}
+    {% include 'nav_sp.html' %}
 
     <main>
         <div class="winning-bids-container">

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/saleDetail_finished.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav_sp.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
     <!-- scrollbar -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/scrollbar.css') }}">
@@ -20,6 +21,7 @@
 
 <body>
     {% include 'header.html' %}
+    {% include 'nav_sp.html' %}
 
     <main class="sale-detail">
         {% if finished %}
@@ -192,7 +194,6 @@
             </div>
         </div>
     </main>
-
     {% include 'footer.html' %}
 </body>
 
