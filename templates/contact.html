@@ -13,8 +13,7 @@
     <link rel="icon" href="../static/icon/favicon.png">
     <title>お問い合わせ | Piction</title>
 </head>
-
-<body>
+<body oncontextmenu="return false;">
     <header>
         <div class="header_icon" id="page_top">
             <a href="/top">
@@ -25,7 +24,7 @@
 
 
     <div class="main">
-        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% with messages = get_flashed_messages(with_categories=true
         {% if messages %}
         {% for category, message in messages %}
         <div class="flash-message flash-{{ category }}">

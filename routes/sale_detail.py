@@ -44,7 +44,7 @@ def saleDetail(app):
                 db.session.commit()
                 print("最大金額（落札金額）:",lastAmount)
                 finished = "この作品のオークションは終了しています"
-                return render_template('saleDetail.html', sale=sale, bids=bids, currentPrice=currentPrice, categories=categories, finished=finished, bidUserId=bidUserId ,lastAmount=lastAmount, config=app.config)
+                return render_template('saleDetail.html', sale=sale, userName=userName, userIcon=userIcon,  bids=bids, currentPrice=currentPrice, categories=categories, finished=finished, bidUserId=bidUserId ,lastAmount=lastAmount, config=app.config)
             
             # 商品なかった時のerror処理
             if sale is None:

@@ -126,10 +126,11 @@ class InquiryModelView(BaseModelView):
 
 # 管理画面の設定
 def init_admin(app):
-    admin = Admin(app, name='Piction 管理パネル', template_mode='bootstrap3')
+    admin = Admin(app, name='Piction 管理パネル', template_mode='bootstrap3', url='/piction0306admin')
     
     # エラー抑制設定
     app.config['FLASK_ADMIN_RAISE_ON_VIEW_EXCEPTION'] = False
+    
     
     # 各モデルの登録
     try:

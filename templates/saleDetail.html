@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/saleDetail_finished.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav_sp.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
     <!-- scrollbar -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/scrollbar.css') }}">
@@ -18,8 +19,9 @@
     <title>{{ sale.title }} | Piction</title>
 </head>
 
-<body>
+<body oncontextmenu="return false;">
     {% include 'header.html' %}
+    {% include 'nav_sp.html' %}
 
     <main class="sale-detail">
         {% if finished %}
@@ -123,7 +125,11 @@
                 <div class="seller_box">
                     <p>出品者</p>
                     <div class="seller_icon_name">
-                        <img src="{{ url_for('static', filename=userIcon) }}" class="icon" alt="userIcon">
+                        {% if config.IS_LOCAL %}
+                        <img src="{{ url_for('static', filename=userIcon) }}" id="icon" alt="userIcon">
+                        {% else %}
+                        <img src="{{ userIcon }}" id="icon" alt="userIcon">
+                        {% endif %}
                         <div>
                             <p>{{ sale.displayName }}</p>
                             <p>@{{ userName }}</p>
@@ -192,7 +198,6 @@
             </div>
         </div>
     </main>
-
     {% include 'footer.html' %}
 </body>
 

@@ -14,11 +14,12 @@
                 <img src="{{ sale.filePath }}" alt="{{ sale.title }}">
                 {% endif %}
 
-                {% if not sale.saleStatus %}
-                <div class="status-badge ended">終了</div>
+                {% if winning_bids[sale.saleId] %}
+                <div class="status-badge ended">支払い済み</div>
                 {% else %}
-                <div class="status-badge active">出品中</div>
+                <div class="status-badge active">未払い</div>
                 {% endif %}
+                
             </div>
             <div class="sale-info">
                 <h3>{{ sale.title }}</h3>

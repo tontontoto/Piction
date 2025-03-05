@@ -69,9 +69,15 @@ def mypage(app):
 
         # 落札した商品の情報を取得
         myBidSales = []
+        winning_bids = {}  # 各 saleId ごとの支払い状況を管理
         for bid in myBidList:
             sale = Sale.query.get(bid.Sale.saleId)
             myBidSales.append(sale)
+            
+            # 各 saleId ごとに WinningBid の情報を取得
+            winning_bid = WinningBid.query.filter_by(saleId=sale.saleId).first()
+            winning_bids[sale.saleId] = winning_bid is not None  # True: 支払い済み, False: 未払い
+
 
         print("落札した商品の一覧", myBidSales)
 
@@ -89,7 +95,6 @@ def mypage(app):
         for bid in my_bids_query:
             sale = Sale.query.get(bid.Sale.saleId)
             my_bids.append(sale)
-            
         
         # 売上情報の取得
         saleStatus = db.session.query(Sale).filter(Sale.userId == userId, Sale.saleStatus == 0).all()
@@ -190,7 +195,7 @@ def mypage(app):
                 print(f"データベース保存エラー: {e}")
 
             # リダイレクトでフォーム送信後の再送信を防ぐ
-            return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, my_bids=my_bids, revenue=revenue, config=app.config)
+            return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, my_bids=my_bids, revenue=revenue, winning_bids=winning_bids, config=app.config)
             
 
-        return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, my_bids=my_bids, revenue=revenue, config=app.config)
+        return render_template('myPage.html', user=user, sales=sales, listingCount=listingCount, likeCount=likeCount, myBidSales=myBidSales, my_bids=my_bids, revenue=revenue, winning_bids=winning_bids, config=app.config)

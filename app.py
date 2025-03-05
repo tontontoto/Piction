@@ -40,7 +40,6 @@ else:
 from errors.error_handlers import *
 
 # == インスタンス作成 ==
-
 # MARK:インスタンス化
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL

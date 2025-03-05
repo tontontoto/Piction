@@ -63,3 +63,9 @@
 .download-button:hover {
     background: #0056b3;
 } 
+@media (max-width: 768px) {
+    .winning-bids-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+}
