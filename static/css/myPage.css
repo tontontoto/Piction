@@ -561,14 +561,17 @@ body {
     }
     
     .tab-1 > label {
-        padding: 0.5em;
+        padding: 1em;
         font-size: 0.8em;
     }
     
     .tab-1 > div {
         padding: 1em 0.5em;
     }
-    
+    .tab-1 label:has(:checked) {
+        padding-top: calc(1em - 4px);
+    }
+
     /* いいね一覧の調整 */
     .thumbsUpSaleList {
         height: 70px;
