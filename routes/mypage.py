@@ -156,7 +156,7 @@ def mypage(app):
                             iconFilePath = None
                     else:
                         print('アイコン Azure Blob Storage保存')
-                         # Azure Blob Storageにアップロードする場合
+                        # Azure Blob Storageにアップロードする場合
                         try:
                             # Azure Blob Storage接続
                             blob_service_client, container_client = connect_to_azure_blob(AZURE_STORAGE_ICON_CONTAINER)

@@ -82,7 +82,7 @@
                     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
                     <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
-                            <form method="post" enctype="multipart/form-data">
+                            <form method="post" enctype="multipart/form-data" id="saveButton">
                                 <div class="modal-header">
                                     <div class="modal-header-left">
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -115,16 +115,19 @@
                                     </div>
 
                                     <div class="modalInputBox">
+                                        <span class="errorMessageRequired"></span>
                                         <label for="displayName" class="inputLabel">表示名</label>
                                         <input type="text" name="displayName" class="modalInput"
                                             value="{{ user.displayName }}">
                                     </div>
                                     <div class="modalInputBox">
+                                        <span class="errorMessageRequired"></span>
                                         <label for="userName" class="inputLabel">ユーザー名</label>
                                         <input type="text" name="userName" class="modalInput"
                                             value="{{ user.userName }}">
                                     </div>
                                     <div class="modalInputBox">
+                                        <span class="errorMessageRequired"></span>
                                         <label for="mailAddress" class="inputLabel">Email</label>
                                         <input type="text" name="mailAddress" class="modalInput"
                                             value="{{ user.mailAddress }}">
