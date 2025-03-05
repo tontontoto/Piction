@@ -3,6 +3,10 @@
     padding: 0;
     box-sizing: border-box;
 }   
+input, select {
+    -webkit-appearance: none;
+    appearance: none;
+}
 
 body {
     font-family: "游ゴシック Medium", "Yu Gothic Medium", "游ゴシック体", YuGothic, sans-serif;
@@ -60,6 +64,11 @@ main {
     display: inline-block;
 }
 
+#productSortSelect option:hover {
+    background-color: #46A0DC;
+    outline: none;
+}
+
 .sort-select::after {
     content: '';
     position: absolute;
@@ -84,6 +93,7 @@ main {
     cursor: pointer;
     min-width: 200px;
 }
+
 
 .likes-container {
     background: white;
