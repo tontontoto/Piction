@@ -7,6 +7,7 @@
 header {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
     border-bottom: 1px solid #bababa;
@@ -35,6 +36,15 @@ header {
     vertical-align: top;
 }
 
+.header_icon {
+    padding: 5px 10px;
+}
+
+.header_icon img {
+    margin: 0;
+}
+
+
 /* main */
 main {
     width: 90%;
@@ -53,7 +63,7 @@ main {
 
 /* Tools */
 #Tools {
-    flex: 1;
+    width: 40%;
 }
 
 .tool-group {
@@ -104,6 +114,7 @@ main {
 
 .btn_push span {
     font-size: 13px;
+    color: #000;
 }
 
 .color-picker:hover {
@@ -116,6 +127,7 @@ main {
 
 .btn_push.active {
     background: #eaeaea;
+    border: #46A0DC 2px solid;
     transform: translateY(1px);
 }
 
@@ -249,7 +261,7 @@ main {
     border: 1px #161616 solid;
     border-radius: 13px;
     width: 100%;
-    height: auto; 
+    height: auto;
 }
 
 /* side */
@@ -315,58 +327,87 @@ main {
     font-size: 18px;
 }
 
-/* 570px以下の画面に適用するスタイル */
-@media (max-width: 570px) { 
-    header {
-        justify-content: space-between;
+/* ------------- */
+
+
+/* submit */
+.pageOperation_sp {
+    display: block;
+    padding-right: 5px;
+}
+
+.submit-button {
+    padding: 5px 12px;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* main のレイアウトを縦方向に変更 */
+main {
+    width: 95%;
+    flex-direction: column;
+    margin: 0 auto 100px;
+}
+
+
+
+/* スライダーコンテナの幅調整 */
+.sliderContainer {
+    width: 100%;
+    padding: 0;
+}
+
+.side {
+    display: flex;
+    flex-direction: row;
+}
+
+.colorHistory_pc {
+    display: none;
+}
+
+
+/* タイマーと価格表示を横並びから縦並びに変更 */
+.sideTop {
+    gap: 20px;
+    flex: 1;
+}
+
+.info-card {
+    padding: 12px;
+}
+
+.pageOperation_pc {
+    display: none;
+}
+@media (max-width: 570px) {
+    #nav_sp_draw {
+        display: none;
     }
 
-    .header_icon {
-        padding: 5px 10px;
-    }
-
-    .header_icon img {
-        margin: 0;
-    }
-
-    /* submit */
-    .pageOperation_sp {
-        display: block;
-        padding-right: 5px;
-    }
-
-    .submit-button {
-        padding: 5px 12px;
-        font-size: 14px;
-        text-align: center;
-    }
-
-    /* main のレイアウトを縦方向に変更 */
-    main {
-        width: 95%;
-        flex-direction: column;
-        margin: 0 auto 100px;
-    }
-
-    /* drawArea を縦方向に変更 */
     .drawArea {
         flex-direction: column;
-        gap: 15px;
+    }
+
+    /* 並び順指定 */
+    #Tools {
+        order: 2;
     }
 
     #myCanvas {
         order: 1;
     }
 
-    #Tools {
-        order: 2;
-    }
-
-    .side {
+    #side {
         order: 3;
     }
 
-    /* Tools（ツールボックス） */
+    /* --------- */
+    /* Tools */
+    #Tools {
+        width: 100%;
+    }
+
     .selectTool {
         width: 100%;
         position: fixed;
@@ -407,34 +448,38 @@ main {
         padding: 12px;
     }
 
-    /* スライダーコンテナの幅調整 */
-    .sliderContainer {
+    .tools_sp_block {
         width: 100%;
-        padding: 0;
-    }
-
-    .side {
         display: flex;
         flex-direction: row;
+        gap: 5px;
+    }
+
+    .colorHistory_sp {
+        display: block;
+        flex-grow: 0;
+        width: 30%;
     }
     .colorHistory_pc {
         display: none;
     }
-    .colorHistory_sp {
-        display: block;
-        flex: 1;
-    }
-    /* タイマーと価格表示を横並びから縦並びに変更 */
-    .sideTop {
-        gap: 20px;
+
+    .sliderContainer {
         flex: 1;
     }
 
-    .info-card {
-        padding: 12px;
+    #myCanvas {
+        width: 100% !important;
+        height: auto;
     }
-    .pageOperation_pc {
-        display: none;
+    /* side */
+    .sideTop {
+        display: flex;
+        flex-direction: row;
+    }
+    .info-card {
+        flex: 1;
     }
 
 }
+

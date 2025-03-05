@@ -36,33 +36,30 @@ def add_sale(app):
         try:
             data = request.get_json()
             title = data.get('title')
-            postingTime = data.get('postingTime')
+            posting_date = data.get('postingDate')  # 例: "3月4日 (火)"
+            posting_time_range = data.get('postingTime')  # 例: "9時～10時"
             image_data = data.get('image')
             time = data.get('time')
             price = data.get('price')
             kategori = data.get('kategori')
 
-            print(title)
-            print(postingTime)
-            print(kategori)
+            print(f"出品情報: {title}, {posting_date}, {posting_time_range}, {kategori}")
 
-            # カテゴリIDを使ってカテゴリ情報を取得
+            # カテゴリ情報を取得
             category = Category.query.filter_by(categoryId=kategori).first()
-
             if not category:
                 return jsonify({'error': 'Category not found'}), 400
 
-            # カテゴリ名を表示（デバッグ用）
             print(f"選択されたカテゴリ名: {category.categoryName}")
 
         except Exception as e:
             print(f"Error 出品情報取得失敗: {e}")
             return jsonify({'error': 'Failed to parse request data'}), 400
-        
+
         if not image_data:
             return jsonify({'error': 'No image data provided'}), 400
 
-        # Base64デコードの処理を明示的に記述
+        # Base64デコード
         if image_data.startswith("data:image/png;base64,"):
             image_data = image_data.replace("data:image/png;base64,", "")
 
@@ -72,41 +69,69 @@ def add_sale(app):
             print(f"Error: Base64 decoding failed - {e}")
             return jsonify({'error': 'Invalid image data'}), 400
 
+        # 現在の日本時間を取得
+        now = datetime.now(pytz.timezone('Asia/Tokyo'))
+        current_minutes = now.minute  # 現在の「分」を取得
+
+        # 日付と時間範囲から掲載開始時刻を計算
+        try:
+            # 今日の年を取得し、"3月4日 (火)" をパース
+            current_year = now.year
+            posting_date = posting_date.split(" (")[0]  # "3月4日" にする
+            posting_datetime = datetime.strptime(f"{current_year}年{posting_date}", "%Y年%m月%d日")
+
+            # 時間範囲 "9時～10時" から開始時刻を取得
+            start_hour = int(posting_time_range.split("時～")[0])  # "9" を取得
+            posting_datetime = posting_datetime.replace(hour=start_hour, minute=0, second=0)
+
+            # 日本時間に変換
+            posting_datetime = pytz.timezone('Asia/Tokyo').localize(posting_datetime)
+
+            print("掲載開始時刻:", posting_datetime.strftime('%Y/%m/%d %H:%M:%S'))
+        except Exception as e:
+            print(f"Error 掲載開始時間の計算失敗: {e}")
+            return jsonify({'error': 'Failed to calculate posting time'}), 400
+
+        # 掲載終了時刻の計算（現在の「分」を適用）
+        posting_end_datetime = posting_datetime.replace(minute=current_minutes)
+
+        print("掲載終了時刻:", posting_end_datetime.strftime('%Y/%m/%d %H:%M:%S'))
+
+        # 画像保存
         if UPLOAD_STORAGE == 'local':
-            # 画像をローカルフォルダに保存
             file_path = save_image_to_file(image_bytes, app.config['UPLOAD_FOLDER'])
             file_path = file_path.replace(app.config['UPLOAD_FOLDER'], 'upload_images')
         else:
             try:
-                # 画像をAzure Blob Storageに保存
                 file_path = save_image_to_azure(image_bytes)
                 if not file_path:
                     return jsonify({"error": "Failed to save image"}), 500
             except Exception as e:
-                # 保存成功時に画像のURLを返す
                 return jsonify({"message": "Image uploaded successfully", "image_url": file_path}), 201
 
-
-        userId = session.get('userId') # 今使っているユーザーのuserIdの取得
+        # ユーザー情報取得
+        userId = session.get('userId')
         try:
-            user = db.session.query(User).get(userId)  # userIdからuser情報受け取り
+            user = db.session.query(User).get(userId)
         except Exception as e:
             print(f"Error ユーザー情報取得失敗: {e}")
             return jsonify({'error': 'Failed to query user'}), 500
-        
-        displayName = user.displayName # displayNameの取得
 
-        #現在時刻取得
-        dt = datetime.now(pytz.timezone('Asia/Tokyo'))
-        datetimeStr = dt.strftime('%Y/%m/%d %H:%M:%S')
-        #掲載時間計算
-        postingTimePlus = dt + timedelta(minutes=int(postingTime))
-        postingTimeStr = postingTimePlus.strftime('%Y/%m/%d %H:%M:%S')
-        print("現在時刻：", datetimeStr, file=sys.stderr)
-        print("掲載満了時刻：", postingTimeStr, file=sys.stderr)
+        displayName = user.displayName
 
         try:
-            new_sale = Sale(userId=userId, displayName=displayName, title=title, filePath=file_path, startingPrice=price,currentPrice=price, creationTime=time, startingTime=datetimeStr, finishTime=postingTimeStr)
+            # 出品データをデータベースに追加
+            new_sale = Sale(
+                userId=userId,
+                displayName=displayName,
+                title=title,
+                filePath=file_path,
+                startingPrice=price,
+                currentPrice=price,
+                creationTime=time,
+                startingTime=posting_datetime.strftime('%Y/%m/%d %H:%M:%S'),
+                finishTime=posting_end_datetime.strftime('%Y/%m/%d %H:%M:%S')
+            )
             db.session.add(new_sale)
             db.session.commit()
         except Exception as e:
@@ -116,7 +141,7 @@ def add_sale(app):
         try:
             # 新しいビッドを作成
             new_bid = Bid(userId=userId, saleId=new_sale.saleId, bidPrice=price)
-            db.session.add(new_sale, new_bid)
+            db.session.add(new_bid)
             db.session.commit()
         except Exception as e:
             print(f"Error ビッド処理失敗: {e}")
@@ -131,6 +156,4 @@ def add_sale(app):
             print(f"Error 中間テーブルへの追加失敗: {e}")
             return jsonify({'error': 'Failed to associate sale with category'}), 500
 
-        # 出品成功メッセージ
-        return jsonify({'message': 'Sale added successfully'}), 201  
-    
+        return jsonify({'message': 'Sale added successfully'}), 201
