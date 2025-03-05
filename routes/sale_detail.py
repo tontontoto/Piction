@@ -9,7 +9,7 @@ def saleDetail(app):
         try:
             # 商品情報をデータベースから取得
             sale = db.session.query(Sale).get(sale_id)
-            bids = Bid.query.filter_by(saleId=sale_id).all()
+            bids = Bid.query.filter_by(saleId=sale_id).order_by(Bid.bidPrice.desc()).all()
             currentPrice = db.session.query(Bid.bidPrice).filter_by(saleId=sale_id).order_by(Bid.bidPrice.desc()).first()
             currentPrice = currentPrice[0] if currentPrice else sale.startingPrice
             categories = ', '.join([category.categoryName for category in sale.categories])

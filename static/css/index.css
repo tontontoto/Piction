@@ -82,6 +82,10 @@
         min-width: 300px;
         margin: 0 auto;
     }
+    .signupLoginButton:hover {
+        background-color: #fff;
+        color: #000;
+    }
     #supportedBrowser {
         position: absolute;
         right: 0;
@@ -89,7 +93,7 @@
     }
     #supportedBrowser p {
         padding: 5px 20px;
-        font-size: 8px;
+        font-size: 14px;
     }
 }
 

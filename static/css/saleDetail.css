@@ -509,6 +509,9 @@ input[type="number"]::-webkit-inner-spin-button {
     .scroll-contents {
         width: 95%;
     }
+    .scroll-contents th {
+        white-space: nowrap;
+    }
     .scroll-contents td {
         padding: 5px ;
     }
