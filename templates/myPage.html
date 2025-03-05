@@ -21,7 +21,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <!-- footer -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <!-- nav_sp -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/nav_sp.css') }}">
+
+    <script src="{{ url_for('static', filename='js/footer.js') }}" defer></script>
     <title>マイページ | Piction</title>
     <!-- alpinejs -->
     <!-- <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script> -->
@@ -41,7 +44,6 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/cropper.js') }}" charset="UTF-8"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/cropperCanvas.js') }}" defer></script>
 </head>
-
 <body oncontextmenu="return false;">
     <!-- ヘッダーエリア -->
     {% include 'header.html' %}

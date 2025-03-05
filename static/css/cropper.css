@@ -13,6 +13,20 @@
     border-radius: 50%;
 }
 
+@media (max-width:570px) {
+    .cropper-container {
+        width: 100%;
+        max-height: 300px;
+        overflow: hidden;
+    }
+    #trimed_image {
+        width: 100%;
+        height: auto;
+        max-height: 250px;
+    }
+
+}
+
 .cropper-container {
     width: 100%;
 }
@@ -39,9 +53,10 @@ main {
 } */
 
 .cropper-container {
-    direction: ltr;
+    /* direction: ltr; */
     /* font-size: 0;
     line-height: 0; */
+    width: 100%;
     position: relative;
     -ms-touch-action: none;
     touch-action: none;
@@ -62,6 +77,9 @@ main {
     min-height: 0 !important;
     min-width: 0 !important;
     width: 100%;
+}
+.cropper-bg {
+    width: 100% !important;
 }
 
 .cropper-wrap-box,

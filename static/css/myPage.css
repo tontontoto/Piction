@@ -625,6 +625,10 @@ body {
         display: inline-block;
     }
 }
+@media (max-width: 570px) {
+    
+}
+
 
 /* 小型モバイルデバイス用（iPhone SE等） */
 @media screen and (max-width: 480px) {
