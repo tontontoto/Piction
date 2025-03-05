@@ -123,7 +123,7 @@
                 </div>
                 <!-- 出品者情報 -->
                 <div class="seller_box">
-                    <p>出品者</p>
+                    <p class="seller">出品者</p>
                     <div class="seller_icon_name">
                         {% if config.IS_LOCAL %}
                         <img src="{{ url_for('static', filename=userIcon) }}" id="icon" alt="userIcon">
@@ -182,7 +182,7 @@
                 <div class="scroll-contents">
                     <table>
                         <thead>
-                            <th>入札者</th>
+                            <th>入札者ID</th>
                             <th>入札額</th>
                             <th>日時</th>
                         </thead>
