@@ -8,7 +8,7 @@
             </div>
             <div class="search-box">
                 <form action="/search" method="get">
-                    <input type="text" name="query" placeholder="作品を検索" value="{{ request.args.get('query', '') }}">
+                    <input type="text" name="query" placeholder="作品名を検索" value="{{ request.args.get('query', '') }}">
                     <button type="submit">
                         <img src="{{ url_for('static', filename='parts/magnifyingglass.svg') }}" alt="検索">
                     </button>

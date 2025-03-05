@@ -106,3 +106,13 @@
     color: #e91e63;
     font-size: 24px;
 }
+@media  screen and (max-width: 768px) {
+    .finished-flex-container .main{
+        max-width: 100%;
+        flex: 0;
+    }
+    .finished-flex-container .main img{
+        height: auto;
+    }
+    
+}
