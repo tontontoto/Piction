@@ -67,31 +67,33 @@
                         </button>
                     </div>
                 </div>
-                <div class="sliderContainer">
-                    <div class="slider-group">
-                        <label for="lineWidth">線の太さ</label>
-                        <input type="range" id="lineWidth" min="1" max="30" value="5">
-                        <span class="value-display" id="lineWidth-value">5</span>
+                <div class="tools_sp_block">
+                    <!-- 色履歴 -->
+                    <div id="colorHistory" class="colorHistory_sp">
+                        <h3>色履歴</h3>
+                        <ul id="colorList">
+                        </ul>
                     </div>
-                    <div class="slider-group">
-                        <label for="lineOpacity">透明度</label>
-                        <input type="range" id="lineOpacity" min="0" max="1" step="0.1" value="1">
-                        <span class="value-display" id="lineOpacity-value">100%</span>
+                    <div class="sliderContainer">
+                        <div class="slider-group">
+                            <label for="lineWidth">線の太さ</label>
+                            <input type="range" id="lineWidth" min="1" max="30" value="5">
+                            <span class="value-display" id="lineWidth-value">5</span>
+                        </div>
+                        <div class="slider-group">
+                            <label for="lineOpacity">透明度</label>
+                            <input type="range" id="lineOpacity" min="0" max="1" step="0.1" value="1">
+                            <span class="value-display" id="lineOpacity-value">100%</span>
+                        </div>
                     </div>
                 </div>
-                <!-- 色履歴 -->
-                <!-- <div id="colorHistory" class="colorHistory_pc">
-                    <h3>使った色履歴</h3>
-                    <ul id="colorList">
-                    </ul>
-                </div> -->
             </div>
 
             <canvas id="myCanvas"></canvas>
 
-            <div class="side">
+            <div id="side">
                 <!-- 色履歴 -->
-                <div id="colorHistory" class="colorHistory_sp">
+                <div id="colorHistory" class="colorHistory_pc">
                     <h3>使った色履歴</h3>
                     <ul id="colorList">
                     </ul>

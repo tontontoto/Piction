@@ -33,6 +33,69 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+  const oneWeekSelect = document.getElementById("one_week");
+  const timesSelect = document.getElementById("times");
+
+  // **日付リストを作成する関数**
+  function generateDateList() {
+      const now = new Date();
+      let dateList = [];
+
+      for (let i = 0; i < 7; i++) {
+          let futureDate = new Date();
+          futureDate.setDate(now.getDate() + i);
+
+          let month = futureDate.getMonth() + 1;
+          let day = futureDate.getDate();
+          let dayOfWeek = futureDate.toLocaleDateString('ja-JP', { weekday: 'short' });
+
+          let formattedDate = `${month}月${day}日 (${dayOfWeek})`;
+          dateList.push({ value: formattedDate, formattedDate }); 
+      }
+
+      oneWeekSelect.innerHTML = "";
+      dateList.forEach(item => {
+          const option = document.createElement("option");
+          option.value = item.value;  // "3月4日 (月)" 形式で送信
+          option.textContent = item.formattedDate;
+          oneWeekSelect.appendChild(option);
+      });
+
+      // 初回の時間リスト更新（デフォルト: 今日の時間）
+      generateTimeList(dateList[0].value);
+  }
+
+  // **時間リストを作成する関数**
+  function generateTimeList(selectedDate) {
+      const now = new Date();
+      let timeList = [];
+      let startHour = selectedDate === oneWeekSelect.options[0].value ? now.getHours() + 1 : 0; 
+
+      for (let hour = startHour; hour < 24; hour++) {
+          let timeRange = `${hour}時～${hour + 1}時`;
+          timeList.push(timeRange);
+      }
+
+      timesSelect.innerHTML = "";
+      timeList.forEach((time) => {
+          const option = document.createElement("option");
+          option.value = time; // 直接 "10時～11時" を value に
+          option.textContent = time;
+          timesSelect.appendChild(option);
+      });
+  }
+
+  // **日付が変更されたら時間リストを更新**
+  oneWeekSelect.addEventListener("change", function () {
+      generateTimeList(this.value);
+  });
+
+  generateDateList();
+});
+
+
+
 
 // このクラスはコピペだからわけわかんねえっす
 // ComboboxAutocompleteクラスはコンボボックスのオートコンプリート機能を処理します
@@ -672,28 +735,31 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 //本保存
-// 出品ボタンのクリックイベントリスナー
 const download = document.getElementById("download");
 download.addEventListener("click", () => {
+    const title = document.getElementById("title").value;
+    const postingDate = document.getElementById("one_week").value; // 例: "3月4日 (月)"
+    const postingTime = document.getElementById("times").value;   // 例: "10時～11時"
+    const dataURL = localStorage.getItem("canvasImage");
     const time = localStorage.getItem("elapsedTime");
     const price = localStorage.getItem("moneyValue");
-    const title = document.getElementById("title").value;
-    const postingTime = document.getElementById("postingTime").value;
-    const dataURL = localStorage.getItem("canvasImage");
+    const kategoriSelectValue = document.getElementById("kategori").value;
 
-    // kategoriセレクトボックスの選択されたvalueを取得
-    const kategoriSelectValue = document.getElementById('kategori').value;
+    if (!title || !postingDate || !postingTime || !dataURL || !price) {
+        alert("必要な情報が足りません。全ての項目を入力してください。");
+        return;
+    }
 
-    // バックエンドに送信
     fetch("/add_sale", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             title,
-            postingTime,
+            postingDate,  // "3月4日 (月)"
+            postingTime,  // "10時～11時"
             image: dataURL,
-            time: time,
-            price: price,
+            time,
+            price,
             kategori: kategoriSelectValue
         }),
     })
@@ -701,11 +767,15 @@ download.addEventListener("click", () => {
         if (response.ok) {
             alert("正常に保存されました。");
         } else {
-            alert("保存に失敗しました。");
+            return response.json().then(data => { throw new Error(data.error || "保存に失敗しました。"); });
         }
     })
-    .catch((error) => console.log("送信エラー:", error));
+    .catch((error) => {
+        console.error("送信エラー:", error);
+        alert("保存に失敗しました: " + error.message);
+    });
 });
+
 
 // kategoriセレクトボックスを取得
 const kategoriSelect = document.getElementById('kategori');
