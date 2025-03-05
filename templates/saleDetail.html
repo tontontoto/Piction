@@ -19,7 +19,7 @@
     <title>{{ sale.title }} | Piction</title>
 </head>
 
-<body>
+<body oncontextmenu="return false;">
     {% include 'header.html' %}
     {% include 'nav_sp.html' %}
 
@@ -125,7 +125,11 @@
                 <div class="seller_box">
                     <p>出品者</p>
                     <div class="seller_icon_name">
-                        <img src="{{ url_for('static', filename=userIcon) }}" class="icon" alt="userIcon">
+                        {% if config.IS_LOCAL %}
+                        <img src="{{ url_for('static', filename=userIcon) }}" id="icon" alt="userIcon">
+                        {% else %}
+                        <img src="{{ userIcon }}" id="icon" alt="userIcon">
+                        {% endif %}
                         <div>
                             <p>{{ sale.displayName }}</p>
                             <p>@{{ userName }}</p>
