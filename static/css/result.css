@@ -2,6 +2,7 @@
 input, select {
   -webkit-appearance: none;
   appearance: none;
+  background: #fff;
 }
 
 
@@ -261,7 +262,7 @@ main {
   transition: all 0.4s;
 }
 .confirm {
-  background-color: #ff5a65;
+  background-color: #46A0DC;
 }
 .confirm a{
     text-decoration: none;
@@ -269,7 +270,7 @@ main {
 }
 
 .confirm:hover {
-  background-color: #ff0011;
+  background-color: #46A0DC;
 }
 .modalClose {
   background: #333;
