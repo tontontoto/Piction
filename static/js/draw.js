@@ -278,18 +278,35 @@ window.onload = function () {
 // 描画内容の仮保存
 function saveCanvas() {
   var canvas = document.getElementById('myCanvas');
-  var dataURL = canvas.toDataURL();
-  localStorage.setItem('canvasImage', dataURL);
+  if (!canvas) {
+    console.error("Canvas element not found");
+    return;
+  }
 
-  // キャンバスの幅と高さも保存
-  localStorage.setItem('canvasWidth', canvas.width);
-  localStorage.setItem('canvasHeight', canvas.height);
+  try {
+    // キャンバスの内容を直接DataURLとして保存
+    const dataURL = canvas.toDataURL('image/png');
+    localStorage.setItem('canvasImage', dataURL);
+    
+    // キャンバスの幅と高さも保存
+    localStorage.setItem('canvasWidth', canvas.width.toString());
+    localStorage.setItem('canvasHeight', canvas.height.toString());
 
-  // タイマーと値段を保存
-  var timerValue = document.querySelector('.timer p').textContent;
-  localStorage.setItem('timerValue', timerValue);
-  localStorage.setItem('moneyValue', money);
+    // タイマーと値段を保存
+    var timerValue = document.querySelector('.timer p').textContent;
+    localStorage.setItem('timerValue', timerValue);
+    localStorage.setItem('moneyValue', money.toString());
+
+    console.log("Canvas saved successfully");
+    console.log("Dimensions:", canvas.width, canvas.height);
+    console.log("DataURL length:", dataURL.length);
+  } catch (error) {
+    console.error("Error saving canvas:", error);
+  }
 }
+
+// 自動保存を追加
+setInterval(saveCanvas, 5000); // 5秒ごとに保存
 
 //ボタンをクリックしたときに保存する
 window.addEventListener('DOMContentLoaded', (event) => {

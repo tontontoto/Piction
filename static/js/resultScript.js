@@ -1,22 +1,38 @@
 window.onload = function () {
   const canvas = document.getElementById("myCanvas");
+  if (!canvas) {
+    console.error("Canvas element not found");
+    return;
+  }
+
   const context = canvas.getContext("2d");
+  if (!context) {
+    console.error("Could not get canvas context");
+    return;
+  }
 
   // ローカルストレージから保存されたデータを取得
   const dataURL = localStorage.getItem("canvasImage");
   const canvasWidth = localStorage.getItem("canvasWidth");
   const canvasHeight = localStorage.getItem("canvasHeight");
-  console.log(canvasWidth, canvasHeight);
   
+  console.log("Canvas dimensions:", canvasWidth, canvasHeight);
+  console.log("DataURL exists:", !!dataURL);
+
   if (dataURL) {
     const img = new Image();
     img.onload = function () {
       // 画像を描画する前にキャンバスサイズを復元
-      canvas.width = canvasWidth || canvas.width;  // 幅が保存されていない場合はそのまま
-      canvas.height = canvasHeight || canvas.height; // 高さが保存されていない場合はそのまま
+      canvas.width = parseInt(canvasWidth) || canvas.width;
+      canvas.height = parseInt(canvasHeight) || canvas.height;
       context.drawImage(img, 0, 0);
     };
+    img.onerror = function() {
+      console.error("Failed to load image");
+    };
     img.src = dataURL;
+  } else {
+    console.error("No image data found in localStorage");
   }
 };
 
@@ -738,15 +754,33 @@ document.addEventListener("DOMContentLoaded", () => {
 const download = document.getElementById("download");
 download.addEventListener("click", () => {
     const title = document.getElementById("title").value.trim() || "無題";
-    const postingDate = document.getElementById("one_week").value; // 例: "3月4日 (月)"
-    const postingTime = document.getElementById("times").value;   // 例: "10時～11時"
+    const postingDate = document.getElementById("one_week").value;
+    const postingTime = document.getElementById("times").value;
     const dataURL = localStorage.getItem("canvasImage");
     const time = localStorage.getItem("elapsedTime");
     const price = localStorage.getItem("moneyValue");
     const kategoriSelectValue = document.getElementById("kategori").value;
 
+    // データの存在確認とログ出力
+    console.log("Saving data:", {
+        hasImage: !!dataURL,
+        imageLength: dataURL ? dataURL.length : 0,
+        title,
+        postingDate,
+        postingTime,
+        time,
+        price,
+        kategori: kategoriSelectValue
+    });
+
     if (!postingDate || !postingTime || !dataURL || !price) {
         alert("必要な情報が足りません。全ての項目を入力してください。");
+        console.error("Missing required data:", {
+            postingDate: !!postingDate,
+            postingTime: !!postingTime,
+            dataURL: !!dataURL,
+            price: !!price
+        });
         return;
     }
 
@@ -755,8 +789,8 @@ download.addEventListener("click", () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             title,
-            postingDate,  // "3月4日 (月)"
-            postingTime,  // "10時～11時"
+            postingDate,
+            postingTime,
             image: dataURL,
             time,
             price,
@@ -764,11 +798,16 @@ download.addEventListener("click", () => {
         }),
     })
     .then((response) => {
-        if (response.ok) {
-            alert("正常に保存されました。");
-        } else {
-            return response.json().then(data => { throw new Error(data.error || "保存に失敗しました。"); });
+        if (!response.ok) {
+            return response.json().then(data => {
+                throw new Error(data.error || "保存に失敗しました。");
+            });
         }
+        return response.json();
+    })
+    .then((data) => {
+        alert("正常に保存されました。");
+        console.log("Save successful:", data);
     })
     .catch((error) => {
         console.error("送信エラー:", error);
