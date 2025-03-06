@@ -65,6 +65,7 @@
 }
 #supportedBrowser p {
     padding: 5px 20px;
+    text-align: right;
 }
 
 @media (max-width: 570px) {
