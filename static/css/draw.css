@@ -1,153 +1,485 @@
-@charset "UTF-8";
-
-body {
-    font-family: "游ゴシック Medium", "Yu Gothic Medium", "游ゴシック体", YuGothic,
-    sans-serif;
-    font-size: 16px;
-    color: #333;
-    background-color: #fff;
-    
+* {
+    margin: 0;
+    padding: 0;
 }
 
+/* header */
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-bottom: 1px solid #bababa;
+}
+
+.header_icon {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.header_icon .back-button .icon img {
+    width: 32px;
+    height: 32px;
+    padding: 3px;
+    border-radius: 50em;
+}
+
+.header_icon .back-button .icon img:hover {
+    background: #d1d1d1;
+}
+
+.header_icon img {
+    width: 90px;
+    margin-left: 10px;
+    vertical-align: top;
+}
+
+.header_icon {
+    padding: 5px 10px;
+}
+
+.header_icon img {
+    margin: 0;
+}
+
+
+/* main */
 main {
-    display: flex;  
-    justify-content: space-around;
-    margin: auto;
-    height: 80%;
-    width: 70%;
-    color: #fff;
-}
-@media screen and (max-width: 768px) {
-    main {
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    #myCanvas {
-        margin-bottom: 15%;
-    }
-
-    .side{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        width: 100%;
-    }
-
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    margin: 10px auto;
 }
 
 .drawArea {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
-    }
-    
-#myCanvas {
-    grid-area: 1 / 2 / 5 / 5;
-    z-index: 5;
-    border: #737172 solid 1px;
-    box-shadow: 0 5px 7px 0 #c0c0c0;
-    border-radius: 0 15px 15px 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 5px;
 }
 
-.selectTool{
-    grid-area: 1 / 1 / 5 / 2;
-    height: 100%;
+/* Tools */
+#Tools {
+    width: 40%;
+}
+
+.tool-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    /* gap: 15px; */
+}
+
+.color-picker {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-}
-.selectTool span{
-    display: flex;
-    justify-content: center;
     align-items: center;
-    flex-direction: column;
-}
-.selectTool > * {
     flex: 1;
-    color: #070707;
-    background-color: #ffffff;
-    border: #737172 solid 1px;
-    box-shadow: 0 5px 7px 0 #c0c0c0;
-    border-radius: 15px 0 0 15px;
+    gap: 8px;
+    padding: 10px;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+}
+
+.color-picker input {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
 }
 
 .btn_push {
-    display: inline-block;
-    position: relative;
-    width: 9em;
-    padding: 1em;
-    background-color: #ffffff;
-    color: #070707;
-    text-align: center;
-    text-decoration: none;
-}
-.btn_push:active{
-    transform: translateX(5px);
-    z-index: 0;
-}
-.selectTool button img{
-    scale: 0.5;
-    z-index: inherit;
-}
-.sliderContainer{
-    grid-area: 5 / 1 / 6 / 5;
-    color : #070707;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    align-items: center;
+    width: 50%;
+    gap: 8px;
+    padding: 15px 10px;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.side{
-    width: 30%;
+.btn_push img {
+    width: 32px;
+    height: 32px;
+}
+
+.btn_push span {
+    font-size: 13px;
+    color: #000;
+}
+
+.color-picker:hover {
+    background: #f5f5f5;
+}
+
+.btn_push:hover {
+    background: #f5f5f5;
+}
+
+.btn_push.active {
+    background: #eaeaea;
+    border: #46A0DC 2px solid;
+    transform: translateY(1px);
+}
+
+/* スライダー */
+.sliderContainer {
+    grid-row: 2 / 3;
+    grid-column: 1 / 3;
     display: flex;
     flex-direction: column;
+    gap: 20px;
+    padding: 10px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.slider-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.slider-group label {
+    font-size: 14px;
+    color: #666;
+    display: flex;
     justify-content: space-between;
-}
-.side > * {
-    color: #070707;
-}
-.sideTop > *{
-    margin-bottom: 10%;
+    align-items: center;
 }
 
-.timer{
-    border: #737172 solid 1px;
-    font-size: 100%; 
-    padding: 15px;
-    box-shadow: 0 5px 7px 0 #c0c0c0;
-    border-radius: 15px;
-}
-
-.timer p{
+.value-display {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    background: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    min-width: 45px;
     text-align: center;
 }
 
-.money{
-    border: #737172 solid 1px;
-    font-size: 100%; 
-    padding: 15px;
-    box-shadow: 0 5px 7px 0 #c0c0c0;
-    border-radius: 15px;
-}
-
-.money p{
-    text-align: center;
-}
-.btn .button {
+.slider-group input[type="range"] {
+    -webkit-appearance: none;
     width: 100%;
-    border: 1px solid #000000;
+    height: 6px;
+    background: #ddd;
+    border-radius: 3px;
+    outline: none;
+}
+
+.slider-group input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #000;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.slider-group input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: #000;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.slider-group input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.slider-group input[type="range"]::-moz-range-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.slider-group input[type="range"]:active::-webkit-slider-thumb {
+    transform: scale(1.1);
+    background: #333;
+}
+
+.slider-group input[type="range"]:active::-moz-range-thumb {
+    transform: scale(1.1);
+    background: #333;
+}
+
+
+/* 色履歴 */
+#colorHistory_pc {
+    margin-top: 20px;
+}
+
+#colorList {
+    list-style-type: none;
+    padding: 0;
+}
+
+#colorList li {
+    padding: 10px;
+    margin: 5px 0;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#colorList li:hover {
+    opacity: 0.7;
+}
+
+#colorList li:nth-child(odd) {
+    background-color: #555;
+}
+
+#colorList li:nth-child(even) {
+    background-color: #888;
+}
+
+
+/* canvas */
+#myCanvas {
+    border: 1px #161616 solid;
+    border-radius: 13px;
+    width: 100%;
+    height: auto;
+}
+
+/* side */
+.side {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sideTop {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+}
+
+.info-card {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.info-card h3 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    color: #666;
+}
+
+.info-card p {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* submit_button */
+.pageOperation_pc {
+    display: block;
+}
+
+.pageOperation_sp {
+    display: none;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 15px 20px;
+    background: #000;
+    color: white;
+    border: none;
+    border-radius: 8px;
     font-size: 16px;
     font-weight: bold;
-    color: #070707;
-    background-color: #ffffff;
-    padding: 10px 30px;
-    border-radius: 0px;
-    text-decoration: none;
-    transition: all 0.2s;
+    cursor: pointer;
 }
 
+.submit-button:hover {
+    background: #333;
+    transform: translateY(-1px);
+}
+
+.submit-button .icon {
+    font-size: 18px;
+}
+
+/* ------------- */
+
+
+/* submit */
+.pageOperation_sp {
+    display: block;
+    padding-right: 5px;
+}
+
+.submit-button {
+    padding: 5px 12px;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* main のレイアウトを縦方向に変更 */
+main {
+    width: 95%;
+    flex-direction: column;
+    margin: 0 auto 100px;
+}
+
+
+
+/* スライダーコンテナの幅調整 */
+.sliderContainer {
+    width: 100%;
+    padding: 0;
+}
+
+.side {
+    display: flex;
+    flex-direction: row;
+}
+
+.colorHistory_pc {
+    display: none;
+}
+
+
+/* タイマーと価格表示を横並びから縦並びに変更 */
+.sideTop {
+    gap: 20px;
+    flex: 1;
+}
+
+.info-card {
+    padding: 12px;
+}
+
+.pageOperation_pc {
+    display: none;
+}
+@media (max-width: 570px) {
+    #nav_sp_draw {
+        display: none;
+    }
+
+    .drawArea {
+        flex-direction: column;
+    }
+
+    /* 並び順指定 */
+    #Tools {
+        order: 2;
+    }
+
+    #myCanvas {
+        order: 1;
+    }
+
+    #side {
+        order: 3;
+    }
+
+    /* --------- */
+    /* Tools */
+    #Tools {
+        width: 100%;
+    }
+
+    .selectTool {
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background-color: #fff;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+
+    .tool-group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .color-picker,
+    .btn_push {
+        flex: 0;
+        flex-grow: 1;
+    }
+
+    .color-picker input,
+    .btn_push img {
+        width: 20px;
+        height: 20px;
+    }
+
+    .color-picker span,
+    .btn_push span {
+        font-size: 8px;
+    }
+
+    /* ツールボタンの幅調整 */
+    .btn_push {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .tools_sp_block {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+    }
+
+    .colorHistory_sp {
+        display: block;
+        flex-grow: 0;
+        width: 30%;
+    }
+    .colorHistory_pc {
+        display: none;
+    }
+
+    .sliderContainer {
+        flex: 1;
+    }
+
+    #myCanvas {
+        width: 100% !important;
+        height: auto;
+    }
+    /* side */
+    .sideTop {
+        display: flex;
+        flex-direction: row;
+    }
+    .info-card {
+        flex: 1;
+    }
+
+}
 

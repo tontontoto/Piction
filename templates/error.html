@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/error.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
+    <!-- scrollbar -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/scrollbar.css') }}">
+    <title>Document</title>
+</head>
+<body oncontextmenu="return false;">
+    <div>
+        <main id="main">
+            <div class="errorMassageContents">
+                <div class="emptyState">
+                    <div class="pageLogo">
+                        <img src="{{url_for('static', filename='icon/logo.png')}}" alt="logo">
+                    </div>
+                    <div class="titleContainer">
+                        <p>ページが見つかりませんでした</p>
+                    </div>
+                    <div class="bodyContainer">
+                        <p><span>お探しのページはURLが間違っているか、</span><span>削除された可能性があります。</span></p>   
+                    </div>
+                    <div class="actionContainer">
+                        <div class="jumpToIndex">
+                            <a href="/">トップページへ</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

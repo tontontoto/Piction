@@ -1,36 +1,45 @@
-<header>
+<header id="header_pc">
     <div class="header-wrapper">
         <div class="header-top">
             <div class="header-logo">
-                <h1>
-                    <a href="/top">
-                        <img src="{{ url_for('static', filename='icon/logo.png') }}" alt="">
-                    </a>
-                </h1>
+                <a href="/top">
+                    <img src="{{ url_for('static', filename='icon/logo.png') }}" alt="Piction">
+                </a>
             </div>
             <div class="search-box">
-                <form action="#">
-                    <input type="text" placeholder="検索">
-                    <button type="submit"><img src="{{ url_for('static', filename='parts/magnifyingglass.svg') }}" alt="いいね"></button>
+                <form action="/search" method="get">
+                    <input type="text" name="query" placeholder="作品名を検索" value="{{ request.args.get('query', '') }}">
+                    <button type="submit">
+                        <img src="{{ url_for('static', filename='parts/magnifyingglass.svg') }}" alt="検索">
+                    </button>
                 </form>
             </div>
             <div class="header-icon">
-                <nav class="icon">
-                    <ul>
-                        <li><a href="/myLikeList"><img src="{{ url_for('static', filename='parts/heart.svg') }}" alt="いいね"></a></li>
-                        <li><a href="/myPage"><img src="{{ url_for('static', filename='parts/person-fill.svg') }}" alt="マイページ"></a></li>
-                        <!-- <li><a href=".html"><img src="img/cart/Icon/cart.svg" alt="カート"></a></li> -->
-                    </ul>
-                </nav>
+                <div class="icon-item">
+                    <a href="/logout" class="nav-link">
+                        <img src="{{ url_for('static', filename='parts/logout.svg') }}" alt="ログアウト">
+                        <span>ログアウト</span>
+                    </a>
+                </div>
+                <div class="icon-item">
+                    <a href="/myLikeList" class="nav-link">
+                        <img src="{{ url_for('static', filename='parts/heart.svg') }}" alt="いいね">
+                        <span>いいね</span>
+                    </a>
+                </div>
+                <div class="icon-item">
+                    <a href="/myPage" class="nav-link">
+                        <img src="{{ url_for('static', filename='parts/person-fill.svg') }}" alt="マイページ">
+                        <span>マイページ</span>
+                    </a>
+                </div>
             </div>
-
         </div>
-        <!-- ナビゲーション -->
         <nav class="navigation-main">
             <ul>
-                <li class="list"><a href=".html">商品ランキング</a></li>
-                <li class="list"><a href="/lineup">作品一覧</a></li>
-                <li class="list"><a href="/draw">作品を出品する</a></li>
+                <li><a href="/top">商品ランキング</a></li>
+                <li><a href="/lineup">作品一覧</a></li>
+                <li><a href="/draw">作品を出品する</a></li>
             </ul>
         </nav>
     </div>

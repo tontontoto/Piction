@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>落札確認 | Piction</title>
+    <link rel="icon" href="../static/icon/favicon.png">
+    <!-- bidConfirmation -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bidConfirmation.css') }}">
+    <!-- header -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <!-- footer -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav_sp.css') }}">
+    <!-- scrollbar -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/scrollbar.css') }}">
+
+    <script src="{{ url_for('static', filename='js/footer.js') }}" defer></script>
+</head>
+<body oncontextmenu="return false;">
+    {% include 'header.html' %}
+    {% include 'nav_sp.html' %}
+    
+
+    <main class="confirmation-container">
+        <div class="confirmation-card">
+            <div class="status-banner">
+                <div class="status-icon">🎉</div>
+                <h1>落札おめでとうございます！</h1>
+                <p>落札が確定しました</p>
+            </div>
+
+            <div class="artwork-details">
+                <div class="artwork-image">
+                    
+                    {% if config.IS_LOCAL %}
+                    <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">
+                    {% else %}
+                        <img src="{{ sale.filePath }}" alt="{{ sale.title }}">
+                    {% endif %}
+                </div>
+                <div class="artwork-info">
+                    <h2>{{ sale.title }}</h2>
+                    <p class="artist">作者：{{ sale.displayName }}</p>
+                    <div class="price-info">
+                        <div class="info-row">
+                            <span class="label">落札価格</span>
+                            <span class="value price">¥{{ '{:,}'.format(sale.currentPrice) }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">落札日時</span>
+                            <span class="value">{{ sale.finishTime }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="next-steps">
+                <h3>次のステップ</h3>
+                <ol class="steps-list">
+                    <li>お支払い手続きを完了</li>
+                    <li>作品データのダウンロード</li>
+                </ol>
+            </div>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+</body>
+</html> 

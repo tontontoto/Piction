@@ -1,34 +1,201 @@
+html, body{
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+body{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f8f8;
+}
+.sale-detail {
+    flex: 1;
+    width: 80%;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+/* input numberのカーソル消去 */
+input[type="number"]::-webkit-outer-spin-button, 
+input[type="number"]::-webkit-inner-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+} 
+
+/* オークション中のスタイル */
 .flex-container{
     background-color:#ffffff;
     display:flex;
     justify-content:center;
+    padding: 40px;
+    border-radius: 10px;
+    overflow: visible;
 }
-
-
 .main{
-    border: #737172 solid 1px;
     font-size: 100%; 
-    width: 400px;
-    height:400px;
-    box-shadow: 0 5px 7px 0 #c0c0c0;/*影*/
-    border-radius: 15px; /*角の丸み*/
-    margin-right: 100px;
+    width: 40%;
+    margin: 20px;
+    min-width: 300px;
+    min-height: 300px;
+    position: sticky;
+    top: 200px;
+    align-self: flex-start;
 }
 .main img{
+    border: #eee solid 3px;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    max-height: 100%;
+    min-width: 300px;
+    min-height: 300px;
     border-radius: 15px;
+    vertical-align: top;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
 .text{
-    margin-right: 100px;
+    width: 60%;
+    margin: 20px;
+}
+.current_price,
+.make_time {
+    font-size: 20px;
+    line-height: 1.8;
+    color: #626262;
+}
+#currentPrice {
+    font-size: 28px;
+    font-weight: bold;
+    color: #e91e63;
+}
+#make_time {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000;
+}
+/* 入札ボタン、入札モーダル */
+/* 入札ボタン */
+.bidButton {
+    z-index: 10;
+    position: relative;
+}
+.nyuusatu_button {
+    width: 50%;
+    padding: 0.5rem 1.5rem;
+    border: 2px solid #46A0DC;
+    background-color: #ffffff; /* bg-gray-200 */
+    border-radius: 10px; /* rounded-xl */    
+    margin: 1rem 1rem 1rem 0;
+    cursor: pointer;
+    font-size: 24px;
+    transition: all 0.2s;
+}
+.nyuusatu_button:hover {
+    background-color: #46A0DC;
+    color: #ffffff;
+}
+/* 入札モーダル */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* bg-black bg-opacity-40 */
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #000; /* border */
+}
+#modal-overlay:target {
+    display: flex;
+}
+[ x-show="open" ] {
+    display: flex;
+}
+/* x-cloak の非表示スタイル */
+[x-cloak] {
+    display: none !important;
 }
 
+.button-contents {
+    width: 700px;
+    margin: 30px;
+    border: #565656 solid 1px;
+    border-radius: 10px;
+    background: #fff;
+}
+.modal-header {
+    display: flex;
+    flex-direction: row;
+    border-bottom: #000 solid 1px;
+    padding: 5px;
+}
+.modal-header h2 {
+    position: relative;
+    font-size: 24px;
+    margin: 0;
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+}
+.modal_batu {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 24px;
+    margin: 0;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+/* modal_body */
+.modal_body {
+    padding: 20px 30px;
+    margin: 10px;
+}
+.botan,
+.botan2 {
+    padding-bottom: 20px;
+}
 .botan{
     display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
     justify-content: center;
+    align-items: center;
+    width: 100%;
     text-align: center;
+    font-size: 24px;
+}
+.botan p {
+    margin: 0;
+    padding: 10px;
+}
+#price_specification_container {
+    display: flex;
+    flex-direction: row;
+}
+#specify {
+    width: 40%;
+    min-width: 220px;
+    text-align: center;
+    font-size: 22px;
+}
+.current_price_modal {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #626262;
+}
+#currentPrice_modal {
+    font-size: 16px;
+    font-weight: bold;
+    color: #626262;
+}
+.enn {
+    display: inline;
 }
 
 .botan2{
@@ -36,7 +203,6 @@
     justify-content:space-evenly;
     text-align: center;
 }
-
 .btn {
     border: 1px solid #000000;
     font-size: 16px;
@@ -50,7 +216,6 @@
     transition: all 0.2s;
 
 }
-
 .addAmountBtn{
     border: 1px solid #000000;
     font-size: 16px;
@@ -62,42 +227,108 @@
     border-radius: 10px;
     text-decoration: none;
 }
-
 .btn2 {
     border: 1px solid #000000;
     font-size: 16px;
     font-weight: bold;
     color: #ffffff;
-    background-color: #1f1f1f;
+    background-color: #1b1b1b;
     padding: 10px 30px;
     width: 250px;
     border-radius: 10px;
     text-decoration: none;
     transition: all 0.2s;
     z-index: 10;
-
+    cursor: pointer;
 }
-
 .btn:hover {
     background-color: #070707;
     color: #ffffff;
     transition: all 0.4s;
 }
-
 .btn2:hover {
-    background-color: #070707;
+    background-color: #494949;
     transition: all 0.4s;
 }
 
-
-.bidHistory{
-    text-align: center;
-    margin-top: 50px;
-    margin-bottom: 50px;
+/* 出品者情報 */
+.seller_box {
+    position: relative;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    padding: 10px 20px;
 }
-.bidHistory h1{
+.seller_box :nth-child(1),
+.seller_box :nth-child(3) {
+    color: #626262;
+}
+.seller_icon_name {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    color: #000;
+}
+.seller_icon_name :nth-child(2) {
+    display: flex;
+    flex-direction: column;
+}
+.seller_icon_name p:nth-child(1) {
+    color: #000;
+    font-size: 24px;
+}
+.seller_icon_name p:nth-child(2) {
+    color: #626262;
+    font-size: 16px;
+}
+.seller_icon_name img {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+#piction_id {
+    position: absolute;
+    right: 2%;
+    bottom: 0;
+}
+
+/* 商品情報 */
+.sale-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+.sale-info h3 {
+    font-size: 20px;
+    margin: 0 0 5px;
+    color: #333;
+}
+#saleInfo_table {
+    width: 100%;
+    text-align: left;
+}
+#saleInfo_table th {
+    width: 30%;
+    padding: 5px;
+}
+#saleInfo_table td{
+    width: 70%;
+}
+
+/* 入札履歴 */
+.bidHistory{
+    margin-top: 40px;
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.bidHistory h2{
     text-align: center;
     font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
 }
 
 .contents{
@@ -105,21 +336,233 @@
     justify-content: center;
     text-align: center;
 }
-
 .scroll-contents{
-    border: #737172 solid 1px;
-    font-size: 14px; 
-    width: 500px;
-    height:200px;
-    overflow-y: scroll;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    font-size: 14px;
+    width: 100%;
+    max-width: 800px;
+    height: 300px;
+    overflow-y: auto;
+    margin: 0 auto;
 }
 .scroll-contents table{
     width: 100%;
-    display: flex;
-    justify-content: center;
     border-collapse: collapse;
 }
-.scroll-contents table td{
-    padding: 5px;
+.scroll-contents thead {
+    border-bottom: 1px #d5d5d5 solid;
+}
+.scroll-contents th {
+    background: #f8f8f8;
+    padding: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    text-align: left;
+}
+.scroll-contents th:nth-child(2),
+.scroll-contents th:nth-child(3) {
+    text-align: center;
+}
+.scroll-contents tr:nth-child(even) {
+    background: #f8f8f8;
+}
+.scroll-contents td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
     text-align: right;
+}
+.scroll-contents td:nth-child(1) {
+    text-align: left;
+}
+.scroll-contents tr:last-child td {
+    border-bottom: none;
+}
+
+/* mobile_css */
+@media (max-width: 960px) {
+    .sale-detail {
+        width: 95%;
+        padding: 15px;
+    }
+    .nyuusatu_button {
+        min-width: 150px;
+
+    }
+    .seller_icon_name {
+        flex-wrap: wrap;
+    }
+}
+/* mobile_css */
+@media (max-width: 570px) {
+    body {
+        margin-bottom: 110px;
+    }
+    .sale-detail {
+        width: 100%;
+        padding: 20px 0;
+    }
+    .flex-container{
+        background-color:#ffffff;
+        display:block;
+        justify-content:center;
+        padding: 0;
+        border-radius: 10px;
+        overflow: visible;
+    }
+    .main {
+        width: 100%;
+        margin: 0;
+        position: static;
+        top: 0;
+    }
+    .text {
+        width: 100%;
+        margin: 20px 0;
+        padding: 0 10px;
+    }
+    .text h1 {
+        font-size: 22px;
+    }
+    .current_price,
+    .current-price-enn,
+    .make_time {
+        font-size: 16px;
+    }
+    #currentPrice {
+        font-size: 24px;
+        margin: 0 3px;
+    }
+    #make_time {
+        font-size: 18px;
+    }
+    .nyuusatu_button_container {
+        width: 100%;
+        position: fixed;  /* 画面に固定 */
+        bottom: 40px;     /* 画面下から20pxの位置 */
+        left: 50%;        /* 横中央に配置 */
+        transform: translateX(-50%); /* 中央揃え */
+        background-color: #eee;  /* 背景色を白に設定 */
+        padding: 15px 9px;       /* ボタン周りの余白を調整 */
+        /* border-top: #b1b1b1 1px solid; */
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 薄い影を追加 */
+        z-index: 10; /* 他の要素に隠れないようにする */
+    }
+    .nyuusatu_button {
+        width: 100%;
+        background-color: #46A0DC; /* ボタンの背景色 */
+        color: white;  /* ボタンの文字色 */
+        border: none;  /* ボーダーをなしに */
+        padding: 10px 20px;  /* ボタンの余白 */
+        margin: 0 0 20px 0;
+        font-size: 18px;  /* フォントサイズ */
+        border-radius: 5px;  /* ボタンの角を丸く */
+        cursor: pointer;  /* カーソルをポインタに */
+    }
+    .button-contents {
+        width: 90%;
+    }
+
+    .botan {
+        justify-content: left;
+    }
+    .botan p {
+        padding: 0;
+    }
+    #botan_mobile_css {
+        display: none;
+    }
+    .price_specification_container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+    .btn {
+        width: 50%;
+        margin: 0 5px;
+    }
+    .enn {
+        padding: 0;
+    }
+    .btn2 {
+        width: 100%;
+    }
+
+    /* 出品者情報 */
+    .seller_box {
+        width: 100%;
+        padding: 10px;
+    }
+    .seller{
+        padding-left: 5px;
+    }
+    .seller_icon_name img {
+        margin-left: 5px;
+    }
+    /* 入札履歴 */
+    .bidHistory {
+        padding: 0 ;
+    }
+    .bidHistory h2 {
+        padding: 10px 0;
+        margin: 0 ;
+    }
+    .scroll-contents {
+        width: 95%;
+        margin-bottom: 10px;
+    }
+    .scroll-contents th {
+        white-space: nowrap;
+    }
+    .scroll-contents td {
+        padding: 5px ;
+    }
+}
+
+
+
+
+/* レスポンシブ対応 */
+@media (max-width: 968px) {
+    .finished-flex-container {
+        flex-direction: column;
+    }
+
+    .finished-flex-container .main {
+        flex: none;
+        width: 100%;
+        height: 400px;
+        margin-bottom: 30px;
+    }
+
+    .auction-result {
+        width: 100%;
+    }
+}
+
+@media (max-width: 968px) {
+    .sale-detail {
+        margin: 20px auto;
+        padding: 0 15px;
+    }
+
+    .auction-ended {
+        padding: 20px;
+    }
+
+    .status-banner {
+        padding: 20px;
+    }
+
+    .finished-flex-container .main {
+        max-width: 100%;
+    }
+
+    .scroll-contents {
+        height: 250px;
+    }
+
 }

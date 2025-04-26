@@ -1,14 +1,64 @@
-<div class="userSales">
-    <p>あなたの出品物</p>
-    <div class="mySales">
-        {% for sale in sales %}
-        <div class="mySale">
-            <img src="{{ url_for('static', filename=sale.filePath) }}">
-            <div class="mySaleInfo">
-                <h3>{{ sale.title }}</h3>
-                <p>作：{{ sale.user.displayName }}</p>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../static/icon/favicon.png">
+    <!-- scrollbar -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/scrollbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/userSales.css') }}">
+</head>
+<body oncontextmenu="return false;">
+    <div class="user-sales-container">
+        <div class="section-header">
+            <h2>あなたの出品物</h2>
+            <div class="header-actions">
+                <a href="/draw" class="new-listing-button">
+                    <img src="{{ url_for('static', filename='parts/plus.svg') }}" alt="新規出品">
+                    新しく出品する
+                </a>
             </div>
         </div>
-        {% endfor %}
+
+        {% if sales %}
+        <div class="sales-grid">
+            {% for sale in sales %}
+            <a href="{{ url_for('saleDetail_view', sale_id=sale.saleId) }}" class="sale-card">
+                <div class="sale-image">
+                    {% if config.IS_LOCAL %}
+                        <img src="{{ url_for('static', filename=sale.filePath) }}" alt="saleImage" id="uploadImg">
+                    {% else %}
+                        <img src="{{ sale.filePath }}" alt="saleImage" id="uploadImg">
+                    {% endif %}
+                    
+                    {% if not sale.saleStatus %}
+                        <div class="status-badge ended">終了</div>
+                    {% else %}
+                        <div class="status-badge active">出品中</div>
+                    {% endif %}
+                </div>
+                <div class="sale-info">
+                    <h3>{{ sale.title }}</h3>
+                    <div class="sale-details">
+                        <div class="price-info">
+                            <span class="current-price">¥{{ '{:,}'.format(sale.currentPrice) }}</span>
+                            <span class="starting-price">開始価格 ¥{{ '{:,}'.format(sale.startingPrice) }}</span>
+                        </div>
+                        <div class="time-info">
+                            <span class="time-remaining">終了時間 {{ sale.finishTime }}</span>
+                            <span class="creation-time">制作時間 {{ sale.creationTime }}s</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p>出品した作品はありません</p>
+            <a href="/draw" class="cta-button">作品を出品する</a>
+        </div>
+        {% endif %}
     </div>
-</div>
+</body>
+</html>

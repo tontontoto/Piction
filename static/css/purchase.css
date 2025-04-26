@@ -1,0 +1,45 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.sales-status-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.sales-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.sale-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.sale-card:hover {
+    transform: translateY(-3px);
+}
+
+.sale-card img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.sale-card h3 {
+    font-size: 18px;
+    margin: 10px;
+}
+
+.sale-card p {
+    margin: 5px 10px;
+    color: #666;
+} 

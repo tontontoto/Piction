@@ -1,0 +1,46 @@
+<div class="user-sales-container">
+    <div class="section-header">
+        <h2>落札した商品</h2>
+    </div>
+
+    {% if myBidSales %}
+    <div class="sales-grid">
+        {% for sale in myBidSales %}
+        <a href="{{ url_for('bidSaleDetail_view', sale_id=sale.saleId) }}" class="sale-card">
+            <div class="sale-image">
+                {% if config.IS_LOCAL %}
+                <img src="{{ url_for('static', filename=sale.filePath) }}" alt="{{ sale.title }}">
+                {% else %}
+                <img src="{{ sale.filePath }}" alt="{{ sale.title }}">
+                {% endif %}
+
+                {% if winning_bids[sale.saleId] %}
+                <div class="status-badge ended">支払い済み</div>
+                {% else %}
+                <div class="status-badge active">未払い</div>
+                {% endif %}
+                
+            </div>
+            <div class="sale-info">
+                <h3>{{ sale.title }}</h3>
+                <p class="displayName">作：{{ sale.user.displayName }}</p>
+                <div class="sale-details">
+                    <div class="price-info">
+                        <span class="current-price">¥{{ '{:,}'.format(sale.currentPrice) }}</span>
+                        <span class="starting-price">開始価格 ¥{{ '{:,}'.format(sale.startingPrice) }}</span>
+                    </div>
+                    <div class="time-info">
+                        <span class="time-remaining">終了時間 {{ sale.finishTime }}</span>
+                        <span class="creation-time">制作時間 {{ sale.creationTime }}s</span>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>落札した作品はありません</p>
+    </div>
+    {% endif %}
+</div>

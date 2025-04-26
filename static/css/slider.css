@@ -1,0 +1,243 @@
+/* 基本のスタイル */
+.carousel-container {
+    position: relative;
+    overflow: hidden;
+    margin: 2% 0;
+    width: 100%;
+}
+.carousel {
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+    touch-action: pan-y pinch-zoom;
+}
+.carousel-slide {
+    width: 100%;
+    flex-shrink: 0;
+    padding: 10px;
+    box-sizing: border-box;
+}
+.carousel-link {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    text-decoration: none;
+    color: inherit;
+}
+.carousel-content {
+    display: flex;
+    flex-direction: row;
+    width: 40%;
+    margin: 0 auto;
+    padding: 15px;
+    background: #ffffff;
+    box-shadow: 0px 0px 15px -7px #787878;
+    border-radius: 21px;
+}
+.image-wrapper {
+    flex: 1;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0px 0px 15px -7px #787878;
+    border-radius: 21px;   
+}
+.carousel-image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+}
+.carousel-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 5px 10px;
+    text-align: left;
+    width: 100%; /* 親要素の幅を制限 */
+}
+.carousel-title {
+    font-size: 2em;
+    margin-bottom: 1em;
+}
+.carousel-artist {
+    font-size: 1.5em;
+    color: #777;
+}
+.carousel-stats {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    gap: 5px;
+}
+.carousel-stat {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+    width: 100%;
+}
+.icon {
+    margin-right: 10px;
+}
+#heart {
+    margin: 0;
+}
+.icon img {
+    vertical-align: top;
+}
+#currentPrice :nth-child(1) {
+    font-size: 22px;
+}
+#currentPrice :nth-child(2) {
+    font-size: 26px;
+}
+
+/* ボタンのスタイル */
+.carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: white;
+    color: #333;
+    border: none;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.prev {
+    left: 10px;
+}
+.next {
+    right: 10px;
+}
+
+/* タブレット向けレスポンシブ */
+@media (min-width: 571px) and (max-width: 1024px) {
+    .carousel-content {
+        width: 70%;
+    }
+
+    .carousel-title {
+        font-size: 1.5em;
+    }
+
+    .carousel-artist {
+        font-size: 1.2em;
+    }
+
+    .carousel-stats {
+        gap: 3px;
+    }
+}
+
+/* スマホ向けレスポンシブ */
+@media (max-width: 570px) {
+    .carousel-container {
+        width: 100%;
+        flex-direction: column;
+        touch-action: pan-x pinch-zoom;
+    }
+
+    .carousel-slide {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .carousel-link {
+        text-align: center;
+    }
+
+    .carousel-content {
+        width: 100%;
+        flex-direction: row;
+        margin: 0 ;
+        background: #ffffff;
+        box-shadow: 0px 0px 15px -7px #787878;
+        border-radius: 21px;
+    }
+
+    .image-wrapper {
+        flex: 1;
+        width: 50%;
+        margin: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .carousel-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 5px 10px;
+        text-align: left;
+    }
+    .carousel-text{
+        padding-left: 13px;
+    }
+    .carousel-title {
+        overflow: hidden;
+        margin-bottom: 0;
+        text-overflow: ellipsis;
+        display: block; /* ブロック要素として扱う */
+        -webkit-line-clamp: 2; /* 2行に制限 */
+        -webkit-box-orient: vertical; /* ボックスの縦方向に配置 */
+        white-space: normal; /* 折り返しを有効に */
+        display: -webkit-box; /* 必須: 多行省略のため */
+    }
+
+    .carousel-stats {
+        flex-direction: column;
+        justify-content: left;
+        padding-right: 15px;
+        gap: 0px;
+    }
+
+    .carousel-stat {
+        width: 100%;
+    }
+    .icon {
+        display: inline-flex;
+        align-items: center;
+        margin-right: 0px;
+    }
+    .icon img {
+        height: 1em;
+        width: auto;
+    }
+    #currentPrice :nth-child(2) {
+        font-size: 20px;
+    }
+
+    .carousel-button {
+        display: none;
+        font-size: 1.5rem;
+        padding: 8px;
+    }
+    .prev{
+        left: 15px;
+    }
+    .next{
+        right: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel-title {
+        font-size: 0.9em;
+    }
+
+    .carousel-artist {
+        font-size: 0.8em;
+    }
+}

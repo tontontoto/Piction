@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- contact -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
+    <!-- font -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
+    <!-- scrollbar -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/scrollbar.css') }}">
+    <link rel="icon" href="../static/icon/favicon.png">
+    <title>お問い合わせ | Piction</title>
+</head>
+<body oncontextmenu="return false;">
+    <header>
+        <div class="header_icon" id="page_top">
+            <a href="/top">
+                <img src="{{ url_for('static', filename='icon/logo.png') }}" alt="Piction">
+            </a>
+        </div>
+    </header>
+
+
+    <div class="main">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="flash-message flash-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="header">
+            <h1>お問い合わせ</h1>
+        </div>
+        <div class="content">
+            <form class="form-items" action="/contact" method="post">
+                <span class="required"><label for="name">お名前</label></span><br />
+                <input type="text" name="name" class="textbox" placeholder="お名前" required><br />
+                <br>
+
+                <span class="required"><label for="name_kana">お名前(フリガナ)</label></span><br />
+                <input type="text" name="name_kana" class="textbox" placeholder="お名前"><br />
+                <br>
+
+                <span class="required"><label for="mail">メールアドレス</label></span><br />
+                <input type="email" name="mail" class="textbox" placeholder="メールアドレス" required><br />
+                <br>
+
+                <span class="required"><label for="subject">件名</label></span><br />
+                <div id="option">
+                    <select name="subject" class="options" title="件名" required aria-placeholder="件名の選択">
+                        <option value="option0">件名を選択</option>
+                        <option value="option1">激励のメッセージ（memberが喜びます）</option>
+                        <option value="option2">利用規約に反した投稿の報告</option>
+                        <option value="option3">バグの報告</option>
+                        <option value="option4">改善点</option>
+                    </select><br />
+                </div>
+                <br>
+
+                <span class="required"><label for="message">お問い合わせ内容</label></span><br />
+                <textarea name="message" class="textarea" title="お問い合わせ内容" placeholder="お問い合わせ内容を入力してください"
+                    required></textarea>
+
+                <br><br>
+
+                <div class="check">
+                    <label><input type="checkbox" required></label>個人情報の取扱いについて、<a href="/termsOfUse">利用規約</a>、<a href="/privacyPolicy">プライバシーポリシー</a>に同意する。<br />
+                </div>
+                <br>
+
+                <div class="button">
+                    <button type="submit" class="btn">送信</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <a href="/" class="back-link">トップページへ戻る</a>
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.winning-bids-container {
+    max-width: 1200px;
+    min-height: 250px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.winning-bids-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.winning-bid-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    transition: transform 0.2s;
+}
+.winning-bid-card a {
+    text-decoration: none;
+}
+
+.winning-bid-card:hover {
+    transform: translateY(-3px);
+}
+
+.winning-bid-card img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.winning-bid-card h3 {
+    font-size: 18px;
+    margin: 10px;
+}
+
+.winning-bid-card p {
+    margin: 5px 10px;
+    color: #666;
+}
+
+.download-button {
+    display: block;
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    margin: 10px;
+    text-decoration: none;
+}
+
+.download-button:hover {
+    background: #0056b3;
+} 
+@media (max-width: 768px) {
+    .winning-bids-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+}

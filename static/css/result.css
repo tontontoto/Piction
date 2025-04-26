@@ -1,45 +1,165 @@
 @charset "UTF-8";
+input, select {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #fff;
+}
+
 
 body {
-  font-family: "游ゴシック Medium", "Yu Gothic Medium", "游ゴシック体", YuGothic,
-    sans-serif;
-  font-size: 16px;
-  color: #333;
-  background-color: #fff;
   position: relative;
 }
 
-.backbotan {
-  position: absolute;
-  height: 30%;
-  top: 4%;
-  left: 4%;
+/* header */
+header {
+  padding: 10px 40px;
+  border-bottom: #000 1px solid;
+}
+#headerLogo img {
+  width: 150px;
+  height: auto;
 }
 
-.backbotan .btn {
+
+/* main */
+main {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: auto;
+  padding: 0;
+  width: 80%;
+  color: #fff;
+}
+
+/* 戻るボタン */
+#backbutton {
+  width: 100%;
+}
+.backbutton_form {
+  margin: 20px 30px;
+}
+.button {
   font-size: 16px;
   font-weight: bold;
   color: #070707;
   padding: 10px 30px;
-  border-radius: 0;
+  border-radius: 5px;
+  border: #333 1px solid;
   text-decoration: none;
+  background: #fff;
   transition: all 0.2s;
   cursor: pointer;
 }
-
-.backbotan .btn:hover {
+.button:hover {
   color: #474747;
   transition: all 0.4s;
 }
 
-main {
-  display: flex;
-  justify-content: space-around;
-  margin: auto;
-  padding: 5% 0;
-  width: 70%;
-  color: #fff;
+/* 商品情報 */
+#myCanvas {
+  flex: 1;
+  width: 100%;
+  height: auto;
+  border: #000 1px solid;
+  border-radius: 10px;
+  object-fit: cover;
 }
+.side {
+  flex: 1;
+  width: 100%;
+  padding: 10px 20px;
+  color: #000;
+}
+.timerResult p,
+.moneyResult p {
+  font-size: 24px;
+}
+.side > * p2 {
+  font-size: 28px;
+  color: #e91e63;
+  margin: 0;
+}
+
+/* タイトル */
+.titleComponent {
+  width: 100%;
+  position: relative;
+  margin-top: 5%;
+}
+.inputText,
+.label {
+  color: #333;
+}
+.inputText {
+  width: 100%;
+  padding: 12px 0px;
+  border: #333 1px solid;
+  border-radius: 5px;
+  background: #ffffff;
+  font-size: 1em;
+  line-height: 1.5;
+}
+.label {
+  position: absolute;
+  top: -0.5em;
+  left: 4%;
+  background: #fff;
+  display: block;
+  font-size: 0.9em;
+  padding: 0 5px;
+}
+
+/* カテゴリ */
+.categoryComponent {
+  position: relative;
+  margin: 20px 0px;
+}
+.kategriTitle {
+  position: absolute;
+  top: -0.5em;
+  left: 4%;
+  background: #fff;
+  display: block;
+  font-size: 0.9em;
+  padding: 0 5px;
+}
+#kategori {
+  width: 100%;
+  padding: 12px 0;
+  border: #333 1px solid;
+  border-radius: 5px;
+  font-size: 1em;
+  line-height: 1.5;
+}
+#kategori option {
+  padding: 12px 0;
+}
+
+/* 掲載期間 */
+#postingTerm {
+  width: 100%;
+}
+.postingTerm_select {
+  display: flex;
+}
+#one_week,
+#times {
+  flex: 1;
+  padding: 12px;
+  border-radius: 5px;
+  font-size: 1em;
+  line-height: 1.5;
+  text-align: center;
+}
+#one_week {
+  margin-right: 3px;
+}
+#times {
+  margin-left: 3px;
+}
+
+
 @media screen and (max-width: 768px) {
   main {
     flex-direction: column;
@@ -52,10 +172,7 @@ main {
   }
 
   .side {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 100%;
+
   }
 }
 
@@ -66,50 +183,6 @@ main {
   box-shadow: 0 5px 7px 0 #c0c0c0;
   border-radius: 15px;
 }
-
-.side {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.side > * p {
-  color: #070707;
-  margin: 0;
-}
-
-.timerResult p,
-.moneyResult p {
-  font-size: 32px;
-}
-
-.titleComponent {
-  margin-top: 5%;
-}
-.inputText,
-.label {
-  color: #333;
-}
-
-.label {
-  display: block;
-  margin-bottom: 5px;
-  font-size: 0.9em;
-}
-
-.inputText {
-  width: 100%;
-  padding: 8px 10px;
-  border: none;
-  border-radius: 3px;
-  background: #f7f7f7;
-  font-size: 1em;
-  line-height: 1.5;
-}
-
-.inputText::placeholder {
-  color: #999;
-}
-
 .btn {
   margin-top: 5%;
 }
@@ -119,18 +192,19 @@ main {
   border: 1px solid #000000;
   font-size: 16px;
   font-weight: bold;
-  color: #070707;
-  background-color: #ff5a65;
+  color: #fdfdfd;
+  background-color: #46A0DC;
   padding: 10px 30px;
-  border-radius: 0px;
+  border-radius: 5px;
+  border: 1px #c3c3c3 solid;
   text-decoration: none;
   transition: all 0.2s;
   cursor: pointer;
 }
 
 .btn .button:hover {
-  background-color: #ff0011;
-  color: #ffffff;
+  background-color: #fff;
+  color: #000;
   transition: all 0.4s;
 }
 
@@ -188,7 +262,7 @@ main {
   transition: all 0.4s;
 }
 .confirm {
-  background-color: #ff5a65;
+  background-color: #46A0DC;
 }
 .confirm a{
     text-decoration: none;
@@ -196,7 +270,7 @@ main {
 }
 
 .confirm:hover {
-  background-color: #ff0011;
+  background-color: #46A0DC;
 }
 .modalClose {
   background: #333;
@@ -211,4 +285,108 @@ main {
   text-align: left;
   padding: 30px;
   font-weight: bold;
+}
+
+
+.combobox-container {
+  /* background-color: rgba(196, 196, 196, 0.3); */
+  border-radius: 24px;
+  display: grid;
+  /* padding: 16px; */
+  position: relative;
+  min-width: 150px;
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(15px);
+  &::before {
+    background: linear-gradient(135deg, rgb(255 255 255 / .4) 0, rgb(255 255 255 / 0) 40%, rgb(255 255 255 / 0) 60%, rgb(255 255 255 / .1) 100%);
+    border: 1.4px solid transparent;
+    border-radius: 24px;
+    content: "";
+    inset: 0;
+    position: absolute;
+    mask-composite: exclude;
+    z-index: -1;
+  }
+}
+
+label {
+  color: #070707;
+}
+
+.combobox-list {
+  position: relative;
+  margin-top: 4px;
+}
+
+.combobox .group {
+  display: inline-flex;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.combobox input,
+.combobox button {
+  background-color: #f7f7f7;
+  border: none;
+  color: #999;
+  border-radius: 3px;
+  margin: 0;
+  vertical-align: bottom;
+  position: relative;
+  cursor: pointer;
+}
+
+.combobox input {
+  color: #070707;
+  flex-grow: 1;
+  font-size: 16px;
+  padding: 8px 12px;
+}
+
+.combobox button {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  width: 32px;
+  color: #070707;
+  
+  &[aria-expanded="true"] {
+    transform: rotate(180deg);
+  }
+}
+
+
+ul[role="listbox"] {
+  margin: 0;
+  padding: 8px 0;
+  position: absolute;
+  left: 0;
+  top: 42px;
+  list-style: none;
+  background-color: rgb(128 128 128 / .3);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(15px);
+  border-radius: 8px;
+  display: none;
+  max-height: 100px;
+  overflow: auto;
+  width: 100%;
+}
+
+ul[role="listbox"] li[role="option"] {
+  cursor: pointer;
+  margin: 0;
+  display: block;
+  padding: 4px 12px;
+}
+
+[role="listbox"].focus [role="option"][aria-selected="true"], [role="listbox"] [role="option"]:hover {
+  background-color: rgb(128 128 128 / .5);
+}
+
+
+@media (max-width: 570px) {
+  main {
+    width: 95%;
+  }
 }

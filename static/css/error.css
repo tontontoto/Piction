@@ -1,0 +1,82 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+#main {
+    width: 100%;
+    max-width: 650px;
+    margin: 0 auto;
+}
+.errorMassageContents {
+    padding: 10%;
+    align-items: center;
+}
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 10%;
+    margin: 0 auto;
+    text-align: center;
+}
+.pageLogo {
+    width: 100%;
+}
+.pageLogo img {
+    width: 40%;
+    max-width: 300px;
+    min-width: 200px;
+}
+.titleContainer {
+    margin-top: 20px;
+    text-align: center;
+}
+.titleContainer p {
+    font-size: 17px;
+    font-weight: 800;
+    color: #737373;
+}
+.bodyContainer {
+    margin-top: 20px;
+    text-align: center;
+}
+.bodyContainer p {
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 10px;
+    color: #737373;
+    
+}
+.bodyContainer p span {
+    white-space: nowrap;
+}
+.actionContainer {
+    display: flex;
+    flex-direction: column  ;
+    text-align: center;
+    margin-top: 20px;
+}
+.jumpToIndex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 45px;
+    line-height: 21px;
+    width: 100%;
+    font-size: 15px;
+    font-weight: 600;
+}
+.jumpToIndex a {
+    border: #737373 1px solid;
+    color: #ffffff;
+    background-color: #000000;
+    text-decoration: none;
+    text-align: center;
+    padding: 10px 20px;
+    transition: .3s;
+}
+.jumpToIndex a:hover {
+    color: #000000;
+    background-color: #fff;
+}

@@ -9,46 +9,48 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/top.css') }}">
     <!-- header -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <!-- nav_sp -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav_sp.css') }}">
+    <!-- scrollbar -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/scrollbar.css') }}">
     <!-- footer -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
-
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/topRanking.css') }}"> -->
-    
-    <!-- lineup css -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/lineup.css') }}">
-    <!-- sale css -->
+    <!-- slider -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/slider.css') }}">
+    <!-- sale -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sale.css') }}">
-    
-
+    <!-- ranking -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ranking.css') }}">
+    <!-- font -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
     
+    <!-- script link -->
     <script src="{{ url_for('static', filename='js/top.js') }}" defer></script>
-    <title>Piction Top</title>
+    <script src="{{ url_for('static', filename='js/footer.js') }}" defer></script>
+    <title>トップ | Piction</title>
 </head>
 
-<body>
+<body oncontextmenu="return false;">
+
     <!-- ヘッダーエリア -->
     {% include 'header.html' %}
-    <!------------------->
+    <!-- スマホナビ -->
+    {% include 'nav_sp.html' %}
 
-    <!-- {% include 'top_ranking.html' %} -->
+    <main>
+        <!-- スライダーエリア -->
+        {% include 'slider.html' %}
+        
+        <!-- ランキングエリア -->
+        {% include 'top_ranking.html' %}
 
-    <!-- 商品一覧 -->
-    {% with sales = sales %}
-        {% include 'lineup.html' %}
-    {% endwith %}
-    
-    
-    <p style="font-weight: bold;">デバック用ショートカット</p>
-    <a href="/saleDetail">商品詳細ページ</a>
-    <a href="/logout">ログアウトする</a>
-    <a href="/signup" role="button">新規登録する</a>
+        <!-- 商品一覧 -->
+        {% include 'sale.html' %}
+    </main>
 
     <!-- フッターエリア -->
     {% include 'footer.html' %}
-    
-    <!------------------->
-
 </body>
 
 </html>

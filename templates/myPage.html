@@ -4,77 +4,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" href="../static/icon/favicon.png">
+    <!-- bootstrap css -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <!-- css -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/myPage.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cropper.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/userSales.css') }}">
+    <!-- font -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
+    <!-- scrollbar -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/scrollbar.css') }}">
+    <!-- header -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <!-- footer -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
-    <title>My Page</title>
-</head>
+    <!-- nav_sp -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav_sp.css') }}">
 
-<body>
+    <script src="{{ url_for('static', filename='js/footer.js') }}" defer></script>
+    <title>マイページ | Piction</title>
+    <!-- alpinejs -->
+    <!-- <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script> -->
+    <!-- tailwindcss -->
+    <!-- <script src="https://unpkg.com/@tailwindcss/browser@4"></script> -->
+
+    <!-- bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+
+    <script src="{{ url_for('static', filename='js/myPage.js') }}" defer></script>
+
+    <!-- cropper.js -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+        charset="UTF-8"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/cropper.js') }}" charset="UTF-8"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/cropperCanvas.js') }}" defer></script>
+</head>
+<body oncontextmenu="return false;">
     <!-- ヘッダーエリア -->
     {% include 'header.html' %}
+    {% include 'nav_sp.html' %}
     <!------------------->
-    </header>
     <main id="main">
         <div class="profile">
-            <div class="userIcon">
-                <img src="{{ url_for('static', filename='img/icon_sample.jpg') }}" class="icon">
-            </div>
+
             <div class="userInfo">
-                <p class="displayName">{{ user.displayName }}</p>
-                <p class="userName">@{{ user.userName }}</p>
-                <p class="mailAddress">
-                    <!-- <span><img src="{{ url_for('static', filename='parts/mail.svg') }}"></span> -->
-                    {{ user.mailAddress }}
-                </p>
+                <div class="userIcon">
+                    {% if config.IS_LOCAL %}
+                    <img src="{{ url_for('static', filename=user.iconFilePath) }}" class="icon" alt="userIcon">
+                    {% else %}
+                    <img src="{{ user.iconFilePath }}" class="icon" alt="userIcon">
+                    {% endif %}
+                </div>
+                <div class="nameAndMail">
+                    <p class="profileDisplayName">{{ user.displayName }}</p>
+                    <p class="userName">@{{ user.userName }}</p>
+                    <p class="mailAddress">{{ user.mailAddress }}</p>
+                </div>
 
                 <div class="userWantSale">
                     <div class="listingNumber">
-                        <h3>出品</h3>
-                        <p>{{ listingNumber }}</p>
+                        <h3 class="listingNumber_h3">出品</h3>
+                        <p>{{ listingCount }}</p>
                     </div>
                     <div class="thumbsUpSaleNumber">
                         <h3>いいねした商品</h3>
-                        <p>{{ listingNumber }}</p>
+                        <p>{{ likeCount }}</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="profileChange">
-                <button class="profileChangeButton">プロフィール変更</button>
+                <!-- Modal1 -->
+                <div class="modal fade" id="exampleModalToggle" aria-hidden="true"
+                    aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <form method="post" enctype="multipart/form-data" id="saveButton">
+                                <div class="modal-header">
+                                    <div class="modal-header-left">
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                        <h5 class="modal-title" id="exampleModalLabel">プロフィールを編集</h5>
+                                    </div>
+                                    <div class="modal-header-right">
+                                        <input type="submit" value="変更" class="profileSubmitbtn">
+                                    </div>
+                                </div>
+                                <!-- Modal1-Main -->
+                                <div class="modalMain">
+                                    <div class="fileContainer">
+                                        <!-- 現在の表示アイコン -->
+                                        <div id="result">
+                                            {% if config.IS_LOCAL %}
+                                            <img src="{{ url_for('static', filename=user.iconFilePath) }}" id="icon" alt="userIcon">
+                                            {% else %}
+                                            <img src="{{ user.iconFilePath }}" id="icon" alt="userIcon">
+                                            {% endif %}
+                                        </div>
+                                        <!-- カメラのSVGアイコン -->
+                                        <div class="cameraIconBox">
+                                            <img src="{{ url_for('static', filename='parts/camera-plus.svg') }}" alt=""
+                                                class="cameraIcon">
+                                        </div>
+                                        <!-- アイコン選択input -->
+                                        <input type="file" id="triming_image" name="file" class="triming-image"
+                                            accept="image/*" />
+                                    </div>
+
+                                    <div class="modalInputBox">
+                                        <span class="errorMessageRequired"></span>
+                                        <label for="displayName" class="inputLabel">表示名</label>
+                                        <input type="text" name="displayName" class="modalInput"
+                                            value="{{ user.displayName }}">
+                                    </div>
+                                    <div class="modalInputBox">
+                                        <span class="errorMessageRequired"></span>
+                                        <label for="userName" class="inputLabel">ユーザー名</label>
+                                        <input type="text" name="userName" class="modalInput"
+                                            value="{{ user.userName }}">
+                                    </div>
+                                    <div class="modalInputBox">
+                                        <span class="errorMessageRequired"></span>
+                                        <label for="mailAddress" class="inputLabel">Email</label>
+                                        <input type="text" name="mailAddress" class="modalInput"
+                                            value="{{ user.mailAddress }}">
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="modal-footer" style="display: none;">
+                                <button class="btn btn-primary" data-bs-target="#exampleModalToggle2"
+                                    data-bs-toggle="modal" id="trimingiconedit">Open second modal</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Modal2 -->
+                <div class="modal fade" id="exampleModalToggle2" aria-hidden="true"
+                    aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <div class="modal-header-left">
+                                    <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                        data-bs-toggle="modal" data-bs-target="#exampleModalToggle">←</button> -->
+                                    <button class="btn btn-primary back_btn" id="backExampleModalToggle"
+                                        data-bs-target="#exampleModalToggle" data-bs-toggle="modal">←</button>
+                                    <h5 class="modal-title" id="exampleModalLabel">メディアを編集</h5>
+                                </div>
+                                <div class="modal-header-right">
+                                    <input type="button" id="crop_btn" class="profileSubmitbtn" value="適用" /></p>
+                                    <!-- <input type="button" id="crop_btn" class="profileSubmitbtn" value="適用" /> -->
+                                </div>
+                                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button> -->
+                            </div>
+                            <!-- Modal2-Main -->
+                            <div class="modalMain">
+                                <div class="cropper-container">
+                                    <p><img src="" alt="トリミング画像" id="trimed_image" style="display: none;" /></p>
+                                </div>
+                                <!-- <div id="result"></div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn_profile" data-bs-target="#exampleModalToggle"data-bs-toggle="modal">
+                    プロフィールの編集
+                </button>
             </div>
+        </div>
+
+
         </div>
         <div class="flex1">
             <div class="salesMoney">
                 <p>売上金</p>
-                <p>￥1,345</p>
+                <p>￥{{ '{:,}'.format(revenue) }}</p>
             </div>
             <div class="flex2">
                 <div class="thumbsUpSaleList">
-                    <img src="{{ url_for('static', filename='../static/parts/heart.svg') }}" alt="heart">
+                    <img src="{{ url_for('static', filename='../static/parts/heart.svg') }}" class="saleListIcon"
+                        alt="heart">
                     <p>いいね一覧</p>
-                    <img src="{{ url_for('static', filename='../static/parts/chevron-right.svg')}}" class="chevron-right">
+                    <img src="{{ url_for('static', filename='../static/parts/chevron-right.svg')}}"
+                        class="chevron-right" alt="chevron-right">
                     <a href="/myLikeList"></a>
                 </div>
                 <div class="thumbsUpSaleList">
-                    <img src="{{ url_for('static', filename='../static/parts/chart-line.svg') }}" alt="chart-line">
-                    <p>販売状況</p>
-                    <img src="{{ url_for('static', filename='../static/parts/chevron-right.svg')}}" class="chevron-right">
+                    <img src="{{ url_for('static', filename='../static/parts/auction.svg') }}" class="saleListIcon"
+                        alt="chart-line">
+                    <p>落札した商品</p>
+                    <img src="{{ url_for('static', filename='../static/parts/chevron-right.svg')}}"
+                        class="chevron-right" alt="chevron-right">
+                    <a href='/my_winning_bids'></a>
                 </div>
             </div>
         </div>
     </main>
 
-    <hr class="separatorLine">
-    
-    <!-- 自分の出品物表示エリア -->
-    <div>
-        {% with sales = sales %}
-        {% include 'userSales.html' %}
-        {% endwith %}
+    <div class="tab-1">
+        <label>
+            <input type="radio" name="tab-1" checked>
+            自分の出品物
+        </label>
+        <!-- 自分の出品物表示エリア -->
+        <div>
+            {% with sales = sales %}
+            {% include 'userSales.html' %}
+            {% endwith %}
+        </div>
+
+        <label>
+            <input type="radio" name="tab-1">
+            落札した商品
+        </label>
+        <!-- 落札完了出品物表示エリア -->
+        <div>
+            {% with myBidSales = myBidSales %}
+            {% include 'successfulBid.html' %}
+            {% endwith %}
+        </div>
+
+        <label>
+            <input type="radio" name="tab-1">
+            入札した商品
+        </label>
+        <div>
+            {% with myBidSales = myBidSales %}
+            {% include 'myBid.html' %}
+            {% endwith %}
+        </div>
     </div>
+
 
     <!-- フッターエリア -->
     {% include 'footer.html' %}

@@ -1,0 +1,173 @@
+/* ranking */
+.ranking {
+    width: 100%;
+    height: ;
+    display: flex;
+    flex-direction: column;
+    margin: 10% auto 5%;
+    align-items: center;
+}
+.saleTitle h2{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5%;
+}
+
+.saleRanking {
+    width: 70%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 50px;
+}
+
+.saleRankingBox {
+    position: relative;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 4px solid #eee;
+}
+
+.saleRankingBox::before {
+    content: attr(data-rank);
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    z-index: 2;
+}
+
+/* ランキングごとに枠線の色を変更 */
+/* 1位: ゴールド */
+.saleRankingBox[data-rank="No.1"] {
+    border: 4px solid #ffcc00;
+    box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+}
+.saleRankingBox[data-rank="No.1"]::before {
+    background: linear-gradient(135deg, #ffcc00, #fff2a6);
+    box-shadow: 0 0 8px rgba(255, 204, 0, 0.8);
+}
+
+/* 2位: シルバー */
+.saleRankingBox[data-rank="No.2"] {
+    border: 4px solid #c0c0c0;
+    box-shadow: 0 0 15px rgba(192, 192, 192, 0.5);
+}
+.saleRankingBox[data-rank="No.2"]::before {
+    background: linear-gradient(135deg, #c0c0c0, #f0f0f0);
+    box-shadow: 0 0 8px rgba(192, 192, 192, 0.8);
+}
+
+/* 3位: ブロンズ */
+.saleRankingBox[data-rank="No.3"] {
+    border: 4px solid #cd7f32;
+    box-shadow: 0 0 15px rgba(205, 127, 50, 0.5);
+}
+.saleRankingBox[data-rank="No.3"]::before {
+    background: linear-gradient(135deg, #cd7f32, #e3a56b);
+    box-shadow: 0 0 8px rgba(205, 127, 50, 0.8);
+}
+
+/* それ以外のランク */
+.saleRankingBox {
+    border: 2px solid #e0e0e0;
+    background: #fff;
+    transition: border 0.3s, box-shadow 0.3s, transform 0.3s;
+}
+
+/* ホバー時のエフェクト */
+.saleRankingBox:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+.uploadImg{
+    position: relative;
+    padding-top: 100%;
+    background: #f8f8f8;
+}
+.uploadImg img{
+    aspect-ratio: 1/1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-bottom: 1px solid #eee;
+}
+.saleRankingBox_content {
+    padding: 15px;
+}
+.saleRankingBox_content h2 {
+    margin: 0 0 10px;
+    font-size: 16px;
+    line-height: 1.4;
+    color: #333;
+}
+.card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+    color: #666;
+}
+
+.price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+.rankingLikeContainer{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    bottom: 5%;
+    right: 5%;
+}
+
+.rankingLikeContainer svg {
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    z-index: 10;
+}
+.rankingLikeContainer span {
+    margin-left: 3px;
+}
+@media (max-width: 960px) {
+
+}
+@media (max-width: 570px) {
+    .saleTitle {
+        display: flex;
+        flex-direction: column;
+    }
+    .saleRanking{
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+    }
+    .saleRankingBox{
+        display: flex;
+        height: auto;
+    }
+    .uploadImg{
+        width: 50%;
+        padding: 0;
+    }
+    .uploadImg img{
+        aspect-ratio: 1/1;
+        object-fit: contain;
+    }
+    .saleRankingBox_content{
+        width: 50%;
+    }
+}

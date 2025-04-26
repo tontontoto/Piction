@@ -7,17 +7,16 @@ let mailAddress = document.getElementById('mailAddress');
 let password = document.getElementById('password');
 const checkBoxCheck = document.getElementById('privacyPolicy');
 
-
 // エラーメッセージ表示要素を取得
 let errorMessageRequired = document.getElementsByClassName('errorMessageRequired');
 
-
 // 各項目正規表現
 let userNameRegex = /^[a-zA-Z0-9_]{2,15}$/
-let emailRegex = /^[a-zA-Z0-9_\-]+(\.[a-zA-Z0-9_\-]+)*@([a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]\.)+[a-zA-Z]{2,}$/;
+let emailRegex = /^[a-zA-Z0-9_\-]+(\.[a-zA-Z0-9_\-]+)*@([a-zA-Z0-9\-]*[a-zA-Z0-9]\.)+[a-zA-Z]{2,}$/;
 let passwordRegex = /^[a-zA-Z0-9_]{6,15}$/;
 
-// フォーム送信時にチェックする処理
+
+// フォーム送信時にチェックする処理---------------------------------------------
 signupForm.addEventListener('submit', function (event) {
     // 各フィールドが未入力ならエラーメッセージを表示
     let hasError = false;
@@ -26,15 +25,30 @@ signupForm.addEventListener('submit', function (event) {
     if (userName.value.length === 0) {
         errorMessageRequired[0].innerHTML = "必須";
         hasError = true;
-    } else {
+    }
+    // ユーザー名が1文字以上、かつ1文字目が正規表現に従っていない場合
+    else if (userName.value.length >= 1 && !/^[a-zA-Z0-9_]/.test(userName.value[0])) {
+        errorMessageRequired[0].innerHTML = "半角英数字または半角アンダーバーで始めてください。";
+        hasError = true;
+    }
+    // ユーザー名が2文字以上で、かつ正規表現に従っていない場合（全体に対してチェック）
+    else if (userName.value.length >= 2 && !userNameRegex.test(userName.value)) {
+        errorMessageRequired[0].innerHTML = "半角英数字と半角アンダーバーのみで入力してください。";
+        hasError = true;
+    }
+    else {
         errorMessageRequired[0].innerHTML = "";
     }
 
-    // 表示名のチェック 
+    // 表示名のチェック
     if (displayName.value.length === 0) {
         errorMessageRequired[1].innerHTML = "必須";
         hasError = true;
-    } else {
+    } 
+    else if (displayName.value.length > 30) {
+        hasError = true;
+    }
+    else {
         errorMessageRequired[1].innerHTML = "";
     }
 
@@ -42,17 +56,14 @@ signupForm.addEventListener('submit', function (event) {
     if (mailAddress.value.length === 0) {
         errorMessageRequired[2].innerHTML = "必須";
         hasError = true;
-    } else {
-        errorMessageRequired[2].innerHTML = "";
     }
-    // 有効メールアドレス制限
-    if (!emailRegex.test(mailAddress.value)) {
+    else if (!emailRegex.test(mailAddress.value)) {
         errorMessageRequired[2].innerHTML = "有効なメールアドレスを入力してください。";
-    } else {
+        hasError = true;
+    } 
+    else {
         errorMessageRequired[2].innerHTML = "";
     }
-    console.log(mailAddress.value);
-    console.log(emailRegex.test(mailAddress.value));
 
     // パスワードのチェック 
     if (password.value.length === 0) {
@@ -67,13 +78,14 @@ signupForm.addEventListener('submit', function (event) {
             hasError = true;
         }
     }
+    // チェックボックスのチェック
     if (!checkBoxCheck.checked) {
-        console.log("not checked")
         errorMessageRequired[4].innerHTML = "利用規約に同意する必要があります。";
+        hasError = true;
     } else {
         errorMessageRequired[4].innerHTML = "";
     }
-    
+
     // エラーがあればフォーム送信を防ぐ
     if (hasError) {
         console.log("submit stop.")
@@ -82,7 +94,7 @@ signupForm.addEventListener('submit', function (event) {
 });
 
 
-// リアルタイム入力時ので条件に当てはまっているかの処理--------------------------------
+// リアルタイム入力時の条件に当てはまっているかの処理--------------------------------
 // ユーザーネーム文字制限
 userName.addEventListener('input', function () {
     // ユーザー名が0文字の場合はエラーメッセージを表示しない
@@ -105,9 +117,9 @@ userName.addEventListener('input', function () {
 
 // 表示名count、制限以上のinputエラーメッセージ
 displayName.addEventListener('input', function () {
-    const displayNameValue = this.value.trim();
-    const displayNameLength = displayNameValue.length;
-    const countArea = document.getElementById('displayNameCount')
+    let displayNameValue = this.value.trim();
+    let displayNameLength = displayNameValue.length;
+    let countArea = document.getElementById('displayNameCount')
     countArea.innerText = displayNameLength;
     if (displayNameLength > 30) {
         console.log("30文字以上です。")
@@ -119,11 +131,28 @@ displayName.addEventListener('input', function () {
     }
 })
 
-// password
+// メールアドレスのチェック
+// カーソルを離した瞬間にエラーメッセージ表示非表示する
+mailAddress.addEventListener('blur', function () {
+    let mailAddressValue = this.value.trim();
+    let mailAddressLength = mailAddressValue.length;
+    if (mailAddressLength === 0) {
+        errorMessageRequired[2].innerHTML = "必須";
+    } else if (!emailRegex.test(mailAddress.value)) {
+        errorMessageRequired[2].innerHTML = "有効なメールアドレスを入力してください。";
+    } 
+    else {
+        errorMessageRequired[2].innerHTML = "";
+    }
+})
+
+
+// password input error message
 password.addEventListener('input', function () {
     const passwordValue = this.value.trim();
     if (passwordRegex.test(passwordValue)) {
         console.log("半角英数のみ");
+        errorMessageRequired[3].innerHTML = "";
     }
 })
 password.addEventListener('blur', function () {
@@ -140,7 +169,6 @@ password.addEventListener('blur', function () {
 });
 
 
-
 // パスワード入力欄のパスワード表示非表示機能
 function pushHideButton() {
     let password = document.getElementById("password");
@@ -154,3 +182,12 @@ function pushHideButton() {
     }
 }
 
+// 利用規約のチェックボックス
+checkBoxCheck.addEventListener('click', function () {
+    if (!checkBoxCheck.checked) {
+        errorMessageRequired[4].innerHTML = "利用規約に同意する必要があります。";
+        hasError = true;
+    } else {
+        errorMessageRequired[4].innerHTML = "";
+    }
+})

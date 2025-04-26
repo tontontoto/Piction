@@ -5,17 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
     <link rel="icon" href="../static/icon/favicon.png">
     <title>Piction</title>
 </head>
 
-<body>
+<body oncontextmenu="return false;">
     <div class="mainContents">
-        <img src="{{ url_for('static', filename='../static/icon/logo.png') }}" alt="Piction" id="PictionLogo">
+        <div class="welcomeLogo">
+            <img src="{{ url_for('static', filename='../static/icon/logo.png') }}" alt="Piction" id="PictionLogo">
+        </div>
 
         <h1>Welcome to Piction!!!</h1>
         <div class="welcomeText">
-            <p>このアプリは自分の絵がそのままオークションに出品できるアプリです。</p>
+            <p><span>このアプリは自分の絵がそのまま</span><span>オークションに出品できるアプリです。</span></p>
         </div>
 
         <div class="signupLoginArea">
@@ -27,23 +30,13 @@
             </div>
         </div>
     </div>
-    
-    <footer>
-        {% include 'x_share.html'%}
-    </footer>
-
-
-
-    <!-- db内容表示(デバック用) -->
-    <!-- <h5>デバック用</h5>
-    <h5>このページ（index.html）はログアウト時にしか見ることができない</h5>
-    <p>【以下デバック用DB中身エリア】</p>
-    {% for user in user %}
-        <p>userName :{{user.userName}}｜displayName :{{user.displayName}}｜mailAddress :{{user.mailAddress}}｜password :{{user.password}}</p>
-    {% endfor %}
-    <div class="userPageLink">
-        <a href="/logout" role="button">ログアウトする</a>
-    </div> -->
+    <div id="supportedBrowser">
+        <p>
+            このサイトには決済方法を選択する機能がありますが、ECサイト制作の課題のためのもので、機能は致しません。ご了承ください。
+        <br>
+            推奨ブラウザ：[Google Chrome]
+        </p>
+    </div>
 </body>
 
 </html>

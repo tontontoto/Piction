@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../static/icon/favicon.png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/my_winning_bids.css') }}">
+    <!-- scrollbar -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/scrollbar.css') }}">
+    <!-- header -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <!-- footer -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <!-- nav_sp -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav_sp.css') }}">
+    
+    <script src="{{ url_for('static', filename='js/footer.js') }}" defer></script>
+    <title>落札した作品 | Piction</title>
+</head>
+<body oncontextmenu="return false;">
+    {% include 'header.html' %}
+    {% include 'nav_sp.html' %}
+
+    <main>
+        <div class="winning-bids-container">
+            <h2>落札した作品</h2>
+            {% if winning_bids %}
+            <div class="winning-bids-grid">
+                {% for bid_info in winning_bids %}
+                <div class="winning-bid-card">
+                    <a href="{{ url_for('saleDetail_view', sale_id=bid_info['sale'].saleId) }}">
+                        {% if config.IS_LOCAL %}
+                            <img src="{{ url_for('static', filename=bid_info['sale'].filePath) }}" alt="{{ bid_info['sale'].title }}">
+                        {% else %}
+                            <img src="{{ bid_info['sale'].filePath }}" alt="{{ bid_info['sale'].title }}">
+                        {% endif %}
+                        <h3>{{ bid_info['sale'].title }}</h3>
+                        <p>落札者: {{ bid_info['user'].displayName }}</p>
+                        <p>落札価格: ¥{{ '{:,}'.format(bid_info['sale'].currentPrice) }}</p>
+                        <p>落札日時: {{ bid_info['winningBid'].bidTime }}</p>
+                    </a>
+                    <a href="{{ url_for('download_artwork_view', sale_id=bid_info['sale'].saleId) }}" class="download-button">ダウンロード</a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>落札した作品はありません。</p>
+            {% endif %}
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+</body>
+</html>

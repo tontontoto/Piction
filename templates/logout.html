@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログアウト | Piction</title>
+    <!-- logout -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/logout.css') }}">
+    <!-- font -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css//font.css') }}">
+    <!-- header -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <!-- footer -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <!-- scrollbar -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/scrollbar.css') }}">
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/footer.js') }}" defer></script>
+</head>
+<body oncontextmenu="return false;">
+    {% include 'header.html' %}
+
+    <main class="logout-container">
+        <div class="logout-card">
+            <h1>ログアウトしますか？</h1>
+            
+            <div class="message">
+                <p>ログアウトすると、再度ログインするまで以下の機能が利用できなくなります：</p>
+                <ul>
+                    <li>作品の出品</li>
+                    <li>オークションへの参加</li>
+                    <li>いいね機能</li>
+                </ul>
+            </div>
+
+            <div class="action-buttons">
+                <form action="{{ url_for('logout_view') }}" method="post">
+                    <button type="submit" class="logout-button">ログアウト</button>
+                </form>
+                <a href="{{ url_for('top_view') }}" class="cancel-button">キャンセル</a>
+            </div>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+</body>
+</html> 

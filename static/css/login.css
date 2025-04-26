@@ -1,0 +1,119 @@
+/* ---- header ---- */
+#header {
+    padding: 5px 20px;
+}
+.headerLogo {
+    width: 200px;
+    text-align: left;
+}
+
+/* ---- maincontent ---- */
+#mainContent {
+    text-align: center;
+    padding-bottom: 10vh;
+}
+.loginTitle {
+    display: block;
+    padding: 10px;
+    margin-bottom: 3vh;
+    font-size: 35px;
+}
+.wrongErrorMassage {
+    color: red;
+    display: inline-block;
+    margin: 20px 0;
+}
+#loginForm {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    width: 45%;
+}
+.inputArea {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 5%;
+}
+.inputAreaTextDetail {
+    display: flex;
+    flex-direction: row;
+}
+.inputArea p {
+    margin: 0;
+    text-align: left;
+}
+.inputArea input {
+    width: 100%;
+    line-height: 100%;
+    font-size: 16px;
+    height: 50px;
+    border-radius: 5px;
+    inline-size: 1px solid #000;
+}
+.inputArea input:focus{
+    outline: none;
+    border: 2px solid #46A0DC;
+    box-shadow: 0 0 3px #46A0DC;
+}
+.errorMessageRequired {
+    color: red;
+    display: inline-block;
+    padding-left: 10px;
+}
+/* submit button */
+.loginSubmitButton {
+    background: #000;
+    color: #fff;
+    margin: 5% auto;
+    transition: 0.4s;
+    width: 100%;
+    height: 4rem;
+    border-radius: 5px;
+}
+.loginSubmitButton:hover {
+    background: #fff;
+    color: #000;
+}
+
+/* signup link */
+.signupLink {
+    text-align: right;
+    margin: 3% 0;
+}
+.signupLink a {
+    color: #000;
+    text-decoration: none;
+    border-bottom: #000 2px solid;
+}
+.signupLink a:hover {
+    color: #898989;
+    border-bottom-color: #898989;
+}
+
+@media screen and (max-width: 570px) {
+
+    #loginForm {
+        width: 80%;
+    }
+    .loginTitle {
+        font-size: 28px;
+    }
+
+    .inputArea input {
+        font-size: 14px;
+    }
+
+    .inputArea input::placeholder {
+        font-size: 14px;
+    }
+
+    .wrongErrorMassage,
+    .errorMessageRequired {
+        font-size: 14px;
+    }
+
+    .loginSubmitButton {
+        font-size: 16px;
+    }
+
+}
