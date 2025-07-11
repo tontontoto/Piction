@@ -1,33 +1,13 @@
-ロゴの筆の色
-#46A0DC
-レスポンシブ
-960pxと570px
+### Piction
+## HEW2025作品
+---
 
-インストール手順
+>**GitHub初使用🍀**
 
-	↓これをターミナルに記述してインストールされているライブラリをテキスト化
-	pip freeze > requirements.txt
+＊反省点＊
+　commit名などの規則を決め、誰が見てもなんのコミットか分かるようにする点。
 
-	↓これをターミナルに記述してインストール
-	pip install -r requirements.txt
+ 画像の加工処理をフロントエンドではなくバックエンドで行なっていたため通信環境によっては作品やアイコンのアップロードが失敗する。
 
+2025/04/26
 
-データベース
-	データベースはデフォルトで[azure database for MySQL フレキシブルサーバー]に接続しているのでローカルでテーブルの中身を確認することはできません。
-	もしデータベースの接続をローカルに切り替えたい場合は[Piction > .env]の2行目をコメントアウトして1行目のコメントアウトを解除してください。
-
-テーブル
-	user 					: ユーザー情報
-	sale 					: 商品情報
-	category 				: カテゴリー
-	saleCategoryAssociation : saleテーブルとcategoryテーブルの仲介テーブル
-	bid 					: 入札情報
-	winningBid 				: 落札情報
-	paymentWay 				: 支払い方法
-	payment 				: 支払い情報
-	like 					: いいね情報
-	inquiryKind 			: 問い合わせ種類
-	inquiry 				: 問い合わせ情報
-
-
-	

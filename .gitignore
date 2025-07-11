@@ -24,6 +24,10 @@ example.db
 static/upload_images/
 static/upload_icon/
 dummy_data.txt
+hide_data
+static/icon
+static/img
+static/parts
 
 # IDE設定
 .vscode/
@@ -34,4 +38,5 @@ dummy_data.txt
 # OS生成ファイル
 .DS_Store
 Thumbs.db
+
 
