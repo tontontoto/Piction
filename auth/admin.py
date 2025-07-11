@@ -4,6 +4,7 @@ from flask_admin.contrib.sqla import ModelView
 from flask_admin import Admin, BaseView, expose
 import locale
 from datetime import datetime
+from auth.config import ADMIN_URL
 
 # 基本ModelViewクラス - 共通機能を実装
 class BaseModelView(ModelView):
@@ -126,7 +127,7 @@ class InquiryModelView(BaseModelView):
 
 # 管理画面の設定
 def init_admin(app):
-    admin = Admin(app, name='Piction 管理パネル', template_mode='bootstrap3', url='/piction0306admin')
+    admin = Admin(app, name='Piction 管理パネル', template_mode='bootstrap3', url=ADMIN_URL)
     
     # エラー抑制設定
     app.config['FLASK_ADMIN_RAISE_ON_VIEW_EXCEPTION'] = False

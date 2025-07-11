@@ -1,4 +1,5 @@
 # MARK:== auth ==
+from numpy import add
 from imports import *
 from auth.config import *
 from auth.azure_blob import connect_to_azure_blob
@@ -49,6 +50,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['UPLOAD_ICON_FOLDER'] = UPLOAD_ICON_FOLDER
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['IS_LOCAL'] = UPLOAD_STORAGE == 'local'
+app.config['ADMIN_URL'] = ADMIN_URL
 
 # == ローカル画像保存先フォルダの作成 ==
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -135,6 +137,9 @@ with app.app_context():
     try:
         # db.drop_all()  # テーブルの全削除
         db.create_all()
+        # add_payment_methods()  # 支払い方法の追加
+        # add_users()  # ユーザーの追加
+        # add_sales(add_categories())  # 商品の追加
     except Exception as e:
         print(f"Error テーブル作成失敗: {e}")
         db.session.rollback()

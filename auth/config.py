@@ -3,7 +3,8 @@
 from imports import *
 
 # 環境設定の取得
-ENVIRONMENT = os.getenv('ENVIRONMENT')
+# ENVIRONMENT = os.getenv('ENVIRONMENT')
+ENVIRONMENT = 'local'
 if not ENVIRONMENT:
     raise ValueError("app.py 環境変数 ENVIRONMENT が設定されていません")
 
@@ -33,3 +34,6 @@ UPLOAD_ICON_FOLDER = './static/upload_icon'
 
 # 許可する拡張子
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+# 管理者画面のURL
+ADMIN_URL = os.getenv('ADMIN_URL', '/admin')

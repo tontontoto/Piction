@@ -17,6 +17,8 @@ def bidSaleDetail(app):
         winning_bid = WinningBid.query.filter_by(saleId=saleId).first()
         payment = Payment.query.filter_by(saleId=saleId).first()
         
+        print(f"winning_bid:{winning_bid},payment:{payment}")
+        
         # 支払いが完了しているか確認
         if payment:
             print(f"支払いが完了しています saleId:{saleId}")
@@ -25,10 +27,14 @@ def bidSaleDetail(app):
         # POSTリクエスト処理（支払い情報登録）
         if request.method == 'POST':
             try:
-                PaymentMethod = request.form.get('paymentMethod')  # 支払い方法
+                PaymentMethod = request.form.get('paymentMethod') # 支払い方法
+                print(f"PaymentMethod:{PaymentMethod}")
                 paymentWayId = db.session.query(PaymentWay.paymentWayId).filter(PaymentWay.paymentWayName == PaymentMethod).scalar()
+                print(f"paymentWayId:{paymentWayId}")
                 comment = request.form.get('comment')  # コメント
                 amount = sale.currentPrice  # 落札金額
+                
+                print(f"paymentWayId:{paymentWayId},comment:{comment},amount:{amount}")
                 
                 # 落札者情報の取得
                 lastBid = db.session.query(Bid).filter_by(saleId=saleId).order_by(Bid.bidPrice.desc()).first()
@@ -37,6 +43,7 @@ def bidSaleDetail(app):
                     return render_template('bidSaleDetail.html', sale=sale, config=app.config)
                 
                 bidUserId = lastBid.userId
+                print(f"bidUserId:{bidUserId}")
                 
                 # WinningBid作成（存在しない場合のみ）
                 if not winning_bid:
@@ -63,6 +70,7 @@ def bidSaleDetail(app):
             except Exception as e:
                 db.session.rollback()
                 print(f"支払い処理エラー: {e}")
+                print(f"saleId:{saleId},winning_bid:{winning_bid}")
                 flash('支払い処理中にエラーが発生しました', 'error')
         
         # GETリクエスト処理（表示）
